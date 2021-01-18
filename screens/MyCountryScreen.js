@@ -6,11 +6,14 @@ const Container = styled.View`
   justify-content: center;
   align-items: center;
 `;
-
+import SkeletonContent from "react-native-skeleton-content";
 const MyCountryScreen = (props) => {
   return (
     <Container>
-      <Text>{props.route.params.myCountry}</Text>
+      <SkeletonContent containerStyle={{ flex: 1 }} isLoading={true}>
+        {/* <Text>{props.route.params.myCountry}</Text> */}
+        <Text>ASDASDASDASDASdasdasd</Text>
+      </SkeletonContent>
     </Container>
   );
 };
