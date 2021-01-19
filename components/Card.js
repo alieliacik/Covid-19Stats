@@ -1,7 +1,8 @@
-import React from "react";
-import { StyleSheet, View, Text } from "react-native";
-import styled from "styled-components";
+import React, { useRef, useEffect } from "react";
+import { StyleSheet, View, Animated } from "react-native";
+import styled from "styled-components/native";
 import { AntDesign } from "@expo/vector-icons";
+import FadeInView from "../constants/FadeinView";
 
 const StyledCard = styled.View`
   background-color: #fff;
@@ -10,32 +11,34 @@ const StyledCard = styled.View`
   border-radius: 5px;
   elevation: 5;
   shadow-color: black;
-  shadow-ofset: {
-      width: 2,
-      height: 2,
-    };
+  shadow-offset: 2px 2px;
   shadow-opacity: 0.1;
-  padding: 16px;
+  padding: 12px;
   shadow-radius: 8px;
 `;
-const CardCateGory = styled.Text`
+const CategoryName = styled.Text`
   font-family: open-sans;
   color: ${(props) => props.color};
   font-size: 12px;
-  margin-bottom: 8px;
+  margin-right: 10px;
+  letter-spacing: 1px;
+`;
+const CategoryContainer = styled.View`
+  flex-direction: row;
+  align-items: center;
 `;
 
 const TotalStats = styled.Text`
-  font-family: open-sans-bold;
+  font-family: open-sans-semibold;
   color: ${(props) => props.color};
-  font-size: 22px;
-  margin-bottom: 10px;
+  font-size: 20px;
 `;
 
 const DailyStatsContainer = styled.View`
   align-self: flex-start;
   background-color: ${(props) => props.color};
   padding: 3px;
+  margin-top: 7px;
   margin-right: 7px;
   border-radius: 5px;
   flex-direction: row;
@@ -44,7 +47,7 @@ const DailyStatsContainer = styled.View`
 `;
 
 const DailyStats = styled.Text`
-  font-family: "open-sans";
+  font-family: open-sans;
   color: #fff;
   font-size: 14px;
 `;
@@ -52,48 +55,25 @@ const DailyStats = styled.Text`
 const Card = (props) => {
   return (
     <StyledCard>
-      <CardCateGory color={props.color}>{props.category}</CardCateGory>
+      <CategoryContainer>
+        <CategoryName color={props.color}>{props.category}</CategoryName>
+        <AntDesign name="linechart" size={12} color={props.color} />
+      </CategoryContainer>
       <View>
         <TotalStats color={props.color}>{props.totalConfirmed}</TotalStats>
       </View>
-      <DailyStatsContainer color={props.color}>
-        <DailyStats color={props.color}>
-          <AntDesign name="arrowup" size={16} color="#fff" />
-          {props.totalNewCases}
-        </DailyStats>
-      </DailyStatsContainer>
+      {props.dailyConfirmed && (
+        <FadeInView duration={800}>
+          <DailyStatsContainer color={props.color}>
+            <DailyStats color={props.color}>
+              <AntDesign name="arrowup" size={15} color="#fff" />
+              {props.dailyConfirmed}
+            </DailyStats>
+          </DailyStatsContainer>
+        </FadeInView>
+      )}
     </StyledCard>
   );
 };
 
 export default Card;
-
-/* const styles = StyleSheet.create({
-  card: {
-    backgroundColor: "#fff",
-    width: (WindowsDimensions.fullWidth / 100) * 47,
-    marginHorizontal: (WindowsDimensions.fullWidth / 100) * 1.5,
-    marginVertical: (WindowsDimensions.fullWidth / 100) * 1.5,
-    borderRadius: 5,
-    elevation: 5,
-    shadowColor: "black",
-    shadowOffset: {
-      width: 2,
-      height: 2,
-    },
-    shadowOpacity: 0.1,
-    padding: 16,
-    shadowRadius: 8,
-  },
-  cardCategory: {
-    fontFamily: "open-sans",
-    color: props.color,
-    fontSize: 12,
-    marginBottom: 8,
-  },
-  total: {
-   
-  },
-  dailyContainer: {},
-  daily: {},
-}); */

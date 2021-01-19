@@ -10,8 +10,9 @@ import globalReducer from "./store/reducers/stats";
 
 export default function App() {
   let [fontsLoaded] = useFonts({
-    "open-sans-bold": require("./assets/fonts//OpenSans-Bold.ttf"),
-    "open-sans": require("./assets/fonts//OpenSans-Regular.ttf"),
+    "open-sans": require("./assets/fonts/OpenSans-Regular.ttf"),
+    "open-sans-semibold": require("./assets/fonts/OpenSans-Semibold.ttf"),
+    "open-sans-bold": require("./assets/fonts/OpenSans-Bold.ttf"),
   });
 
   const rootReducer = combineReducers({

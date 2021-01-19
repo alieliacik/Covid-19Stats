@@ -16,10 +16,12 @@ import { TouchableNativeFeedback } from "react-native-gesture-handler";
 import { countryCodeEmoji } from "country-code-emoji";
 import { AntDesign } from "@expo/vector-icons";
 import SkeletonPlaceholder from "react-native-skeleton-placeholder";
+import SkeletonContent from "react-native-skeleton-content";
 
 import Colors from "../constants/Colors";
 import * as globalActions from "../store/actions/stats";
 import Card from "../components/Card";
+import FadeInView from "../constants/FadeinView";
 
 const Container = styled.View`
   flex: 1;
@@ -109,152 +111,103 @@ const GlobalScreen = (props) => {
 
   if (isLoading) {
     return (
-      <SkeletonPlaceholder backgroundColor="#fff">
-        <View
-          style={{
-            height: 50,
-            marginVertical: 3.5,
-            marginHorizontal: 5,
-            borderRadius: 5,
-          }}
-        ></View>
-        <View
-          style={{
-            height: 50,
-            marginVertical: 3.5,
-            marginHorizontal: 5,
-            borderRadius: 5,
-          }}
-        ></View>
-        <View
-          style={{
-            height: 50,
-            marginVertical: 3.5,
-            marginHorizontal: 5,
-            borderRadius: 5,
-          }}
-        ></View>
-        <View
-          style={{
-            height: 50,
-            marginVertical: 3.5,
-            marginHorizontal: 5,
-            borderRadius: 5,
-          }}
-        ></View>
-        <View
-          style={{
-            height: 50,
-            marginVertical: 3.5,
-            marginHorizontal: 5,
-            borderRadius: 5,
-          }}
-        ></View>
-        <View
-          style={{
-            height: 50,
-            marginVertical: 3.5,
-            marginHorizontal: 5,
-            borderRadius: 5,
-          }}
-        ></View>
-        <View
-          style={{
-            height: 50,
-            marginVertical: 3.5,
-            marginHorizontal: 5,
-            borderRadius: 5,
-          }}
-        ></View>
-        <View
-          style={{
-            height: 50,
-            marginVertical: 3.5,
-            marginHorizontal: 5,
-            borderRadius: 5,
-          }}
-        ></View>
-        <View
-          style={{
-            height: 50,
-            marginVertical: 3.5,
-            marginHorizontal: 5,
-            borderRadius: 5,
-          }}
-        ></View>
-        <View
-          style={{
-            height: 50,
-            marginVertical: 3.5,
-            marginHorizontal: 5,
-            borderRadius: 5,
-          }}
-        ></View>
-        <View
-          style={{
-            height: 50,
-            marginVertical: 3.5,
-            marginHorizontal: 5,
-            borderRadius: 5,
-          }}
-        ></View>
-        <View
-          style={{
-            height: 50,
-            marginVertical: 3.5,
-            marginHorizontal: 5,
-            borderRadius: 5,
-          }}
-        ></View>
-        <View
-          style={{
-            height: 50,
-            marginVertical: 3.5,
-            marginHorizontal: 5,
-            borderRadius: 5,
-          }}
-        ></View>
-        <View
-          style={{
-            height: 50,
-            marginVertical: 3.5,
-            marginHorizontal: 5,
-            borderRadius: 5,
-          }}
-        ></View>
-        <View
-          style={{
-            height: 50,
-            marginVertical: 3.5,
-            marginHorizontal: 5,
-            borderRadius: 5,
-          }}
-        ></View>
-        <View
-          style={{
-            height: 50,
-            marginVertical: 3.5,
-            marginHorizontal: 5,
-            borderRadius: 5,
-          }}
-        ></View>
-        <View
-          style={{
-            height: 50,
-            marginVertical: 3.5,
-            marginHorizontal: 5,
-            borderRadius: 5,
-          }}
-        ></View>
-        <View
-          style={{
-            height: 50,
-            marginVertical: 3.5,
-            marginHorizontal: 5,
-            borderRadius: 5,
-          }}
-        ></View>
-      </SkeletonPlaceholder>
+      <View>
+        <SkeletonPlaceholder backgroundColor="#fff">
+          <View
+            style={{
+              marginVertical: 3.5,
+              marginHorizontal: 6,
+              height: 180,
+            }}
+          ></View>
+          <View
+            style={{ height: 33, marginVertical: 5.5, marginHorizontal: 6 }}
+          ></View>
+          <View
+            style={{
+              height: 50,
+              marginVertical: 3.5,
+              marginHorizontal: 6,
+              borderRadius: 5,
+            }}
+          ></View>
+          <View
+            style={{
+              height: 50,
+              marginVertical: 3.5,
+              marginHorizontal: 6,
+              borderRadius: 5,
+            }}
+          ></View>
+
+          <View
+            style={{
+              height: 50,
+              marginVertical: 3.5,
+              marginHorizontal: 6,
+              borderRadius: 5,
+            }}
+          ></View>
+          <View
+            style={{
+              height: 50,
+              marginVertical: 3.5,
+              marginHorizontal: 6,
+              borderRadius: 5,
+            }}
+          ></View>
+          <View
+            style={{
+              height: 50,
+              marginVertical: 3.5,
+              marginHorizontal: 6,
+              borderRadius: 5,
+            }}
+          ></View>
+          <View
+            style={{
+              height: 50,
+              marginVertical: 3.5,
+              marginHorizontal: 6,
+              borderRadius: 5,
+            }}
+          ></View>
+          <View
+            style={{
+              height: 50,
+              marginVertical: 3.5,
+              marginHorizontal: 6,
+              borderRadius: 5,
+            }}
+          ></View>
+        </SkeletonPlaceholder>
+        <SkeletonPlaceholder backgroundColor="#fff">
+          <View
+            style={{
+              height: 50,
+              marginVertical: 3.5,
+              marginHorizontal: 6,
+              borderRadius: 5,
+            }}
+          ></View>
+          <View
+            style={{
+              height: 50,
+              marginVertical: 3.5,
+              marginHorizontal: 6,
+              borderRadius: 5,
+            }}
+          ></View>
+          <View
+            style={{
+              height: 50,
+              marginVertical: 3.5,
+              marginHorizontal: 6,
+              borderRadius: 5,
+            }}
+          ></View>
+        </SkeletonPlaceholder>
+      </View>
     );
   }
 
@@ -265,28 +218,26 @@ const GlobalScreen = (props) => {
           <Card
             category="CONFIRMED"
             totalConfirmed={numberWithCommas(total.totalConfirmed)}
-            totalNewCases={numberWithCommas(total.totalNewCases)}
+            dailyConfirmed={numberWithCommas(total.totalNewCases)}
             color={Colors.red}
-          />
-          <Card
-            category="ACTIVE"
-            totalConfirmed={numberWithCommas(total.totalActiveCases)}
-            totalNewCases={numberWithCommas(total.totalNewCases)}
-            color={Colors.blue}
-          />
-        </View>
-        <View style={styles.cardContainer}>
-          <Card
-            category="RECOVERD"
-            totalConfirmed={numberWithCommas(total.totalRecovered)}
-            totalNewCases={numberWithCommas(total.totalNewCases)}
-            color={Colors.green}
           />
           <Card
             category="DECEASED"
             totalConfirmed={numberWithCommas(total.totalDeaths)}
-            totalNewCases={numberWithCommas(total.totalNewDeaths)}
+            dailyConfirmed={numberWithCommas(total.totalNewDeaths)}
             color={Colors.gray}
+          />
+        </View>
+        <View style={styles.cardContainer}>
+          <Card
+            category="ACTIVE"
+            totalConfirmed={numberWithCommas(total.totalActiveCases)}
+            color={Colors.blue}
+          />
+          <Card
+            category="RECOVERD"
+            totalConfirmed={numberWithCommas(total.totalRecovered)}
+            color={Colors.green}
           />
         </View>
       </View>
@@ -322,84 +273,35 @@ const GlobalScreen = (props) => {
         ListHeaderComponent={() => <FlatListHeader />}
         renderItem={(itemData) => {
           const flagImg = countryCodeEmoji(itemData.item.countryCode);
-
           return (
             <View style={{ marginHorizontal: 5, marginVertical: 3.5 }}>
               <TouchableButton
-                onPress={() => Alert.alert("pressed")}
-                style={{
-                  paddingVertical: 16,
-                  paddingHorizontal: 10,
-                  flexDirection: "row",
-                  justifyContent: "space-between",
-                  backgroundColor: "#fff",
-                  borderRadius: 3,
-                  elevation: 5,
-                  shadowColor: "black",
-                  shadowOffset: {
-                    width: 2,
-                    height: 2,
-                  },
-                  shadowOpacity: 0.08,
-                  shadowRadius: 2,
-                }}
+                onPress={() =>
+                  props.navigation.push("MyCountry", {
+                    selectedCountry: itemData.item.countryName,
+                  })
+                }
+                style={styles.country}
               >
-                <View
-                  style={{
-                    flexDirection: "row",
-                    alignItems: "center",
-                    justifyContent: "space-between",
-                  }}
-                >
-                  <Text style={{ fontSize: 10, marginRight: 4 }}>
-                    {itemData.index + 1}
-                  </Text>
-                  <Text style={{ fontSize: 16, marginRight: 8 }}>
-                    {flagImg}
-                  </Text>
-                  <Text style={{ fontSize: 16, fontFamily: "open-sans" }}>
+                <View style={styles.countryContainer}>
+                  <Text style={styles.index}>{itemData.index + 1}</Text>
+                  <Text style={styles.countryFlag}>{flagImg}</Text>
+                  <Text style={styles.countryName}>
                     {itemData.item.country}
                   </Text>
                 </View>
-                <View
-                  style={{
-                    flexDirection: "row",
-                    alignItems: "center",
-                    justifyContent: "space-between",
-                  }}
-                >
+                <View style={styles.countryContainer}>
                   {itemData.item.dailyDeaths !== 0 && (
-                    <View
-                      style={{
-                        backgroundColor: Colors.red,
-                        padding: 3,
-                        marginRight: 7,
-                        borderRadius: 5,
-                        flexDirection: "row",
-                        alignItems: "center",
-                        paddingRight: 6,
-                      }}
-                    >
-                      <AntDesign name="arrowup" size={12} color="#fff" />
-                      <Text
-                        style={{
-                          fontSize: 12,
-                          fontFamily: "open-sans-bold",
-                          color: "#fff",
-                        }}
-                      >
-                        {numberWithCommas(itemData.item.dailyConfirmed)}
-                      </Text>
-                    </View>
+                    <FadeInView duration={500}>
+                      <View style={styles.dailyNewCasesContainer}>
+                        <AntDesign name="arrowup" size={12} color="#fff" />
+                        <Text style={styles.dailyNewCaseCount}>
+                          {numberWithCommas(itemData.item.dailyConfirmed)}
+                        </Text>
+                      </View>
+                    </FadeInView>
                   )}
-
-                  <Text
-                    style={{
-                      fontSize: 14,
-                      fontFamily: "open-sans-bold",
-                      color: Colors.red,
-                    }}
-                  >
+                  <Text style={styles.totalCaseCount}>
                     {numberWithCommas(itemData.item.totalConfirmed)}
                   </Text>
                 </View>
@@ -418,5 +320,48 @@ const styles = StyleSheet.create({
   cardContainer: {
     flexDirection: "row",
     justifyContent: "space-between",
+  },
+  country: {
+    paddingVertical: 16,
+    paddingHorizontal: 10,
+    flexDirection: "row",
+    justifyContent: "space-between",
+    backgroundColor: "#fff",
+    borderRadius: 3,
+    elevation: 5,
+    shadowColor: "black",
+    shadowOffset: {
+      width: 2,
+      height: 2,
+    },
+    shadowOpacity: 0.08,
+    shadowRadius: 2,
+  },
+  countryContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+  },
+  index: { fontSize: 10, marginRight: 4 },
+  countryFlag: { fontSize: 16, marginRight: 8 },
+  countryName: { fontSize: 16, fontFamily: "open-sans" },
+  dailyNewCasesContainer: {
+    backgroundColor: Colors.red,
+    padding: 3,
+    marginRight: 7,
+    borderRadius: 5,
+    flexDirection: "row",
+    alignItems: "center",
+    paddingRight: 6,
+  },
+  dailyNewCaseCount: {
+    fontSize: 12,
+    fontFamily: "open-sans-bold",
+    color: "#fff",
+  },
+  totalCaseCount: {
+    fontSize: 14,
+    fontFamily: "open-sans-bold",
+    color: Colors.red,
   },
 });
