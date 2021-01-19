@@ -29,6 +29,9 @@
     "react-native-skeleton-content": "^1.0.20",
     "react-native-skeleton-placeholder": "^3.0.2",
     "react-native-web": "~0.13.12",
+    "react-redux": "^7.2.2",
+    "redux": "^4.0.5",
+    "redux-thunk": "^2.3.0",
     "styled-components": "^5.2.1"
   },
   "devDependencies": {

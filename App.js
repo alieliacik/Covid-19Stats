@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from "react";
-import { Alert, Button, FlatList, StyleSheet, Text, View } from "react-native";
-import { StatusBar } from "expo-status-bar";
-import * as Location from "expo-location";
-import * as Permissions from "expo-permissions";
-import MainNavigation from "./navigation/MainNavigation";
 import AppLoading from "expo-app-loading";
 import { useFonts } from "expo-font";
+import { createStore, combineReducers, applyMiddleware } from "redux";
+import { Provider } from "react-redux";
+import ReduxThunk from "redux-thunk";
+
+import MainNavigation from "./navigation/MainNavigation";
+import globalReducer from "./store/reducers/stats";
 
 export default function App() {
   let [fontsLoaded] = useFonts({
@@ -13,8 +14,17 @@ export default function App() {
     "open-sans": require("./assets/fonts//OpenSans-Regular.ttf"),
   });
 
+  const rootReducer = combineReducers({
+    global: globalReducer,
+  });
+  const store = createStore(rootReducer, applyMiddleware(ReduxThunk));
+
   if (!fontsLoaded) {
     return <AppLoading />;
   }
-  return <MainNavigation />;
+  return (
+    <Provider store={store}>
+      <MainNavigation />
+    </Provider>
+  );
 }

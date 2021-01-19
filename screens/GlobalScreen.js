@@ -1,13 +1,25 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
+import { useSelector, useDispatch } from "react-redux";
 import styled from "styled-components/native";
-import { Alert, Button, FlatList, StyleSheet, Text, View } from "react-native";
+import {
+  Alert,
+  FlatList,
+  StyleSheet,
+  Text,
+  View,
+  Platform,
+  TouchableOpacity,
+} from "react-native";
 import * as Location from "expo-location";
 import * as Permissions from "expo-permissions";
 import { TouchableNativeFeedback } from "react-native-gesture-handler";
 import { countryCodeEmoji } from "country-code-emoji";
-import Colors from "../constants/Colors";
 import { AntDesign } from "@expo/vector-icons";
 import SkeletonPlaceholder from "react-native-skeleton-placeholder";
+
+import Colors from "../constants/Colors";
+import * as globalActions from "../store/actions/stats";
+import Card from "../components/Card";
 
 const Container = styled.View`
   flex: 1;
@@ -15,34 +27,44 @@ const Container = styled.View`
   align-items: center;
 `;
 
-const SimpleText = styled.Text``;
+const total = {
+  totalConfirmed: 95854091,
+  totalDeaths: 2045768,
+  totalRecovered: 68407548,
+  totalNewCases: 334682,
+  totalNewDeaths: 6334,
+  totalActiveCases: 25400775,
+  totalCasesPerMillionPop: 12297,
+  created: "2021-01-18T20:32:00.000Z",
+};
 
 const GlobalScreen = (props) => {
-  const [countriesData, setCountresData] = useState();
-  const [currentCountry, setCurrentCountry] = useState();
-  const [location, setLocation] = useState();
+  const dispatch = useDispatch();
+  const globalStats = useSelector((state) => state.global.globalStats);
   const [isLoading, setIsLoading] = useState(true);
+  // const fetchData = async () => {
+  //   const response = await fetch(
+  //     "http://api.coronatracker.com/v3/stats/worldometer/country"
+  //   );
 
-  const fetchData = async () => {
-    const response = await fetch(
-      "http://api.coronatracker.com/v3/stats/worldometer/country"
-    );
+  //   if (!response.ok) {
+  //     const message = `An error has occured: ${response.status}`;
+  //     throw new Error(message);
+  //   }
 
-    if (!response.ok) {
-      const message = `An error has occured: ${response.status}`;
-      throw new Error(message);
+  //   const resData = await response.json();
+  //   const filteredResData = await resData.filter((c) => !!c.countryCode);
+  //   setCountresData(filteredResData);
+  //   setIsLoading(false);
+  // };
+
+  const loadGlobalStats = useCallback(async () => {
+    try {
+      await dispatch(globalActions.fetchGlobalData());
+    } catch (err) {
+      console.log(err.message);
     }
-
-    const resData = await response.json();
-    const filteredResData = await resData.filter((c) => !!c.countryCode);
-    setCountresData(filteredResData);
-    setIsLoading(false);
-  };
-
-  useEffect(() => {
-    fetchData().catch((err) => console.log(err));
   }, []);
-
   const getLocation = async () => {
     let { status } = await Location.requestPermissionsAsync(
       Permissions.LOCATION
@@ -61,7 +83,8 @@ const GlobalScreen = (props) => {
     let currCountry = await Location.reverseGeocodeAsync(latAndLong).then(
       (res) => {
         console.log(res[0].isoCountryCode);
-        setCurrentCountry(res[0].country);
+        setCurrentCountry("Turkey");
+        // setCurrentCountry(res[0].country);
       }
     );
 
@@ -69,8 +92,20 @@ const GlobalScreen = (props) => {
   };
 
   useEffect(() => {
-    getLocation();
-  }, []);
+    setIsLoading(true);
+    loadGlobalStats().then(() => setIsLoading(false));
+
+    // fetchData().catch((err) => console.log(err));
+    // getLocation();
+  }, [dispatch]);
+
+  let TouchableButton;
+
+  if (Platform.OS === "android") {
+    TouchableButton = TouchableNativeFeedback;
+  } else {
+    TouchableButton = TouchableOpacity;
+  }
 
   if (isLoading) {
     return (
@@ -171,26 +206,130 @@ const GlobalScreen = (props) => {
             borderRadius: 5,
           }}
         ></View>
+        <View
+          style={{
+            height: 50,
+            marginVertical: 3.5,
+            marginHorizontal: 5,
+            borderRadius: 5,
+          }}
+        ></View>
+        <View
+          style={{
+            height: 50,
+            marginVertical: 3.5,
+            marginHorizontal: 5,
+            borderRadius: 5,
+          }}
+        ></View>
+        <View
+          style={{
+            height: 50,
+            marginVertical: 3.5,
+            marginHorizontal: 5,
+            borderRadius: 5,
+          }}
+        ></View>
+        <View
+          style={{
+            height: 50,
+            marginVertical: 3.5,
+            marginHorizontal: 5,
+            borderRadius: 5,
+          }}
+        ></View>
+        <View
+          style={{
+            height: 50,
+            marginVertical: 3.5,
+            marginHorizontal: 5,
+            borderRadius: 5,
+          }}
+        ></View>
+        <View
+          style={{
+            height: 50,
+            marginVertical: 3.5,
+            marginHorizontal: 5,
+            borderRadius: 5,
+          }}
+        ></View>
       </SkeletonPlaceholder>
     );
   }
+
+  const FlatListHeader = () => (
+    <View>
+      <View>
+        <View style={styles.cardContainer}>
+          <Card
+            category="CONFIRMED"
+            totalConfirmed={numberWithCommas(total.totalConfirmed)}
+            totalNewCases={numberWithCommas(total.totalNewCases)}
+            color={Colors.red}
+          />
+          <Card
+            category="ACTIVE"
+            totalConfirmed={numberWithCommas(total.totalActiveCases)}
+            totalNewCases={numberWithCommas(total.totalNewCases)}
+            color={Colors.blue}
+          />
+        </View>
+        <View style={styles.cardContainer}>
+          <Card
+            category="RECOVERD"
+            totalConfirmed={numberWithCommas(total.totalRecovered)}
+            totalNewCases={numberWithCommas(total.totalNewCases)}
+            color={Colors.green}
+          />
+          <Card
+            category="DECEASED"
+            totalConfirmed={numberWithCommas(total.totalDeaths)}
+            totalNewCases={numberWithCommas(total.totalNewDeaths)}
+            color={Colors.gray}
+          />
+        </View>
+      </View>
+      <View
+        style={{
+          width: "100%",
+          flexDirection: "row",
+          justifyContent: "space-between",
+          paddingHorizontal: 15,
+          paddingVertical: 5,
+        }}
+      >
+        <Text
+          style={{
+            fontFamily: "open-sans-bold",
+            fontSize: 12,
+          }}
+        >
+          Country
+        </Text>
+        <Text style={{ fontFamily: "open-sans-bold" }}>Case Number</Text>
+      </View>
+    </View>
+  );
+  const numberWithCommas = (num) =>
+    num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
   return (
     <Container>
       <FlatList
         style={{ width: "100%" }}
-        data={countriesData}
+        data={globalStats}
         keyExtractor={(itemData) => itemData.country}
+        ListHeaderComponent={() => <FlatListHeader />}
         renderItem={(itemData) => {
           const flagImg = countryCodeEmoji(itemData.item.countryCode);
-          const numberWithCommas = (num) =>
-            num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+
           return (
             <View style={{ marginHorizontal: 5, marginVertical: 3.5 }}>
-              <TouchableNativeFeedback
+              <TouchableButton
+                onPress={() => Alert.alert("pressed")}
                 style={{
                   paddingVertical: 16,
                   paddingHorizontal: 10,
-
                   flexDirection: "row",
                   justifyContent: "space-between",
                   backgroundColor: "#fff",
@@ -249,7 +388,7 @@ const GlobalScreen = (props) => {
                           color: "#fff",
                         }}
                       >
-                        {numberWithCommas(itemData.item.dailyDeaths)}
+                        {numberWithCommas(itemData.item.dailyConfirmed)}
                       </Text>
                     </View>
                   )}
@@ -264,25 +403,20 @@ const GlobalScreen = (props) => {
                     {numberWithCommas(itemData.item.totalConfirmed)}
                   </Text>
                 </View>
-              </TouchableNativeFeedback>
+              </TouchableButton>
             </View>
           );
         }}
       />
-      <TouchableNativeFeedback
-        style={{
-          backgroundColor: "lightblue",
-          paddingHorizontal: 10,
-          paddingVertical: 5,
-        }}
-        onPress={() =>
-          props.navigation.push("MyCountry", { myCountry: currentCountry })
-        }
-      >
-        <Text>My Country</Text>
-      </TouchableNativeFeedback>
     </Container>
   );
 };
 
 export default GlobalScreen;
+
+const styles = StyleSheet.create({
+  cardContainer: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+  },
+});
