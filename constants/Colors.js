@@ -5,4 +5,7 @@ export default {
   gray: "#6C757D",
   primary: "#C2185B",
   accent: "#FFC107",
+  darkGray: "#C0CCDA",
+  backgroundBlue: "#222B45",
+  lightGray: "#F9FAFC",
 };

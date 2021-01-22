@@ -6,7 +6,7 @@ import { Provider } from "react-redux";
 import ReduxThunk from "redux-thunk";
 
 import MainNavigation from "./navigation/MainNavigation";
-import globalReducer from "./store/reducers/stats";
+import statsReducer from "./store/reducers/stats";
 
 export default function App() {
   let [fontsLoaded] = useFonts({
@@ -16,7 +16,7 @@ export default function App() {
   });
 
   const rootReducer = combineReducers({
-    global: globalReducer,
+    stats: statsReducer,
   });
   const store = createStore(rootReducer, applyMiddleware(ReduxThunk));
 

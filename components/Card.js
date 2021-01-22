@@ -6,7 +6,7 @@ import FadeInView from "../constants/FadeinView";
 
 const StyledCard = styled.View`
   background-color: #fff;
-  width: 47%;
+  width: ${({ width }) => width}%;
   margin: 1.5%;
   border-radius: 5px;
   elevation: 5;
@@ -54,7 +54,7 @@ const DailyStats = styled.Text`
 
 const Card = (props) => {
   return (
-    <StyledCard>
+    <StyledCard width={props.width}>
       <CategoryContainer>
         <CategoryName color={props.color}>{props.category}</CategoryName>
         <AntDesign name="linechart" size={12} color={props.color} />

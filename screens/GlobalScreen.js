@@ -16,33 +16,21 @@ import { TouchableNativeFeedback } from "react-native-gesture-handler";
 import { countryCodeEmoji } from "country-code-emoji";
 import { AntDesign } from "@expo/vector-icons";
 import SkeletonPlaceholder from "react-native-skeleton-placeholder";
-import SkeletonContent from "react-native-skeleton-content";
 
 import Colors from "../constants/Colors";
-import * as globalActions from "../store/actions/stats";
+import * as statsActions from "../store/actions/stats";
 import Card from "../components/Card";
 import FadeInView from "../constants/FadeinView";
-
 const Container = styled.View`
   flex: 1;
   justify-content: center;
   align-items: center;
 `;
 
-const total = {
-  totalConfirmed: 95854091,
-  totalDeaths: 2045768,
-  totalRecovered: 68407548,
-  totalNewCases: 334682,
-  totalNewDeaths: 6334,
-  totalActiveCases: 25400775,
-  totalCasesPerMillionPop: 12297,
-  created: "2021-01-18T20:32:00.000Z",
-};
-
 const GlobalScreen = (props) => {
   const dispatch = useDispatch();
-  const globalStats = useSelector((state) => state.global.globalStats);
+  const countryTotals = useSelector((state) => state.stats.countryTotals);
+  const globalStats = useSelector((state) => state.stats.globalStats);
   const [isLoading, setIsLoading] = useState(true);
   // const fetchData = async () => {
   //   const response = await fetch(
@@ -62,7 +50,8 @@ const GlobalScreen = (props) => {
 
   const loadGlobalStats = useCallback(async () => {
     try {
-      await dispatch(globalActions.fetchGlobalData());
+      await dispatch(statsActions.fetchCountryTotalStats());
+      await dispatch(statsActions.fetchGlobalStats());
     } catch (err) {
       console.log(err.message);
     }
@@ -216,27 +205,31 @@ const GlobalScreen = (props) => {
       <View>
         <View style={styles.cardContainer}>
           <Card
+            width="47"
             category="CONFIRMED"
-            totalConfirmed={numberWithCommas(total.totalConfirmed)}
-            dailyConfirmed={numberWithCommas(total.totalNewCases)}
+            totalConfirmed={globalStats.totalConfirmed}
+            dailyConfirmed={globalStats.totalNewCases}
             color={Colors.red}
           />
           <Card
+            width="47"
             category="DECEASED"
-            totalConfirmed={numberWithCommas(total.totalDeaths)}
-            dailyConfirmed={numberWithCommas(total.totalNewDeaths)}
+            totalConfirmed={globalStats.totalDeaths}
+            dailyConfirmed={globalStats.totalNewDeaths}
             color={Colors.gray}
           />
         </View>
         <View style={styles.cardContainer}>
           <Card
+            width="47"
             category="ACTIVE"
-            totalConfirmed={numberWithCommas(total.totalActiveCases)}
+            totalConfirmed={globalStats.totalActiveCases}
             color={Colors.blue}
           />
           <Card
+            width="47"
             category="RECOVERD"
-            totalConfirmed={numberWithCommas(total.totalRecovered)}
+            totalConfirmed={globalStats.totalRecovered}
             color={Colors.green}
           />
         </View>
@@ -262,13 +255,12 @@ const GlobalScreen = (props) => {
       </View>
     </View>
   );
-  const numberWithCommas = (num) =>
-    num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+
   return (
     <Container>
       <FlatList
         style={{ width: "100%" }}
-        data={globalStats}
+        data={countryTotals}
         keyExtractor={(itemData) => itemData.country}
         ListHeaderComponent={() => <FlatListHeader />}
         renderItem={(itemData) => {
@@ -277,8 +269,8 @@ const GlobalScreen = (props) => {
             <View style={{ marginHorizontal: 5, marginVertical: 3.5 }}>
               <TouchableButton
                 onPress={() =>
-                  props.navigation.push("MyCountry", {
-                    selectedCountry: itemData.item.countryName,
+                  props.navigation.navigate("MyCountry", {
+                    selectedCountry: itemData.item,
                   })
                 }
                 style={styles.country}
@@ -291,18 +283,18 @@ const GlobalScreen = (props) => {
                   </Text>
                 </View>
                 <View style={styles.countryContainer}>
-                  {itemData.item.dailyDeaths !== 0 && (
+                  {Number(itemData.item.dailyDeaths) !== 0 && (
                     <FadeInView duration={500}>
                       <View style={styles.dailyNewCasesContainer}>
                         <AntDesign name="arrowup" size={12} color="#fff" />
                         <Text style={styles.dailyNewCaseCount}>
-                          {numberWithCommas(itemData.item.dailyConfirmed)}
+                          {itemData.item.dailyConfirmed}
                         </Text>
                       </View>
                     </FadeInView>
                   )}
                   <Text style={styles.totalCaseCount}>
-                    {numberWithCommas(itemData.item.totalConfirmed)}
+                    {itemData.item.totalConfirmed}
                   </Text>
                 </View>
               </TouchableButton>
