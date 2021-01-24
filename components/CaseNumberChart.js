@@ -1,40 +1,112 @@
-import React from "react";
-import { Dimensions, View } from "react-native";
+import React, { useState } from "react";
 import {
-  ChartDot,
-  ChartPath,
-  ChartPathProvider,
-  monotoneCubicInterpolation,
-} from "@rainbow-me/animated-charts";
+  View,
+  Text,
+  Dimensions,
+  ActivityIndicator,
+  StyleSheet,
+} from "react-native";
+import { LineChart } from "react-native-chart-kit";
+import Colors from "../constants/Colors";
+import FadeInView from "../constants/FadeInView";
 
-export const { width: SIZE } = Dimensions.get("window");
+const CaseNumberChart = (props) => {
+  const [dotCaseNum, setDotCaseNum] = useState("");
+  const [dotDate, setDotDate] = useState("");
 
-export const data = [
-  { x: 1453075200, y: 1.47 },
-  { x: 1453161600, y: 1.37 },
-  { x: 1453248000, y: 1.53 },
-  { x: 1453334400, y: 1.54 },
-  { x: 1453420800, y: 1.52 },
-  { x: 1453507200, y: 2.03 },
-  { x: 1453593600, y: 2.1 },
-  { x: 1453680000, y: 2.5 },
-  { x: 1453766400, y: 2.3 },
-  { x: 1453852800, y: 2.42 },
-  { x: 1453939200, y: 2.55 },
-  { x: 1454025600, y: 2.41 },
-  { x: 1454112000, y: 2.43 },
-  { x: 1454198400, y: 2.2 },
-];
+  const modifiedCaseNumbers = props.allStats.map((c) =>
+    c.new_infections.replace(/\,/g, "")
+  );
+  const modifiedCaseDates = props.allStats.map((c) => c.last_updated);
 
-const points = monotoneCubicInterpolation(data)(40);
-
-const CaseNumberChart = () => (
-  <View style={{ backgroundColor: "black" }}>
-    <ChartPathProvider data={{ points, smoothingStrategy: "bezier" }}>
-      <ChartPath height={SIZE / 2} stroke="yellow" width={SIZE} />
-      <ChartDot style={{ backgroundColor: "blue" }} />
-    </ChartPathProvider>
-  </View>
-);
+  return (
+    <View>
+      <FadeInView key={dotCaseNum} duration={300}>
+        <View style={styles.dotStatsContainer}>
+          <View style={styles.dotCaseNumTextContainer}>
+            <Text style={styles.dotCaseNumText}>
+              {dotCaseNum.replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
+            </Text>
+          </View>
+          <Text style={styles.dotDateText}>{dotDate}</Text>
+        </View>
+      </FadeInView>
+      <LineChart
+        formatYLabel={(lab) =>
+          lab.slice(0, lab.length - 3).replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+        }
+        onDataPointClick={(value) => {
+          const selectedDateIndex = value.dataset.data.findIndex(
+            (i) => i === value.value
+          );
+          setDotCaseNum(value.value);
+          setDotDate(modifiedCaseDates[selectedDateIndex]);
+        }}
+        data={{
+          labels: ["January", "February", "March", "April", "May", "June"],
+          datasets: [
+            {
+              data: modifiedCaseNumbers,
+              date: modifiedCaseDates,
+            },
+          ],
+        }}
+        width={(Dimensions.get("window").width / 100) * 80}
+        height={220}
+        yAxisInterval={2522} // optional, defaults to 1
+        chartConfig={{
+          backgroundColor: "#fff",
+          backgroundGradientFrom: "#fff",
+          backgroundGradientTo: "#fff",
+          decimalPlaces: 2, // optional, defaults to 2dp
+          color: (opacity = 1) => `rgba(0, 0, 0, ${opacity})`,
+          labelColor: (opacity = 1) => `rgba(0, 0, 0, ${opacity})`,
+          style: {
+            borderRadius: 1,
+          },
+          propsForDots: {
+            r: "0.1",
+            strokeWidth: "2",
+            stroke: "black",
+          },
+        }}
+        bezier
+        style={{
+          marginVertical: 18,
+          borderRadius: 16,
+          marginLeft: -13,
+        }}
+      />
+    </View>
+  );
+};
 
 export default CaseNumberChart;
+
+const styles = StyleSheet.create({
+  dotStatsContainer: {
+    flexDirection: "row",
+    marginTop: 10,
+    alignItems: "center",
+    alignSelf: "flex-start",
+  },
+  dotCaseNumTextContainer: {
+    backgroundColor: Colors.red,
+    borderRadius: 3,
+  },
+  dotCaseNumText: {
+    fontFamily: "open-sans",
+    color: "#fff",
+    fontSize: 16,
+    paddingHorizontal: 5,
+  },
+
+  dotDateText: {
+    fontFamily: "open-sans",
+    fontSize: 13,
+    color: Colors.red,
+    opacity: 0.8,
+    marginLeft: 5,
+    backgroundColor: "#fff",
+  },
+});

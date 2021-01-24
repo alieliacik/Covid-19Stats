@@ -7262,6 +7262,11 @@ path-parse@^1.0.6:
   resolved "https://registry.yarnpkg.com/path-parse/-/path-parse-1.0.6.tgz#d62dbb5679405d72c4737ec58600e9ddcf06d24c"
   integrity sha512-GSmOT2EbHrINBf9SR7CDELwlJ8AENk3Qn7OikK4nFYAu3Ote2+JYNVvkpAEQm3/TLNEJFD/xZJjzyxg3KBWOzw==
 
+paths-js@^0.4.10:
+  version "0.4.11"
+  resolved "https://registry.yarnpkg.com/paths-js/-/paths-js-0.4.11.tgz#b2a9d5f94ee9949aa8fee945f78a12abff44599e"
+  integrity sha512-3mqcLomDBXOo7Fo+UlaenG6f71bk1ZezPQy2JCmYHy2W2k5VKpP+Jbin9H0bjXynelTbglCqdFhSEkeIkKTYUA==
+
 performance-now@^2.1.0:
   version "2.1.0"
   resolved "https://registry.yarnpkg.com/performance-now/-/performance-now-2.1.0.tgz#6309f4e0e5fa913ec1c69307ae364b4b377c9e7b"
@@ -7346,6 +7351,11 @@ pngjs@^5.0.0:
   version "5.0.0"
   resolved "https://registry.yarnpkg.com/pngjs/-/pngjs-5.0.0.tgz#e79dd2b215767fd9c04561c01236df960bce7fbb"
   integrity sha512-40QW5YalBNfQo5yRYmiw7Yz6TKKVr3h6970B2YE+3fQpsWcrbj1PzJgxeJ19DRQjhMbKPIuMY8rFaXc8moolVw==
+
+point-in-polygon@^1.0.1:
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/point-in-polygon/-/point-in-polygon-1.0.1.tgz#d59b64e8fee41c49458aac82b56718c5957b2af7"
+  integrity sha1-1Ztk6P7kHElFiqyCtWcYxZV7Kvc=
 
 posix-character-classes@^0.1.0:
   version "0.1.1"
@@ -7528,6 +7538,15 @@ react-is@^17.0.1:
   resolved "https://registry.yarnpkg.com/react-is/-/react-is-17.0.1.tgz#5b3531bd76a645a4c9fb6e693ed36419e3301339"
   integrity sha512-NAnt2iGDXohE5LI7uBnLnqvLQMtzhkiAOLXTmv+qnF9Ky7xAPcX8Up/xWIhxvLVGJvuLiNc4xQLtuqDRzb4fSA==
 
+react-native-chart-kit@^6.10.0:
+  version "6.10.0"
+  resolved "https://registry.yarnpkg.com/react-native-chart-kit/-/react-native-chart-kit-6.10.0.tgz#37dbfffd44f68dfebbed8138ece392e8d866fcd7"
+  integrity sha512-+A631cd2lzwUcM0d21k3G4dUOgQkVDsjQy1pBJigz9jxv7U0Bv6dCMOz3F1ud9dlLcGMl8Tu0RUV/ufP0GqVEA==
+  dependencies:
+    lodash "^4.17.13"
+    paths-js "^0.4.10"
+    point-in-polygon "^1.0.1"
+
 react-native-countup@^0.0.2:
   version "0.0.2"
   resolved "https://registry.yarnpkg.com/react-native-countup/-/react-native-countup-0.0.2.tgz#3c8fbf8d364469be3e0989f3ba3c8f2195bfb489"
@@ -7572,15 +7591,6 @@ react-native-reanimated@1.9.0:
   integrity sha512-Aj+spgIHRiVv7ezGADxnSH1EoKrQRD2+XaSiGY0MiB/pvRNNrZPSJ+3NVpvLwWf9lZMOP7dwqqyJIzoZgBDt8w==
   dependencies:
     fbjs "^1.0.0"
-
-react-native-reanimated@2.0.0-alpha.6.1:
-  version "2.0.0-alpha.6.1"
-  resolved "https://registry.yarnpkg.com/react-native-reanimated/-/react-native-reanimated-2.0.0-alpha.6.1.tgz#4e1b31a49226d7f9d37a3c61cf3804ad3da5d51c"
-  integrity sha512-91/eRf8aR9jcuBd/KCdrjMzv/misX1UVeYuCAmbeZdXchyFojVlADupqrwNl0oaDZ/XKZ61x5fRb8NrZYvfp3w==
-  dependencies:
-    "@babel/plugin-transform-object-assign" "^7.10.4"
-    fbjs "^1.0.0"
-    string-hash-64 "^1.0.3"
 
 react-native-reanimated@^2.0.0-alpha.5:
   version "2.0.0-rc.2"

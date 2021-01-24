@@ -2,7 +2,7 @@ import React, { useRef, useEffect } from "react";
 import { StyleSheet, View, Animated } from "react-native";
 import styled from "styled-components/native";
 import { AntDesign } from "@expo/vector-icons";
-import FadeInView from "../constants/FadeinView";
+import FadeInView from "../constants/FadeInView";
 
 const StyledCard = styled.View`
   background-color: #fff;

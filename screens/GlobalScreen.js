@@ -20,7 +20,7 @@ import SkeletonPlaceholder from "react-native-skeleton-placeholder";
 import Colors from "../constants/Colors";
 import * as statsActions from "../store/actions/stats";
 import Card from "../components/Card";
-import FadeInView from "../constants/FadeinView";
+import FadeInView from "../constants/FadeInView";
 const Container = styled.View`
   flex: 1;
   justify-content: center;

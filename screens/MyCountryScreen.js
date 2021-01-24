@@ -92,7 +92,13 @@ const MyCountryScreen = (props) => {
               {dailyConfirmed}
             </Text>
           </View>
-          <CaseNumberChart />
+          {isLoading ? (
+            <View style={{ paddingVertical: 20 }}>
+              <ActivityIndicator size="large" />
+            </View>
+          ) : (
+            <CaseNumberChart allStats={selectedCountryStats.allStats} />
+          )}
         </View>
       </View>
       <View style={styles.table}>
@@ -270,6 +276,7 @@ const styles = StyleSheet.create({
   },
   stats: {
     transform: [{ translateY: -50 }],
+    overflow: "hidden",
   },
   confirmedCard: {
     paddingHorizontal: 16,
