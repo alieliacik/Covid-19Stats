@@ -1,82 +1,171 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   View,
   Text,
   Dimensions,
-  ActivityIndicator,
   StyleSheet,
+  ActivityIndicator,
 } from "react-native";
 import { LineChart } from "react-native-chart-kit";
+import { TouchableOpacity } from "react-native-gesture-handler";
 import Colors from "../constants/Colors";
 import FadeInView from "../constants/FadeInView";
 
 const CaseNumberChart = (props) => {
   const [dotCaseNum, setDotCaseNum] = useState("");
   const [dotDate, setDotDate] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+  const [sliceValue, setSliceValue] = useState(0);
+  const [chartFilterValues, setChartFilterValues] = useState([
+    {
+      name: "1W",
+      isSelected: false,
+      slice: 7,
+    },
+    {
+      name: "1M",
+      isSelected: false,
+      slice: 30,
+    },
+    {
+      name: "3M",
+      isSelected: false,
+      slice: 90,
+    },
+    {
+      name: "6M",
+      isSelected: false,
+      slice: 180,
+    },
+    {
+      name: "1Y",
+      isSelected: false,
+      slice: 365,
+    },
+    {
+      name: "All",
+      isSelected: true,
+      slice: 0,
+    },
+  ]);
 
-  const modifiedCaseNumbers = props.allStats.map((c) =>
-    c.new_infections.replace(/\,/g, "")
-  );
-  const modifiedCaseDates = props.allStats.map((c) => c.last_updated);
+  const chartFilterHandler = (selectedVal, sliceVal) => {
+    setIsLoading(true);
+    const updatedChartFilterValues = chartFilterValues.map((val) => {
+      if (val.name === selectedVal) {
+        return {
+          ...val,
+          isSelected: true,
+        };
+      } else {
+        return {
+          ...val,
+          isSelected: false,
+        };
+      }
+    });
+    setSliceValue(sliceVal);
+    setChartFilterValues(updatedChartFilterValues);
+  };
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setIsLoading(false);
+    }, 1000);
+
+    return () => clearTimeout(timer);
+  }, [sliceValue]);
+
+  const modifiedCaseNumbers = props.allStats
+    .map((c) => c.new_infections.replace(/\,/g, ""))
+    .slice(-sliceValue);
+  const modifiedCaseDates = props.allStats
+    .map((c) => c.last_updated)
+    .slice(-sliceValue);
 
   return (
     <View>
-      <FadeInView key={dotCaseNum} duration={300}>
-        <View style={styles.dotStatsContainer}>
-          <View style={styles.dotCaseNumTextContainer}>
-            <Text style={styles.dotCaseNumText}>
-              {dotCaseNum.replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
-            </Text>
+      {!!dotCaseNum.length && (
+        <FadeInView key={dotCaseNum} duration={300}>
+          <View style={styles.dotStatsContainer}>
+            <View style={styles.dotCaseNumTextContainer}>
+              <Text style={styles.dotCaseNumText}>
+                {dotCaseNum.replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
+              </Text>
+            </View>
+            <Text style={styles.dotDateText}>{dotDate}</Text>
           </View>
-          <Text style={styles.dotDateText}>{dotDate}</Text>
+        </FadeInView>
+      )}
+      {isLoading ? (
+        <View style={{ paddingVertical: 110 }}>
+          <ActivityIndicator size="large" color={Colors.red} />
         </View>
-      </FadeInView>
-      <LineChart
-        formatYLabel={(lab) =>
-          lab.slice(0, lab.length - 3).replace(/\B(?=(\d{3})+(?!\d))/g, ",")
-        }
-        onDataPointClick={(value) => {
-          const selectedDateIndex = value.dataset.data.findIndex(
-            (i) => i === value.value
-          );
-          setDotCaseNum(value.value);
-          setDotDate(modifiedCaseDates[selectedDateIndex]);
-        }}
-        data={{
-          labels: ["January", "February", "March", "April", "May", "June"],
-          datasets: [
-            {
-              data: modifiedCaseNumbers,
-              date: modifiedCaseDates,
+      ) : (
+        <LineChart
+          formatYLabel={(lab) =>
+            lab.slice(0, lab.length - 3).replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+          }
+          onDataPointClick={(value) => {
+            const selectedDateIndex = value.dataset.data.findIndex(
+              (i) => i === value.value
+            );
+            setDotDate(modifiedCaseDates[selectedDateIndex]);
+            setDotCaseNum(value.value);
+          }}
+          data={{
+            datasets: [
+              {
+                data: modifiedCaseNumbers,
+                date: modifiedCaseDates,
+              },
+            ],
+          }}
+          width={(Dimensions.get("window").width / 100) * 80}
+          height={220}
+          yAxisInterval={2522}
+          chartConfig={{
+            backgroundColor: "#fff",
+            backgroundGradientFrom: "#fff",
+            backgroundGradientTo: "#fff",
+            decimalPlaces: 2,
+            color: (opacity = 1) => `rgba(0, 0, 0, ${opacity})`,
+            labelColor: (opacity = 1) => `rgba(0, 0, 0, ${opacity})`,
+            style: {
+              borderRadius: 1,
             },
-          ],
-        }}
-        width={(Dimensions.get("window").width / 100) * 80}
-        height={220}
-        yAxisInterval={2522} // optional, defaults to 1
-        chartConfig={{
-          backgroundColor: "#fff",
-          backgroundGradientFrom: "#fff",
-          backgroundGradientTo: "#fff",
-          decimalPlaces: 2, // optional, defaults to 2dp
-          color: (opacity = 1) => `rgba(0, 0, 0, ${opacity})`,
-          labelColor: (opacity = 1) => `rgba(0, 0, 0, ${opacity})`,
-          style: {
-            borderRadius: 1,
-          },
-          propsForDots: {
-            r: "0.1",
-            strokeWidth: "2",
-            stroke: "black",
-          },
-        }}
-        bezier
-        style={{
-          marginVertical: 18,
-          borderRadius: 16,
-          marginLeft: -13,
-        }}
-      />
+            propsForDots: {
+              r: "1.2",
+              strokeWidth: "1.5",
+              stroke: "rgba(0,0,0,0.2)",
+            },
+          }}
+          bezier
+          style={{
+            marginVertical: 18,
+            borderRadius: 16,
+            marginLeft: -13,
+          }}
+        />
+      )}
+
+      <View style={styles.chartDateFilter}>
+        {chartFilterValues.map((val) => (
+          <TouchableOpacity
+            key={val.name}
+            onPress={() => chartFilterHandler(val.name, val.slice)}
+          >
+            <Text
+              style={[
+                styles.chartDateFilterText,
+                val.isSelected ? styles.textSelected : styles.textUnSelected,
+              ]}
+            >
+              {val.name}
+            </Text>
+          </TouchableOpacity>
+        ))}
+      </View>
     </View>
   );
 };
@@ -108,5 +197,23 @@ const styles = StyleSheet.create({
     opacity: 0.8,
     marginLeft: 5,
     backgroundColor: "#fff",
+  },
+  chartDateFilter: {
+    width: "80%",
+    flexDirection: "row",
+    justifyContent: "space-between",
+    position: "absolute",
+    bottom: 35,
+    left: 50,
+  },
+  chartDateFilterText: {
+    fontFamily: "open-sans-bold",
+    fontSize: 12,
+    color: Colors.red,
+    paddingHorizontal: 5,
+  },
+  textSelected: {
+    color: "#fff",
+    backgroundColor: Colors.red,
   },
 });

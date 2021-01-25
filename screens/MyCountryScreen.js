@@ -33,11 +33,10 @@ const SkeletonComponent = () => (
 
 const MyCountryScreen = (props) => {
   const dispatch = useDispatch();
+  const [isLoading, setIsLoading] = useState(true);
   const selectedCountryStats = useSelector(
     (state) => state.stats.selectedCountryStats
   );
-
-  const [isLoading, setIsLoading] = useState(true);
 
   const {
     countryName,
@@ -52,6 +51,7 @@ const MyCountryScreen = (props) => {
       await dispatch(statsActions.fetchCountryDailyStats(countryCode));
     } catch (error) {
       console.log(error.message);
+      props.navigation.goBack();
     }
   }, [countryCode]);
 
@@ -94,7 +94,7 @@ const MyCountryScreen = (props) => {
           </View>
           {isLoading ? (
             <View style={{ paddingVertical: 20 }}>
-              <ActivityIndicator size="large" />
+              <ActivityIndicator size="large" color={Colors.red} />
             </View>
           ) : (
             <CaseNumberChart allStats={selectedCountryStats.allStats} />
@@ -280,7 +280,7 @@ const styles = StyleSheet.create({
   },
   confirmedCard: {
     paddingHorizontal: 16,
-    paddingVertical: 20,
+    paddingTop: 20,
     backgroundColor: "#fff",
     marginHorizontal: 26,
     elevation: 5,

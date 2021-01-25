@@ -86,6 +86,7 @@ export const fetchCountryDailyStats = (countryCode) => {
           c[key] = numberWithComas(c[key]);
         }
         if (key === "last_updated") {
+          // c["timeStamp"] = moment(c[key]).unix();
           c[key] = moment(c[key]).add(1, "d").format("DD-MM-YYYY");
         }
       }
