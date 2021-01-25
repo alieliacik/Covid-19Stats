@@ -85,7 +85,7 @@ const CaseNumberChart = (props) => {
 
   return (
     <View>
-      {!!dotCaseNum.length && (
+      {!!dotCaseNum.length ? (
         <FadeInView key={dotCaseNum} duration={300}>
           <View style={styles.dotStatsContainer}>
             <View style={styles.dotCaseNumTextContainer}>
@@ -96,9 +96,13 @@ const CaseNumberChart = (props) => {
             <Text style={styles.dotDateText}>{dotDate}</Text>
           </View>
         </FadeInView>
+      ) : (
+        <Text style={{ fontFamily: "open-sans", marginTop: 12 }}>
+          Touch to the line chart to see daily stats.
+        </Text>
       )}
       {isLoading ? (
-        <View style={{ paddingVertical: 110 }}>
+        <View style={{ paddingBottom: 125, paddingTop: 95 }}>
           <ActivityIndicator size="large" color={Colors.red} />
         </View>
       ) : (

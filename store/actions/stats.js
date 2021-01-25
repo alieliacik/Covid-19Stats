@@ -86,26 +86,22 @@ export const fetchCountryDailyStats = (countryCode) => {
           c[key] = numberWithComas(c[key]);
         }
         if (key === "last_updated") {
-          // c["timeStamp"] = moment(c[key]).unix();
           c[key] = moment(c[key]).add(1, "d").format("DD-MM-YYYY");
         }
       }
       return c;
     });
 
-    const lastTenDaysStats = await addCommaToNumbersHandler.slice(
+    const lastThirtyDaysStats = await addCommaToNumbersHandler.slice(
       resData.length - 30
     );
+    const lastThirtyDaysStatsReversed = await lastThirtyDaysStats.reverse();
     const allStats = await addCommaToNumbersHandler;
-
-    const selectedCountryStats = {
-      lastTenDaysStats: lastTenDaysStats.reverse(),
-      allStats,
-    };
 
     dispatch({
       type: FETCH_COUNTRY_DAILY_STATS,
-      selectedCountryStats: selectedCountryStats,
+      lastThirtyDaysStats: lastThirtyDaysStatsReversed,
+      allStats: allStats,
     });
   };
 };

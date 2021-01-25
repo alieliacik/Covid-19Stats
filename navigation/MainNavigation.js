@@ -3,8 +3,7 @@ import { Image, Platform, View } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 import GlobalScreen from "../screens/GlobalScreen";
-import MyCountryScreen from "../screens/MyCountryScreen";
-import { StatusBar } from "expo-status-bar";
+import CountryScreen from "../screens/CountryScreen/CountryScreen";
 import Colors from "../constants/Colors";
 
 const MainStack = createStackNavigator();
@@ -93,7 +92,7 @@ const MainNavigation = () => {
         />
         <MainStack.Screen
           name="MyCountry"
-          component={MyCountryScreen}
+          component={CountryScreen}
           options={({ route }) => ({
             title: route.params.selectedCountry.countryName,
             headerTitleStyle: {

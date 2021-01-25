@@ -7,7 +7,8 @@ import {
 const initialState = {
   countryTotals: [],
   globalStats: {},
-  selectedCountryStats: {},
+  lastThirtyDaysStats: {},
+  allStats: {},
 };
 
 export default (state = initialState, action) => {
@@ -26,7 +27,8 @@ export default (state = initialState, action) => {
     case FETCH_COUNTRY_DAILY_STATS:
       return {
         ...state,
-        selectedCountryStats: action.selectedCountryStats,
+        lastThirtyDaysStats: action.lastThirtyDaysStats,
+        allStats: action.allStats,
       };
     default:
       return state;
