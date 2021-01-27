@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect, useCallback, useRef } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import {
   StyleSheet,
@@ -19,6 +19,8 @@ import CaseNumberChart from "../../components/CaseNumberChart";
 import MonthlyStats from "./MonthlyStats/MonthlyStats";
 
 const CountryScreen = (props) => {
+  const scrollRef = useRef();
+  const timerRef = useRef();
   const dispatch = useDispatch();
   const [isLoading, setIsLoading] = useState(true);
   const [showMonth, setShowMonth] = useState(false);
@@ -45,6 +47,7 @@ const CountryScreen = (props) => {
   useEffect(() => {
     setIsLoading(true);
     loadSelectedCountryStats().then(() => setIsLoading(false));
+    clearTimeout(timerRef.current);
   }, [dispatch]);
 
   let TouchableButton;
@@ -55,8 +58,18 @@ const CountryScreen = (props) => {
     TouchableButton = TouchableOpacity;
   }
 
+  const handleScroll = () => {
+    setShowMonth((prevState) => !prevState);
+    timerRef.current = setTimeout(() => {
+      scrollRef.current?.scrollTo({
+        y: 875,
+        animated: true,
+      });
+    }, 1);
+  };
+
   return (
-    <ScrollView contentContainerStyle={{ paddingBottom: 50 }}>
+    <ScrollView ref={scrollRef} contentContainerStyle={{ paddingBottom: 50 }}>
       <View style={styles.header}>
         <Image
           style={styles.virusImage1}
@@ -153,11 +166,7 @@ const CountryScreen = (props) => {
         </View>
       </View>
       <View style={styles.showMonthlyStatasBtn}>
-        <TouchableButton
-          onPress={() => {
-            setShowMonth((prevState) => !prevState);
-          }}
-        >
+        <TouchableButton onPress={handleScroll}>
           <View style={styles.flexRowCenter}>
             <Text style={styles.monthlyStatsButtonText}>
               Show Last 30 day's stats

@@ -1,6 +1,6 @@
-import React, { useMemo, useState, useEffect } from "react";
+import React, { useRef, useEffect } from "react";
 import { useSelector } from "react-redux";
-import { View, StyleSheet, Text } from "react-native";
+import { ScrollView, View, StyleSheet, Text } from "react-native";
 import SkeletonPlaceholder from "react-native-skeleton-placeholder";
 import { AntDesign } from "@expo/vector-icons";
 
@@ -29,8 +29,17 @@ const MonthlyStats = (props) => {
     (state) => state.stats.lastThirtyDaysStats
   );
 
+  const scrollRef = useRef();
+
+  useEffect(() => {
+    scrollRef.current?.scrollTo({
+      y: 0,
+      animated: true,
+    });
+  });
+
   return (
-    <View style={styles.table}>
+    <ScrollView ref={scrollRef} style={styles.table}>
       <View style={styles.tableHeaderWrapper}>
         <View
           style={{
@@ -107,7 +116,7 @@ const MonthlyStats = (props) => {
             </View>
           );
         })}
-    </View>
+    </ScrollView>
   );
 };
 
