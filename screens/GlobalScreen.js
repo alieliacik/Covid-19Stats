@@ -21,6 +21,7 @@ import Colors from "../constants/Colors";
 import * as statsActions from "../store/actions/stats";
 import Card from "../components/Card";
 import FadeInView from "../constants/FadeInView";
+import TouchableButtonComponent from "../constants/TouchableButtonComponent";
 const Container = styled.View`
   flex: 1;
   justify-content: center;
@@ -90,13 +91,13 @@ const GlobalScreen = (props) => {
     // getLocation();
   }, [dispatch]);
 
-  let TouchableButton;
+  // let TouchableButton;
 
-  if (Platform.OS === "android") {
-    TouchableButton = TouchableNativeFeedback;
-  } else {
-    TouchableButton = TouchableOpacity;
-  }
+  // if (Platform.OS === "android") {
+  //   TouchableButton = TouchableNativeFeedback;
+  // } else {
+  //   TouchableButton = TouchableOpacity;
+  // }
 
   if (isLoading) {
     return (
@@ -267,37 +268,38 @@ const GlobalScreen = (props) => {
           const flagImg = countryCodeEmoji(itemData.item.countryCode);
           return (
             <View style={{ marginHorizontal: 5, marginVertical: 3.5 }}>
-              <TouchableButton
+              <TouchableButtonComponent
                 onPress={() =>
                   props.navigation.navigate("MyCountry", {
                     selectedCountry: itemData.item,
                   })
                 }
-                style={styles.country}
               >
-                <View style={styles.countryContainer}>
-                  <Text style={styles.index}>{itemData.index + 1}</Text>
-                  <Text style={styles.countryFlag}>{flagImg}</Text>
-                  <Text style={styles.countryName}>
-                    {itemData.item.country}
-                  </Text>
+                <View style={styles.country}>
+                  <View style={styles.countryContainer}>
+                    <Text style={styles.index}>{itemData.index + 1}</Text>
+                    <Text style={styles.countryFlag}>{flagImg}</Text>
+                    <Text style={styles.countryName}>
+                      {itemData.item.country}
+                    </Text>
+                  </View>
+                  <View style={styles.countryContainer}>
+                    {Number(itemData.item.dailyDeaths) !== 0 && (
+                      <FadeInView duration={500}>
+                        <View style={styles.dailyNewCasesContainer}>
+                          <AntDesign name="arrowup" size={12} color="#fff" />
+                          <Text style={styles.dailyNewCaseCount}>
+                            {itemData.item.dailyConfirmed}
+                          </Text>
+                        </View>
+                      </FadeInView>
+                    )}
+                    <Text style={styles.totalCaseCount}>
+                      {itemData.item.totalConfirmed}
+                    </Text>
+                  </View>
                 </View>
-                <View style={styles.countryContainer}>
-                  {Number(itemData.item.dailyDeaths) !== 0 && (
-                    <FadeInView duration={500}>
-                      <View style={styles.dailyNewCasesContainer}>
-                        <AntDesign name="arrowup" size={12} color="#fff" />
-                        <Text style={styles.dailyNewCaseCount}>
-                          {itemData.item.dailyConfirmed}
-                        </Text>
-                      </View>
-                    </FadeInView>
-                  )}
-                  <Text style={styles.totalCaseCount}>
-                    {itemData.item.totalConfirmed}
-                  </Text>
-                </View>
-              </TouchableButton>
+              </TouchableButtonComponent>
             </View>
           );
         }}

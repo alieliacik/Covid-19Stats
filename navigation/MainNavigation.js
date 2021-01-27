@@ -95,9 +95,9 @@ const MainNavigation = () => {
           component={CountryScreen}
           options={({ route }) => ({
             title: route.params.selectedCountry.countryName,
-            headerTitleStyle: {
-              display: "none",
-            },
+            // headerTitleStyle: {
+            //   display: "none",
+            // },
           })}
         />
       </MainStack.Navigator>

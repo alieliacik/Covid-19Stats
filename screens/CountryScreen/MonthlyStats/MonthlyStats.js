@@ -25,27 +25,20 @@ const SkeletonComponent = () => (
 );
 
 const MonthlyStats = (props) => {
-  const [isLoading, setIsLoading] = useState(true);
   const lastThirtyDaysStats = useSelector(
     (state) => state.stats.lastThirtyDaysStats
   );
 
-  //   useEffect(() => {
-  //     const timer = setTimeout(() => {
-  //       setIsLoading(false);
-  //     }, 1000);
-
-  //     return () => clearTimeout(timer);
-  //   }, [props.showMonth]);
-
-  //   if (isLoading) {
-  //     return <SkeletonComponent />;
-  //   }
-
   return (
     <View style={styles.table}>
       <View style={styles.tableHeaderWrapper}>
-        <View style={{ ...styles.tableHeaderContainer, width: "27%" }}>
+        <View
+          style={{
+            ...styles.tableHeaderContainer,
+            width: "27%",
+            marginLeft: 0.7,
+          }}
+        >
           <Text style={styles.tableHeaderText}>Date</Text>
         </View>
         <View style={{ ...styles.tableHeaderContainer, width: "22%" }}>
@@ -68,7 +61,13 @@ const MonthlyStats = (props) => {
         lastThirtyDaysStats.map((country) => {
           return (
             <View key={country.last_updated} style={styles.tableHeaderWrapper}>
-              <View style={{ ...styles.tableHeaderContainer, width: "27%" }}>
+              <View
+                style={{
+                  ...styles.tableHeaderContainer,
+                  width: "27%",
+                  marginLeft: 0.7,
+                }}
+              >
                 <Text
                   style={{
                     ...styles.tableContentText,

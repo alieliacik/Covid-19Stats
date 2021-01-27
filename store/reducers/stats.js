@@ -7,8 +7,8 @@ import {
 const initialState = {
   countryTotals: [],
   globalStats: {},
-  lastThirtyDaysStats: {},
-  allStats: {},
+  lastThirtyDaysStats: [],
+  allStats: [],
 };
 
 export default (state = initialState, action) => {

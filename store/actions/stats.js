@@ -72,7 +72,6 @@ export const fetchCountryDailyStats = (countryCode) => {
     const response = await fetch(
       `http://api.coronatracker.com/v5/analytics/newcases/country?countryCode=${countryCode}&startDate=2020-04-01&endDate=${currentDate}`
     );
-
     if (!response.ok) {
       const message = `An error ocurred ${response.status}`;
       throw new Error(message);

@@ -16,19 +16,21 @@ import Colors from "../../constants/Colors";
 import * as statsActions from "../../store/actions/stats";
 import CaseNumberChart from "../../components/CaseNumberChart";
 import MonthlyStats from "./MonthlyStats/MonthlyStats";
+import TouchableButtonComponent from "../../constants/TouchableButtonComponent";
 
 const CountryScreen = (props) => {
   const dispatch = useDispatch();
   const [isLoading, setIsLoading] = useState(true);
   const [showMonth, setShowMonth] = useState(false);
   const allStats = useSelector((state) => state.stats.allStats);
-
   const {
     countryName,
     lastUpdated,
     totalConfirmed,
     dailyConfirmed,
     countryCode,
+    totalDeaths,
+    totalRecovered,
   } = props.route.params.selectedCountry;
 
   const loadSelectedCountryStats = useCallback(async () => {
@@ -46,7 +48,7 @@ const CountryScreen = (props) => {
   }, [dispatch]);
 
   return (
-    <ScrollView>
+    <ScrollView contentContainerStyle={{ paddingBottom: 50 }}>
       <View style={styles.header}>
         <Image
           style={styles.virusImage1}
@@ -68,37 +70,88 @@ const CountryScreen = (props) => {
         </Text>
       </View>
       <View style={styles.stats}>
-        <View style={styles.confirmedCard}>
-          <Text style={styles.confirmedText}>CONFIRMED</Text>
+        <View style={styles.card}>
+          <View style={{ flexDirection: "row", alignItems: "center" }}>
+            <Text style={styles.confirmedText}>CONFIRMED</Text>
+            <AntDesign name="linechart" size={12} color={Colors.red} />
+          </View>
+
           <View style={styles.caseCountContainer}>
-            <Text style={styles.totalNumber}>{totalConfirmed}</Text>
+            <Text style={[styles.totalNumber, { color: Colors.red }]}>
+              {totalConfirmed}
+            </Text>
             {dailyConfirmed !== "0" && (
-              <Text style={styles.dailyNumber}>
+              <Text style={[styles.dailyNumber, { color: Colors.red }]}>
                 <AntDesign name="arrowup" size={15} color={Colors.red} />
                 {dailyConfirmed}
               </Text>
             )}
           </View>
           {isLoading ? (
-            <View style={{ paddingVertical: 20 }}>
+            <View style={{ paddingVertical: 126 }}>
               <ActivityIndicator size="large" color={Colors.red} />
             </View>
           ) : (
             <CaseNumberChart allStats={allStats} />
           )}
         </View>
+        <View style={styles.card}>
+          <View style={{ flexDirection: "row", alignItems: "center" }}>
+            <Text style={[styles.confirmedText, { color: Colors.green }]}>
+              RECOVERED
+            </Text>
+            <AntDesign name="linechart" size={12} color={Colors.green} />
+          </View>
+          <View style={styles.caseCountContainer}>
+            <Text style={[styles.totalNumber, { color: Colors.green }]}>
+              {totalRecovered}
+            </Text>
+
+            {isLoading ? (
+              <View style={{ marginLeft: 10, marginBottom: 10 }}>
+                <ActivityIndicator size="small" color={Colors.green} />
+              </View>
+            ) : allStats[allStats.length - 1].new_recovered !== "0" ? (
+              <Text style={[styles.dailyNumber, { color: Colors.green }]}>
+                <AntDesign name="arrowup" size={15} color={Colors.green} />
+                {allStats[allStats.length - 1].new_recovered}
+              </Text>
+            ) : null}
+          </View>
+        </View>
+        <View style={styles.card}>
+          <View style={{ flexDirection: "row", alignItems: "center" }}>
+            <Text style={[styles.confirmedText, { color: Colors.gray }]}>
+              DECEASED
+            </Text>
+            <AntDesign name="linechart" size={12} color={Colors.gray} />
+          </View>
+          <View style={styles.caseCountContainer}>
+            <Text style={[styles.totalNumber, { color: Colors.gray }]}>
+              {totalDeaths}
+            </Text>
+
+            {isLoading ? (
+              <View style={{ marginLeft: 10, marginBottom: 10 }}>
+                <ActivityIndicator size="small" color={Colors.gray} />
+              </View>
+            ) : allStats[allStats.length - 1].new_deaths !== "0" ? (
+              <Text style={[styles.dailyNumber, { color: Colors.gray }]}>
+                <AntDesign name="arrowup" size={15} color={Colors.gray} />
+                {allStats[allStats.length - 1].new_deaths}
+              </Text>
+            ) : null}
+          </View>
+        </View>
       </View>
-      <Pressable
-        style={{
-          backgroundColor: Colors.blue,
-          paddingVertical: 5,
-          marginHorizontal: 16,
-          width: 150,
-        }}
+      <TouchableButtonComponent
+        style={styles.showMonthlyStatasBtn}
         onPress={() => setShowMonth((prevState) => !prevState)}
       >
-        <Text>Show Months</Text>
-      </Pressable>
+        <Text style={styles.monthlyStatsButtonText}>
+          Show Last 30 day's stats
+        </Text>
+      </TouchableButtonComponent>
       {showMonth && <MonthlyStats showMonth={showMonth} />}
     </ScrollView>
   );
@@ -156,25 +209,29 @@ const styles = StyleSheet.create({
     transform: [{ translateY: -50 }],
     overflow: "hidden",
   },
-  confirmedCard: {
+  card: {
     paddingHorizontal: 16,
-    paddingTop: 20,
+    paddingVertical: 15,
+    marginVertical: 8,
     backgroundColor: "#fff",
     marginHorizontal: 26,
     elevation: 5,
     shadowColor: "black",
     shadowOffset: {
-      width: 2,
+      width: 5,
       height: 2,
     },
-    shadowOpacity: 0.15,
+    shadowOpacity: 0.25,
     shadowRadius: 8,
+    borderRadius: 4,
   },
   confirmedText: {
     fontSize: 12,
     color: Colors.red,
     fontFamily: "open-sans",
     marginBottom: 4,
+    marginRight: 10,
+    paddingTop: 5,
   },
   caseCountContainer: {
     flexDirection: "row",
@@ -182,14 +239,34 @@ const styles = StyleSheet.create({
   },
   totalNumber: {
     fontSize: 34,
-    color: Colors.red,
     fontFamily: "open-sans-bold",
   },
   dailyNumber: {
     fontSize: 14,
-    color: Colors.red,
     marginLeft: 8,
     marginBottom: 7,
     fontFamily: "open-sans",
+  },
+  showMonthlyStatasBtn: {
+    marginHorizontal: 26,
+    marginBottom: 10,
+
+    backgroundColor: "#fff",
+    paddingHorizontal: 16,
+    paddingVertical: 15,
+    marginTop: -40,
+    borderRadius: 6,
+    elevation: 5,
+    shadowColor: "black",
+    shadowOffset: {
+      width: 5,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 8,
+    borderRadius: 4,
+  },
+  monthlyStatsButtonText: {
+    fontFamily: "open-sans-semibold",
   },
 });
