@@ -21,7 +21,6 @@ import Colors from "../constants/Colors";
 import * as statsActions from "../store/actions/stats";
 import Card from "../components/Card";
 import FadeInView from "../constants/FadeInView";
-import TouchableButtonComponent from "../constants/TouchableButtonComponent";
 const Container = styled.View`
   flex: 1;
   justify-content: center;
@@ -91,13 +90,13 @@ const GlobalScreen = (props) => {
     // getLocation();
   }, [dispatch]);
 
-  // let TouchableButton;
+  let TouchableButton;
 
-  // if (Platform.OS === "android") {
-  //   TouchableButton = TouchableNativeFeedback;
-  // } else {
-  //   TouchableButton = TouchableOpacity;
-  // }
+  if (Platform.OS === "android") {
+    TouchableButton = TouchableNativeFeedback;
+  } else {
+    TouchableButton = TouchableOpacity;
+  }
 
   if (isLoading) {
     return (
@@ -268,7 +267,7 @@ const GlobalScreen = (props) => {
           const flagImg = countryCodeEmoji(itemData.item.countryCode);
           return (
             <View style={{ marginHorizontal: 5, marginVertical: 3.5 }}>
-              <TouchableButtonComponent
+              <TouchableButton
                 onPress={() =>
                   props.navigation.navigate("MyCountry", {
                     selectedCountry: itemData.item,
@@ -299,7 +298,7 @@ const GlobalScreen = (props) => {
                     </Text>
                   </View>
                 </View>
-              </TouchableButtonComponent>
+              </TouchableButton>
             </View>
           );
         }}

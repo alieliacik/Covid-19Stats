@@ -7,7 +7,8 @@ import {
   Text,
   ScrollView,
   ActivityIndicator,
-  Pressable,
+  TouchableNativeFeedback,
+  TouchableOpacity,
 } from "react-native";
 import { AntDesign } from "@expo/vector-icons";
 import TimeAgo from "react-native-timeago";
@@ -16,7 +17,6 @@ import Colors from "../../constants/Colors";
 import * as statsActions from "../../store/actions/stats";
 import CaseNumberChart from "../../components/CaseNumberChart";
 import MonthlyStats from "./MonthlyStats/MonthlyStats";
-import TouchableButtonComponent from "../../constants/TouchableButtonComponent";
 
 const CountryScreen = (props) => {
   const dispatch = useDispatch();
@@ -46,6 +46,14 @@ const CountryScreen = (props) => {
     setIsLoading(true);
     loadSelectedCountryStats().then(() => setIsLoading(false));
   }, [dispatch]);
+
+  let TouchableButton;
+
+  if (Platform.OS === "android") {
+    TouchableButton = TouchableNativeFeedback;
+  } else {
+    TouchableButton = TouchableOpacity;
+  }
 
   return (
     <ScrollView contentContainerStyle={{ paddingBottom: 50 }}>
@@ -144,14 +152,25 @@ const CountryScreen = (props) => {
           </View>
         </View>
       </View>
-      <TouchableButtonComponent
-        style={styles.showMonthlyStatasBtn}
-        onPress={() => setShowMonth((prevState) => !prevState)}
-      >
-        <Text style={styles.monthlyStatsButtonText}>
-          Show Last 30 day's stats
-        </Text>
-      </TouchableButtonComponent>
+      <View style={styles.showMonthlyStatasBtn}>
+        <TouchableButton
+          onPress={() => {
+            setShowMonth((prevState) => !prevState);
+          }}
+        >
+          <View style={styles.flexRowCenter}>
+            <Text style={styles.monthlyStatsButtonText}>
+              Show Last 30 day's stats
+            </Text>
+            <AntDesign
+              name={showMonth ? "caretup" : "caretdown"}
+              size={14}
+              color="black"
+            />
+          </View>
+        </TouchableButton>
+      </View>
+
       {showMonth && <MonthlyStats showMonth={showMonth} />}
     </ScrollView>
   );
@@ -160,6 +179,13 @@ const CountryScreen = (props) => {
 export default CountryScreen;
 
 const styles = StyleSheet.create({
+  flexRowCenter: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    paddingHorizontal: 16,
+    paddingVertical: 15,
+  },
   header: {
     backgroundColor: Colors.backgroundBlue,
     paddingHorizontal: 26,
@@ -252,8 +278,6 @@ const styles = StyleSheet.create({
     marginBottom: 10,
 
     backgroundColor: "#fff",
-    paddingHorizontal: 16,
-    paddingVertical: 15,
     marginTop: -40,
     borderRadius: 6,
     elevation: 5,
