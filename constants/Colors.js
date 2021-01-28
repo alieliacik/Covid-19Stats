@@ -8,4 +8,5 @@ export default {
   darkGray: "#C0CCDA",
   backgroundBlue: "#222B45",
   lightGray: "#F9FAFC",
+  bottomTabGray: "#8391A7",
 };

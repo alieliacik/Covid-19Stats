@@ -12,15 +12,17 @@ import {
 } from "react-native";
 import { AntDesign } from "@expo/vector-icons";
 import TimeAgo from "react-native-timeago";
+import { useIsFocused } from "@react-navigation/native";
 
-import Colors from "../../constants/Colors";
 import * as statsActions from "../../store/actions/stats";
+import Colors from "../../constants/Colors";
 import CaseNumberChart from "../../components/CaseNumberChart";
 import MonthlyStats from "./MonthlyStats/MonthlyStats";
 
 const CountryScreen = (props) => {
   const scrollRef = useRef();
   const timerRef = useRef();
+  const isFocused = useIsFocused();
   const dispatch = useDispatch();
   const [isLoading, setIsLoading] = useState(true);
   const [showMonth, setShowMonth] = useState(false);
@@ -43,6 +45,10 @@ const CountryScreen = (props) => {
       props.navigation.goBack();
     }
   }, [countryCode]);
+
+  useEffect(() => {
+    isFocused && loadSelectedCountryStats();
+  }, []);
 
   useEffect(() => {
     setIsLoading(true);
@@ -69,7 +75,7 @@ const CountryScreen = (props) => {
   };
 
   return (
-    <ScrollView ref={scrollRef} contentContainerStyle={{ paddingBottom: 50 }}>
+    <ScrollView ref={scrollRef} contentContainerStyle={{ paddingBottom: 10 }}>
       <View style={styles.header}>
         <Image
           style={styles.virusImage1}

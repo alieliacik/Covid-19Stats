@@ -4,8 +4,9 @@ import { useFonts } from "expo-font";
 import { createStore, combineReducers, applyMiddleware } from "redux";
 import { Provider } from "react-redux";
 import ReduxThunk from "redux-thunk";
+import { NavigationContainer } from "@react-navigation/native";
 
-import MainNavigation from "./navigation/MainNavigation";
+import TabNavigation from "./navigation/TabNavigation";
 import statsReducer from "./store/reducers/stats";
 
 export default function App() {
@@ -25,7 +26,9 @@ export default function App() {
   }
   return (
     <Provider store={store}>
-      <MainNavigation />
+      <NavigationContainer>
+        <TabNavigation />
+      </NavigationContainer>
     </Provider>
   );
 }
