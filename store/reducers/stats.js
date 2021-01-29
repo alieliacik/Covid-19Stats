@@ -2,6 +2,7 @@ import {
   FETCH_COUNTRY_DAILY_STATS,
   FETCH_COUNTRY_TOTAL_STATS,
   FETCH_GLOBAL_STATS,
+  FETCH_NEWS,
 } from "../actions/stats";
 
 const initialState = {
@@ -9,6 +10,7 @@ const initialState = {
   globalStats: {},
   lastThirtyDaysStats: [],
   allStats: [],
+  allNews: [],
 };
 
 export default (state = initialState, action) => {
@@ -29,6 +31,11 @@ export default (state = initialState, action) => {
         ...state,
         lastThirtyDaysStats: action.lastThirtyDaysStats,
         allStats: action.allStats,
+      };
+    case FETCH_NEWS:
+      return {
+        ...state,
+        allNews: action.allNews,
       };
     default:
       return state;

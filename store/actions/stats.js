@@ -1,6 +1,7 @@
 export const FETCH_COUNTRY_TOTAL_STATS = "FETCH_COUNTRY_TOTAL_STATS";
 export const FETCH_GLOBAL_STATS = "FETCH_GLOBAL_STATS";
 export const FETCH_COUNTRY_DAILY_STATS = "FETCH_COUNTRY_DAILY_STATS";
+export const FETCH_NEWS = "FETCH_NEWS";
 
 import moment from "moment";
 
@@ -101,6 +102,19 @@ export const fetchCountryDailyStats = (countryCode) => {
       type: FETCH_COUNTRY_DAILY_STATS,
       lastThirtyDaysStats: lastThirtyDaysStatsReversed,
       allStats: allStats,
+    });
+  };
+};
+
+export const fetchNews = (countryCode) => {
+  return async (dispatch) => {
+    const response = await fetch("http://api.coronatracker.com/news/trending");
+
+    const resData = await response.json();
+
+    dispatch({
+      type: FETCH_NEWS,
+      allNews: resData,
     });
   };
 };

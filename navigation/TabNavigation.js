@@ -1,10 +1,11 @@
 import React from "react";
 import { createMaterialBottomTabNavigator } from "@react-navigation/material-bottom-tabs";
-import { MaterialCommunityIcons } from "@expo/vector-icons";
+import { MaterialCommunityIcons, Ionicons } from "@expo/vector-icons";
 
 import HomeNavigation from "./HomeNavigation";
 import SearchNavigation from "./SearchNavigation";
 import Colors from "../constants/Colors";
+import NewsNavigation from "./NewsNavigation";
 
 const TabStack = createMaterialBottomTabNavigator();
 
@@ -47,6 +48,15 @@ const TabNavigaton = () => (
             size={26}
             color={Colors.bottomTabGray}
           />
+        ),
+      }}
+    />
+    <TabStack.Screen
+      name="News"
+      component={NewsNavigation}
+      options={{
+        tabBarIcon: () => (
+          <Ionicons name="globe" size={24} color={Colors.bottomTabGray} />
         ),
       }}
     />

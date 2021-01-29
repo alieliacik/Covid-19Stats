@@ -12,7 +12,6 @@ import {
 } from "react-native";
 import { AntDesign } from "@expo/vector-icons";
 import TimeAgo from "react-native-timeago";
-import { useIsFocused } from "@react-navigation/native";
 
 import * as statsActions from "../../store/actions/stats";
 import Colors from "../../constants/Colors";
@@ -22,7 +21,6 @@ import MonthlyStats from "./MonthlyStats/MonthlyStats";
 const CountryScreen = (props) => {
   const scrollRef = useRef();
   const timerRef = useRef();
-  const isFocused = useIsFocused();
   const dispatch = useDispatch();
   const [isLoading, setIsLoading] = useState(true);
   const [showMonth, setShowMonth] = useState(false);
