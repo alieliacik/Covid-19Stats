@@ -108,7 +108,9 @@ export const fetchCountryDailyStats = (countryCode) => {
 
 export const fetchNews = (countryCode) => {
   return async (dispatch) => {
-    const response = await fetch("http://api.coronatracker.com/news/trending");
+    const response = await fetch(
+      "http://api.coronatracker.com/news/trending?limit=9&offset=0&country=Canada"
+    );
 
     const resData = await response.json();
 

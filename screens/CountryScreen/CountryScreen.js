@@ -45,10 +45,6 @@ const CountryScreen = (props) => {
   }, [countryCode]);
 
   useEffect(() => {
-    isFocused && loadSelectedCountryStats();
-  }, []);
-
-  useEffect(() => {
     setIsLoading(true);
     loadSelectedCountryStats().then(() => setIsLoading(false));
     clearTimeout(timerRef.current);
