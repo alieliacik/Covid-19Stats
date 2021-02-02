@@ -1,7 +1,8 @@
 import React from "react";
 
 import { createStackNavigator } from "@react-navigation/stack";
-import News from "../screens/NewsScreen";
+import News from "../screens/NewsScreen/NewsScreen";
+import SelectedNews from "../screens/NewsScreen/SelectedNews";
 
 const NewsStack = createStackNavigator();
 
@@ -14,9 +15,12 @@ const NewsNavigation = () => (
         title: "News",
       }}
     />
+    <NewsStack.Screen
+      name="SelectedNews"
+      component={SelectedNews}
+      options={{ title: "News" }}
+    />
   </NewsStack.Navigator>
 );
 
 export default NewsNavigation;
-
-// 33143b4637994411b198d7ee4f5e7a0c

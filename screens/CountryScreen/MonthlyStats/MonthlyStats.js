@@ -1,4 +1,4 @@
-import React, { useRef, useEffect } from "react";
+import React from "react";
 import { useSelector } from "react-redux";
 import { ScrollView, View, StyleSheet, Text } from "react-native";
 import SkeletonPlaceholder from "react-native-skeleton-placeholder";
@@ -6,40 +6,13 @@ import { AntDesign } from "@expo/vector-icons";
 
 import Colors from "../../../constants/Colors";
 
-const SkeletonComponent = () => (
-  <SkeletonPlaceholder backgroundColor="#fff">
-    <View style={styles.table}>
-      <View style={styles.skeletonItemLong}></View>
-      <View style={styles.skeletonItem}></View>
-      <View style={styles.skeletonItemLong}></View>
-      <View style={styles.skeletonItem}></View>
-      <View style={styles.skeletonItemLong}></View>
-      <View style={styles.skeletonItem}></View>
-      <View style={{ flex: 1, flexDirection: "row", width: 150 }}>
-        <View style={styles.skeletonItemShort}></View>
-        <View style={styles.skeletonItemShort}></View>
-        <View style={styles.skeletonItemShort}></View>
-      </View>
-    </View>
-  </SkeletonPlaceholder>
-);
-
 const MonthlyStats = (props) => {
   const lastThirtyDaysStats = useSelector(
     (state) => state.stats.lastThirtyDaysStats
   );
 
-  const scrollRef = useRef();
-
-  useEffect(() => {
-    scrollRef.current?.scrollTo({
-      y: 0,
-      animated: true,
-    });
-  });
-
   return (
-    <ScrollView ref={scrollRef} style={styles.table}>
+    <ScrollView style={styles.table}>
       <View style={styles.tableHeaderWrapper}>
         <View
           style={{
@@ -171,3 +144,21 @@ const styles = StyleSheet.create({
     marginRight: 15,
   },
 });
+
+const SkeletonComponent = () => (
+  <SkeletonPlaceholder backgroundColor="#fff">
+    <View style={styles.table}>
+      <View style={styles.skeletonItemLong}></View>
+      <View style={styles.skeletonItem}></View>
+      <View style={styles.skeletonItemLong}></View>
+      <View style={styles.skeletonItem}></View>
+      <View style={styles.skeletonItemLong}></View>
+      <View style={styles.skeletonItem}></View>
+      <View style={{ flex: 1, flexDirection: "row", width: 150 }}>
+        <View style={styles.skeletonItemShort}></View>
+        <View style={styles.skeletonItemShort}></View>
+        <View style={styles.skeletonItemShort}></View>
+      </View>
+    </View>
+  </SkeletonPlaceholder>
+);

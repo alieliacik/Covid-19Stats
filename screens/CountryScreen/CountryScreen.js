@@ -50,14 +50,6 @@ const CountryScreen = (props) => {
     clearTimeout(timerRef.current);
   }, [dispatch]);
 
-  let TouchableButton;
-
-  if (Platform.OS === "android") {
-    TouchableButton = TouchableNativeFeedback;
-  } else {
-    TouchableButton = TouchableOpacity;
-  }
-
   const handleScroll = () => {
     setShowMonth((prevState) => !prevState);
     timerRef.current = setTimeout(() => {
@@ -67,6 +59,14 @@ const CountryScreen = (props) => {
       });
     }, 1);
   };
+
+  let TouchableButton;
+
+  if (Platform.OS === "android") {
+    TouchableButton = TouchableNativeFeedback;
+  } else {
+    TouchableButton = TouchableOpacity;
+  }
 
   return (
     <ScrollView ref={scrollRef} contentContainerStyle={{ paddingBottom: 10 }}>
@@ -180,7 +180,7 @@ const CountryScreen = (props) => {
         </TouchableButton>
       </View>
 
-      {showMonth && <MonthlyStats showMonth={showMonth} />}
+      {showMonth && <MonthlyStats />}
     </ScrollView>
   );
 };
