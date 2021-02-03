@@ -1,7 +1,7 @@
 import React from "react";
 import { Platform, View } from "react-native";
 import { createStackNavigator } from "@react-navigation/stack";
-import GlobalScreen from "../screens/GlobalScreen";
+import GlobalScreen from "../screens/GlobalScreen/GlobalScreen";
 import CountryScreen from "../screens/CountryScreen/CountryScreen";
 import Colors from "../constants/Colors";
 import HeaderBackgroundComponent from "../components/HeaderBackgroundComponent";

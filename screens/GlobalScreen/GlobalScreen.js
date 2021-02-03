@@ -17,10 +17,10 @@ import { countryCodeEmoji } from "country-code-emoji";
 import { AntDesign } from "@expo/vector-icons";
 import SkeletonPlaceholder from "react-native-skeleton-placeholder";
 
-import Colors from "../constants/Colors";
-import * as statsActions from "../store/actions/stats";
-import Card from "../components/Card";
-import FadeInView from "../constants/FadeInView";
+import Colors from "../../constants/Colors";
+import * as statsActions from "../../store/actions/stats";
+import Card from "../../components/Card";
+import FadeInView from "../../constants/FadeInView";
 const Container = styled.View`
   flex: 1;
   justify-content: center;
