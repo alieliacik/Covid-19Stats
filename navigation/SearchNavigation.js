@@ -1,7 +1,7 @@
 import React from "react";
 import { createStackNavigator } from "@react-navigation/stack";
 
-import SearchScreen from "../screens/SearchScreen";
+import SearchScreen from "../screens/SearchScreen/SearchScreen";
 import HeaderBackgroundComponent from "../components/HeaderBackgroundComponent";
 
 const SearchStack = createStackNavigator();

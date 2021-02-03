@@ -14,8 +14,8 @@ import {
 import { Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
 import { countryCodeEmoji } from "country-code-emoji";
 
-import Colors from "../constants/Colors";
-import * as statsActions from "../store/actions/stats";
+import Colors from "../../constants/Colors";
+import * as statsActions from "../../store/actions/stats";
 
 const Search = (props) => {
   const dispatch = useDispatch();
