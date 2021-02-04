@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import {
   View,
   Text,
@@ -14,6 +14,8 @@ import { LogBox } from "react-native";
 import { vw } from "react-native-expo-viewport-units";
 import { AntDesign } from "@expo/vector-icons";
 
+import FadeInView from "../../constants/FadeInView";
+
 const images = [
   { id: 1, uri: require("../../assets/advice1.png") },
   { id: 2, uri: require("../../assets/advice2.png") },
@@ -26,6 +28,9 @@ const images = [
 const HealthScreen = (props) => {
   const [showModal, setShowModal] = useState(false);
   const [modalSource, setModalSource] = useState(images[0].uri);
+  const [showSymptoms, setShowSymptoms] = useState(false);
+  const [showPreventive, setShowPreventive] = useState(false);
+  const scrollRef = useRef();
 
   let TouchableButton;
 
@@ -40,7 +45,7 @@ const HealthScreen = (props) => {
   }, []);
 
   return (
-    <ScrollView contentContainerStyle={styles.container}>
+    <ScrollView ref={scrollRef} contentContainerStyle={styles.container}>
       <Modal animationType="fade" visible={showModal} transparent>
         <View style={styles.modalContainer}>
           <Image style={styles.modalImage} source={modalSource} />
@@ -53,7 +58,19 @@ const HealthScreen = (props) => {
         </View>
       </Modal>
       <Text style={styles.title}>Healthy Tips</Text>
-      <TouchableButton useForeground={true}>
+      <TouchableButton
+        useForeground={true}
+        onPress={() => {
+          setShowSymptoms((prevState) => !prevState);
+          setShowPreventive(false);
+          if (!showSymptoms) {
+            scrollRef.current?.scrollTo({
+              y: 180,
+              animated: true,
+            });
+          }
+        }}
+      >
         <View style={styles.cardContainer}>
           <View>
             <Image
@@ -69,7 +86,56 @@ const HealthScreen = (props) => {
           </View>
         </View>
       </TouchableButton>
-      <TouchableButton useForeground={true}>
+      {showSymptoms && (
+        <FadeInView style={styles.infoCardContainer}>
+          <Text style={styles.cardText}>
+            The COVID-19 virus affects different people in different ways. Most
+            infected people will develop mild to moderate illness and recover
+            without hospitalization.{"\n"}
+          </Text>
+          <Text style={styles.cardTitle}>Most common symptoms:</Text>
+          <Text style={styles.cardText}>
+            &#x25CF; fever {"\n"}&#x25CF; dry cough {"\n"}&#x25CF; tiredness{" "}
+            {"\n"}
+          </Text>
+          <Text style={styles.cardTitle}>Less common symptoms:</Text>
+          <Text style={styles.cardText}>
+            &#x25CF; aches and pains {"\n"}&#x25CF; sore throat {"\n"}&#x25CF;
+            diarrhoea {"\n"}&#x25CF; conjunctivitis {"\n"}&#x25CF; headache{" "}
+            {"\n"}
+            &#x25CF; loss of taste or smell {"\n"}&#x25CF; a rash on skin, or
+            discolouration of fingers or toes {"\n"}
+          </Text>
+          <Text style={styles.cardTitle}>Serious symptoms:</Text>
+          <Text style={styles.cardText}>
+            &#x25CF; difficulty breathing or shortness of breath {"\n"}&#x25CF;
+            chest pain or pressure {"\n"}&#x25CF; loss of speech or movement{" "}
+            {"\n"}
+          </Text>
+          <Text style={styles.cardText}>
+            Seek immediate medical attention if you have serious symptoms.
+            Always call before visiting your doctor or health facility. {"\n"}
+            {"\n"}People with mild symptoms who are otherwise healthy should
+            manage their symptoms at home. {"\n"}
+            {"\n"}On average it takes 5–6 days from when someone is infected
+            with the virus for symptoms to show, however it can take up to 14
+            days.
+          </Text>
+        </FadeInView>
+      )}
+      <TouchableButton
+        useForeground={true}
+        onPress={() => {
+          setShowPreventive((prevState) => !prevState);
+          setShowSymptoms(false);
+          if (!showPreventive) {
+            scrollRef.current?.scrollTo({
+              y: 310,
+              animated: true,
+            });
+          }
+        }}
+      >
         <View style={styles.cardContainer}>
           <View>
             <Image
@@ -86,6 +152,40 @@ const HealthScreen = (props) => {
           </View>
         </View>
       </TouchableButton>
+      {showPreventive && (
+        <FadeInView style={styles.infoCardContainer}>
+          <Text style={styles.cardText}>
+            Protect yourself and others around you by knowing the facts and
+            taking appropriate precautions. Follow advice provided by your local
+            health authority.{"\n"}
+          </Text>
+          <Text style={styles.cardTitle}>
+            To prevent the spread of COVID-19:
+          </Text>
+          <Text style={styles.cardText}>
+            &#x25CF; Clean your hands often. Use soap and water, or an
+            alcohol-based hand rub. {"\n"}&#x25CF; Maintain a safe distance from
+            anyone who is coughing or sneezing. {"\n"}&#x25CF; Wear a mask when
+            physical distancing is not possible. {"\n"}&#x25CF; Don’t touch your
+            eyes, nose or mouth. {"\n"}&#x25CF; Cover your nose and mouth with
+            your bent elbow or a tissue when you cough or sneeze. {"\n"}&#x25CF;
+            Stay home if you feel unwell. {"\n"}&#x25CF; If you have a fever,
+            cough and difficulty breathing, seek medical attention. {"\n"}
+          </Text>
+          <Text style={styles.cardText}>
+            Calling in advance allows your healthcare provider to quickly direct
+            you to the right health facility. This protects you, and prevents
+            the spread of viruses and other infections. {"\n"}
+          </Text>
+          <Text style={styles.cardTitle}>Masks</Text>
+          <Text style={styles.cardText}>
+            Masks can help prevent the spread of the virus from the person
+            wearing the mask to others. Masks alone do not protect against
+            COVID-19, and should be combined with physical distancing and hand
+            hygiene. Follow the advice provided by your local health authority.
+          </Text>
+        </FadeInView>
+      )}
       <FlatList
         data={images}
         keyExtractor={(item) => item.id.toString()}
@@ -125,7 +225,7 @@ const styles = StyleSheet.create({
     fontSize: 24,
     fontFamily: "open-sans-semibold",
     marginTop: 15,
-    marginBottom: 24,
+    marginBottom: 8,
   },
 
   cardContainer: {
@@ -175,6 +275,12 @@ const styles = StyleSheet.create({
     width: vw(100),
     height: vw(100),
     borderRadius: 16,
+    marginBottom: 20,
+  },
+  infoCardContainer: {
+    backgroundColor: "#fff",
+    borderRadius: 16,
+    padding: 16,
     marginBottom: 20,
   },
 });
