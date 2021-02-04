@@ -71,7 +71,7 @@ const Search = (props) => {
         <View style={styles.countryContainer}>
           <Image
             style={styles.globePng}
-            source={require("../assets/worldwide.png")}
+            source={require("../../assets/worldwide.png")}
           />
 
           <Text style={styles.countryName}>Worldwide</Text>

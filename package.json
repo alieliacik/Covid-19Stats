@@ -27,6 +27,7 @@
     "react-native": "https://github.com/expo/react-native/archive/sdk-40.0.1.tar.gz",
     "react-native-chart-kit": "^6.10.0",
     "react-native-countup": "^0.0.2",
+    "react-native-expo-viewport-units": "^0.0.8",
     "react-native-gesture-handler": "~1.8.0",
     "react-native-paper": "^4.7.1",
     "react-native-safe-area-context": "3.1.9",

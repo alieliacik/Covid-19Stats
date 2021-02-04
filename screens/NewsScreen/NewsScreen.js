@@ -4,7 +4,6 @@ import {
   View,
   Text,
   StyleSheet,
-  ActivityIndicator,
   Image,
   TouchableNativeFeedback,
   TouchableOpacity,
@@ -56,7 +55,7 @@ const News = (props) => {
         )}
         renderItem={(itemData) => (
           <TouchableButton
-            useForeGround
+            useForeGround={true}
             onPress={() => {
               props.navigation.navigate("SelectedNews", {
                 selectedNews: itemData.item,
