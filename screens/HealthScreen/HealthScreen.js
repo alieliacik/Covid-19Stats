@@ -29,7 +29,9 @@ const HealthScreen = (props) => {
   const [showModal, setShowModal] = useState(false);
   const [modalSource, setModalSource] = useState(images[0].uri);
   const [showSymptoms, setShowSymptoms] = useState(false);
+  const [symptomsLayoutY, setSymptomsLayoutY] = useState(false);
   const [showPreventive, setShowPreventive] = useState(false);
+  const [preventiveLayoutY, setPreventiveLayoutY] = useState(false);
   const scrollRef = useRef();
 
   let TouchableButton;
@@ -60,12 +62,12 @@ const HealthScreen = (props) => {
       <Text style={styles.title}>Healthy Tips</Text>
       <TouchableButton
         useForeground={true}
+        onLayout={(e) => setSymptomsLayoutY(e.nativeEvent.layout.y)}
         onPress={() => {
           setShowSymptoms((prevState) => !prevState);
-          setShowPreventive(false);
           if (!showSymptoms) {
             scrollRef.current?.scrollTo({
-              y: 180,
+              y: symptomsLayoutY - 5,
               animated: true,
             });
           }
@@ -125,12 +127,12 @@ const HealthScreen = (props) => {
       )}
       <TouchableButton
         useForeground={true}
+        onLayout={(e) => setPreventiveLayoutY(e.nativeEvent.layout.y)}
         onPress={() => {
           setShowPreventive((prevState) => !prevState);
-          setShowSymptoms(false);
           if (!showPreventive) {
             scrollRef.current?.scrollTo({
-              y: 310,
+              y: preventiveLayoutY - 5,
               animated: true,
             });
           }
@@ -230,12 +232,20 @@ const styles = StyleSheet.create({
 
   cardContainer: {
     flexDirection: "row",
-    height: 114,
     padding: 16,
     marginBottom: 16,
     backgroundColor: "#F9FAFC",
     borderRadius: 16,
     overflow: "hidden",
+    elevation: 5,
+    shadowColor: "black",
+    shadowOffset: {
+      width: 5,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 8,
+    borderRadius: 4,
   },
   image: {
     height: 80,
@@ -256,6 +266,15 @@ const styles = StyleSheet.create({
     marginBottom: 16,
     borderRadius: 16,
     overflow: "hidden",
+    elevation: 5,
+    shadowColor: "black",
+    shadowOffset: {
+      width: 5,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 8,
+    borderRadius: 4,
   },
   adviceImage: {
     width: vw(42),
