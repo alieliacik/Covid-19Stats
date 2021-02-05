@@ -15,6 +15,7 @@ import { vw } from "react-native-expo-viewport-units";
 import { AntDesign } from "@expo/vector-icons";
 
 import FadeInView from "../../constants/FadeInView";
+import Colors from "../../constants/Colors";
 
 const images = [
   { id: 1, uri: require("../../assets/advice1.png") },
@@ -188,6 +189,16 @@ const HealthScreen = (props) => {
           </Text>
         </FadeInView>
       )}
+      <TouchableButton
+        style={styles.selfAssessmentButton}
+        onPress={() => {
+          props.navigation.navigate("Self-Assessment");
+        }}
+      >
+        <Text style={styles.selfAssessmentButtonText}>
+          Start self-assessment
+        </Text>
+      </TouchableButton>
       <FlatList
         data={images}
         keyExtractor={(item) => item.id.toString()}
@@ -222,6 +233,18 @@ const styles = StyleSheet.create({
   container: {
     paddingHorizontal: 24,
     marginBottom: 32,
+  },
+  selfAssessmentButton: {
+    backgroundColor: Colors.blue,
+    borderRadius: 16,
+    paddingVertical: 8,
+    marginBottom: 16,
+  },
+  selfAssessmentButtonText: {
+    textAlign: "center",
+    fontFamily: "open-sans-bold",
+    color: "#fff",
+    fontSize: 20,
   },
   title: {
     fontSize: 24,
