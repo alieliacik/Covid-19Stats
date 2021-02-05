@@ -11,6 +11,7 @@ import SearchNavigation from "./SearchNavigation";
 import Colors from "../constants/Colors";
 import NewsNavigation from "./NewsNavigation";
 import HealthNavigation from "./HealthNavigation";
+import ProfileNavigaton from "./ProfileNavigaton";
 const TabStack = createMaterialBottomTabNavigator();
 
 const TabNavigaton = () => (
@@ -77,6 +78,7 @@ const TabNavigaton = () => (
         ),
       }}
     />
+    <TabStack.Screen name="Profile" component={ProfileNavigaton} />
   </TabStack.Navigator>
 );
 export default TabNavigaton;
