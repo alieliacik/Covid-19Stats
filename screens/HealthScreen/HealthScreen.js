@@ -190,14 +190,26 @@ const HealthScreen = (props) => {
         </FadeInView>
       )}
       <TouchableButton
-        style={styles.selfAssessmentButton}
         onPress={() => {
           props.navigation.navigate("Self-Assessment");
         }}
       >
-        <Text style={styles.selfAssessmentButtonText}>
-          Start self-assessment
-        </Text>
+        <View style={styles.selfAssessmentButton}>
+          <Text style={styles.selfAssessmentButtonText}>
+            Start self-assessment
+          </Text>
+        </View>
+      </TouchableButton>
+      <TouchableButton
+        onPress={() => {
+          props.navigation.navigate("Profile");
+        }}
+      >
+        <View style={styles.selfAssessmentButton}>
+          <Text style={styles.selfAssessmentButtonText}>
+            Set self-isolation countdown
+          </Text>
+        </View>
       </TouchableButton>
       <FlatList
         data={images}
@@ -235,22 +247,23 @@ const styles = StyleSheet.create({
     marginBottom: 32,
   },
   selfAssessmentButton: {
-    backgroundColor: Colors.blue,
-    borderRadius: 16,
-    paddingVertical: 8,
+    backgroundColor: "#00ABD6",
+    borderRadius: 8,
+    paddingVertical: 12,
     marginBottom: 16,
+    overflow: "hidden",
   },
   selfAssessmentButtonText: {
     textAlign: "center",
     fontFamily: "open-sans-bold",
     color: "#fff",
-    fontSize: 20,
+    fontSize: 16,
   },
   title: {
-    fontSize: 24,
+    fontSize: 20,
     fontFamily: "open-sans-semibold",
     marginTop: 15,
-    marginBottom: 8,
+    marginBottom: 10,
   },
 
   cardContainer: {

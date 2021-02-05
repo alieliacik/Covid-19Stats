@@ -3,6 +3,7 @@ import React from "react";
 import { createStackNavigator } from "@react-navigation/stack";
 import News from "../screens/NewsScreen/NewsScreen";
 import SelectedNews from "../screens/NewsScreen/SelectedNews";
+import HeaderBackgroundComponent from "../components/HeaderBackgroundComponent";
 
 const NewsStack = createStackNavigator();
 
@@ -13,12 +14,18 @@ const NewsNavigation = () => (
       component={News}
       options={{
         title: "News",
+        headerBackground: () => <HeaderBackgroundComponent />,
+        headerTintColor: "#fff",
       }}
     />
     <NewsStack.Screen
       name="SelectedNews"
       component={SelectedNews}
-      options={{ title: "News" }}
+      options={{
+        title: "News",
+        headerBackground: () => <HeaderBackgroundComponent />,
+        headerTintColor: "#fff",
+      }}
     />
   </NewsStack.Navigator>
 );

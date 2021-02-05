@@ -12,6 +12,7 @@ import Colors from "../constants/Colors";
 import NewsNavigation from "./NewsNavigation";
 import HealthNavigation from "./HealthNavigation";
 import ProfileNavigaton from "./ProfileNavigaton";
+
 const TabStack = createMaterialBottomTabNavigator();
 
 const TabNavigaton = () => (
@@ -19,11 +20,15 @@ const TabNavigaton = () => (
     sceneAnimationEnabled={true}
     initialRouteName="Home"
     shifting={true}
+    inactiveColor={Colors.bottomTabGray}
     screenOptions={{
       headerTintColor: Platform.OS === "android" ? "#fff" : "black",
       headerStyle: {
         backgroundColor:
           Platform.OS === "android" ? Colors.backgroundBlue : "#fff",
+      },
+      indicatorStyle: {
+        backgroundColor: "red",
       },
     }}
     activeColor="black"
@@ -36,32 +41,28 @@ const TabNavigaton = () => (
   >
     <TabStack.Screen
       options={{
-        tabBarIcon: () => (
-          <MaterialCommunityIcons name="virus" size={26} color="#EB5569" />
+        tabBarIcon: ({ color }) => (
+          <MaterialCommunityIcons name="virus" size={26} color={color} />
         ),
       }}
       name="Home"
       component={HomeNavigation}
     />
     <TabStack.Screen
-      name="Search"
-      component={SearchNavigation}
+      name="News"
+      component={NewsNavigation}
       options={{
-        tabBarIcon: () => (
-          <MaterialCommunityIcons
-            name="magnify"
-            size={26}
-            color={Colors.bottomTabGray}
-          />
+        tabBarIcon: ({ color = Colors.blue }) => (
+          <Ionicons name="globe" size={25} color={color} />
         ),
       }}
     />
     <TabStack.Screen
-      name="News"
-      component={NewsNavigation}
+      name="Search"
+      component={SearchNavigation}
       options={{
-        tabBarIcon: () => (
-          <Ionicons name="globe" size={26} color={Colors.bottomTabGray} />
+        tabBarIcon: ({ color }) => (
+          <MaterialCommunityIcons name="magnify" size={26} color={color} />
         ),
       }}
     />
@@ -69,16 +70,20 @@ const TabNavigaton = () => (
       name="Health"
       component={HealthNavigation}
       options={{
-        tabBarIcon: () => (
-          <FontAwesome
-            name="heartbeat"
-            size={24}
-            color={Colors.bottomTabGray}
-          />
+        tabBarIcon: ({ color }) => (
+          <FontAwesome name="heartbeat" size={24} color={color} />
         ),
       }}
     />
-    <TabStack.Screen name="Profile" component={ProfileNavigaton} />
+    <TabStack.Screen
+      name="Profile"
+      component={ProfileNavigaton}
+      options={{
+        tabBarIcon: ({ color }) => (
+          <Ionicons name="person-circle-outline" size={26} color={color} />
+        ),
+      }}
+    />
   </TabStack.Navigator>
 );
 export default TabNavigaton;
