@@ -247,7 +247,7 @@ const styles = StyleSheet.create({
     marginBottom: 32,
   },
   selfAssessmentButton: {
-    backgroundColor: "#00ABD6",
+    backgroundColor: Colors.lightBlue,
     borderRadius: 8,
     paddingVertical: 12,
     marginBottom: 16,
