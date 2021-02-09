@@ -9,6 +9,7 @@
   },
   "dependencies": {
     "@rainbow-me/animated-charts": "^1.0.0-alpha.4",
+    "@react-native-community/datetimepicker": "3.0.4",
     "@react-native-community/masked-view": "0.1.10",
     "@react-native-masked-view/masked-view": "^0.2.0",
     "@react-navigation/material-bottom-tabs": "^5.3.13",
@@ -31,6 +32,7 @@
     "react-native-countup": "^0.0.2",
     "react-native-expo-viewport-units": "^0.0.8",
     "react-native-gesture-handler": "~1.8.0",
+    "react-native-modal-datetime-picker": "^9.1.0",
     "react-native-paper": "^4.7.1",
     "react-native-safe-area-context": "3.1.9",
     "react-native-screens": "~2.15.0",

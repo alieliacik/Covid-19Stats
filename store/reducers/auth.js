@@ -3,6 +3,7 @@ import { LOGIN, SIGNUP } from "../actions/auth";
 const initialState = {
   token: "",
   userId: "",
+  email: "",
 };
 
 export default (state = initialState, action) => {

@@ -3,13 +3,20 @@ import { useDispatch, useSelector } from "react-redux";
 import {
   View,
   Text,
+  TouchableNativeFeedback,
   TouchableOpacity,
   ActivityIndicator,
   Alert,
+  StyleSheet,
+  ScrollView,
+  Platform,
 } from "react-native";
-import { TextInput } from "react-native-paper";
+import DateTimePickerModal from "react-native-modal-datetime-picker";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
 
 import * as userActions from "../../store/actions/user";
+import Colors from "../../constants/Colors";
+import moment from "moment";
 
 const Profile = () => {
   const dispatch = useDispatch();
@@ -24,28 +31,75 @@ const Profile = () => {
     }
     return modifiedInfectedDates;
   });
-  const [infectedDate, setInfectedDate] = useState();
+
   const [isLoading, setIsLoading] = useState();
   const [error, setError] = useState();
+  const [date, setDate] = useState(new Date());
+  const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
+  const [isUpdating, setIsUpdating] = useState(false);
+  const [selectedItemId, setSelectedItemId] = useState();
 
-  const sendInfectedDateHandler = async () => {
-    setIsLoading(true);
-    setError(null);
-    try {
-      await dispatch(userActions.sendInfectedDate(infectedDate));
-    } catch (error) {
-      setError(error.message);
+  const infectedDateHandler = async (date) => {
+    const currentDate = new Date().getTime();
+    if (currentDate < date) {
+      Alert.alert(
+        "A date in the future has been selected!",
+        "Please change it",
+        [
+          {
+            text: "Okay",
+          },
+        ]
+      );
+      if (Platform.OS === "android") {
+        hideDatePicker();
+      }
+    } else if (currentDate - date > 1209600000) {
+      Alert.alert(
+        "A date older than 14 days has been selected!",
+        "Please change it",
+        [
+          {
+            text: "Okay",
+          },
+        ]
+      );
+      if (Platform.OS === "android") {
+        hideDatePicker();
+      }
+    } else {
+      setDate(date);
+      hideDatePicker();
+      setIsLoading(true);
+      setError(null);
+      try {
+        isUpdating
+          ? await dispatch(userActions.updateInfectedDate(date, selectedItemId))
+          : await dispatch(userActions.sendInfectedDate(date));
+      } catch (error) {
+        setError(error.message);
+      }
+      setIsLoading(false);
     }
-    setIsLoading(false);
   };
 
   const fetchInfectedDatesHandler = async () => {
     await dispatch(userActions.fetchInfectedDates());
   };
 
+  const deleteInfectedDateHandler = (id) => {
+    Alert.alert("Are you sure?", "Do you really want to delete this date?", [
+      { text: "No" },
+      {
+        text: "Yes",
+        onPress: async () => await dispatch(userActions.deleteInfectedDate(id)),
+      },
+    ]);
+  };
+
   useEffect(() => {
     fetchInfectedDatesHandler();
-  }, [isLoading]);
+  }, [fetchInfectedDatesHandler, deleteInfectedDateHandler]);
 
   useEffect(() => {
     if (error) {
@@ -53,22 +107,87 @@ const Profile = () => {
     }
   }, [error]);
 
-  const infectedDateHandler = (date) => {
-    setInfectedDate(date);
+  const showDatePicker = () => {
+    setDatePickerVisibility(true);
   };
-  return (
-    <View>
-      <Text>Logged In</Text>
-      <TextInput onChangeText={infectedDateHandler} />
-      <TouchableOpacity onPress={sendInfectedDateHandler}>
-        {isLoading ? <ActivityIndicator /> : <Text>Send Data</Text>}
-      </TouchableOpacity>
 
+  const hideDatePicker = () => {
+    setDatePickerVisibility(false);
+  };
+
+  let TouchableButton;
+
+  if (Platform.OS === "android") {
+    TouchableButton = TouchableNativeFeedback;
+  } else {
+    TouchableButton = TouchableOpacity;
+  }
+  return (
+    <ScrollView contentContainerStyle={styles.container}>
+      <View>
+        <TouchableButton
+          activeOpacity={0.1}
+          onPress={() => {
+            setIsUpdating(false);
+            showDatePicker();
+          }}
+        >
+          <View style={styles.datePickerButton}>
+            <MaterialCommunityIcons name="calendar" size={22} color="#fff" />
+            <Text style={styles.datePickerButtonText}>
+              Set up a self-isolaton coundown
+            </Text>
+          </View>
+        </TouchableButton>
+
+        <DateTimePickerModal
+          isVisible={isDatePickerVisible}
+          mode="datetime"
+          onConfirm={infectedDateHandler}
+          onCancel={hideDatePicker}
+        />
+      </View>
       {userInfectedDates.map((date) => (
-        <Text>{date.infectedDate}</Text>
+        <View key={date.id}>
+          <Text onPress={() => deleteInfectedDateHandler(date.id)}>
+            {JSON.stringify(date.infectedDate)}
+          </Text>
+          <Text
+            onPress={() => {
+              setSelectedItemId(date.id);
+              showDatePicker();
+              setIsUpdating(true);
+            }}
+          >
+            update
+          </Text>
+        </View>
       ))}
-    </View>
+    </ScrollView>
   );
 };
 
 export default Profile;
+
+const styles = StyleSheet.create({
+  container: {
+    paddingHorizontal: 16,
+    marginVertical: 12,
+  },
+  datePickerButton: {
+    flexDirection: "row",
+    justifyContent: "center",
+    backgroundColor: Colors.green,
+    borderRadius: 8,
+    paddingVertical: 12,
+    marginBottom: 16,
+    overflow: "hidden",
+  },
+  datePickerButtonText: {
+    textAlign: "center",
+    fontFamily: "open-sans-bold",
+    color: "#fff",
+    fontSize: 16,
+    marginLeft: 10,
+  },
+});
