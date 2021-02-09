@@ -22,6 +22,7 @@
     "expo-location": "~10.0.0",
     "expo-permissions": "~10.0.0",
     "expo-status-bar": "~1.0.3",
+    "formik": "^2.2.6",
     "moment": "^2.29.1",
     "react": "16.13.1",
     "react-dom": "16.13.1",
@@ -45,7 +46,8 @@
     "redux": "^4.0.5",
     "redux-thunk": "^2.3.0",
     "rn-timeago": "^1.5.0",
-    "styled-components": "^5.2.1"
+    "styled-components": "^5.2.1",
+    "yup": "^0.32.8"
   },
   "devDependencies": {
     "@babel/core": "~7.9.0"

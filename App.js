@@ -8,6 +8,8 @@ import { NavigationContainer } from "@react-navigation/native";
 
 import TabNavigation from "./navigation/TabNavigation";
 import statsReducer from "./store/reducers/stats";
+import authReducer from "./store/reducers/auth";
+import userReducer from "./store/reducers/user";
 
 export default function App() {
   let [fontsLoaded] = useFonts({
@@ -18,6 +20,8 @@ export default function App() {
 
   const rootReducer = combineReducers({
     stats: statsReducer,
+    auth: authReducer,
+    user: userReducer,
   });
   const store = createStore(rootReducer, applyMiddleware(ReduxThunk));
 
