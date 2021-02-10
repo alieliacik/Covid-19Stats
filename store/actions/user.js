@@ -72,7 +72,7 @@ export const updateInfectedDate = (infectedDate, id) => {
     const userId = getState().auth.userId;
     const token = getState().auth.token;
     const response = await fetch(
-      `https://cov19stats-8f95e-default-rtdb.firebaseio.com/infected-dates/${userId}/${id}/infectedDate.json?auth=${token}`,
+      `https://cov19stats-8f95e-default-rtdb.firebaseio.com/infected-dates/${userId}/${id}.json?auth=${token}`,
       {
         method: "PATCH",
         headers: {

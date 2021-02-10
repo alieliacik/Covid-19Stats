@@ -87,19 +87,28 @@ const Profile = () => {
     await dispatch(userActions.fetchInfectedDates());
   };
 
-  const deleteInfectedDateHandler = (id) => {
+  const deleteInfectedDateHandler = async (id) => {
     Alert.alert("Are you sure?", "Do you really want to delete this date?", [
       { text: "No" },
       {
         text: "Yes",
-        onPress: async () => await dispatch(userActions.deleteInfectedDate(id)),
+        onPress: async () => {
+          setIsLoading(true);
+          setError(null);
+          try {
+            await dispatch(userActions.deleteInfectedDate(id));
+          } catch (error) {
+            setError(error.message);
+          }
+          setIsLoading(false);
+        },
       },
     ]);
   };
 
   useEffect(() => {
     fetchInfectedDatesHandler();
-  }, [fetchInfectedDatesHandler, deleteInfectedDateHandler]);
+  }, [isLoading]);
 
   useEffect(() => {
     if (error) {
@@ -122,11 +131,11 @@ const Profile = () => {
   } else {
     TouchableButton = TouchableOpacity;
   }
+
   return (
     <ScrollView contentContainerStyle={styles.container}>
       <View>
         <TouchableButton
-          activeOpacity={0.1}
           onPress={() => {
             setIsUpdating(false);
             showDatePicker();
