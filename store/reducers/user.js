@@ -1,7 +1,7 @@
 import { FETCH_INFECTED_DATES } from "../actions/user";
 
 const initialState = {
-  userInfectedDates: null,
+  userInfectedDates: [],
 };
 
 export default (state = initialState, action) => {

@@ -1,7 +1,7 @@
 export default {
   red: "#FF073A",
   blue: "#007BFF",
-  lightBlue: "#00ABD6",
+  lightBlue: "#00abd6",
   backgroundBlue: "#222B45",
   green: "#28A745",
   gray: "#6C757D",

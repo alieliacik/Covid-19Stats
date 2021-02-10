@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
   View,
@@ -13,10 +13,11 @@ import {
 } from "react-native";
 import DateTimePickerModal from "react-native-modal-datetime-picker";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
+import moment from "moment";
+import ProgressCircle from "react-native-progress-circle";
 
 import * as userActions from "../../store/actions/user";
 import Colors from "../../constants/Colors";
-import moment from "moment";
 
 const Profile = () => {
   const dispatch = useDispatch();
@@ -39,52 +40,60 @@ const Profile = () => {
   const [isUpdating, setIsUpdating] = useState(false);
   const [selectedItemId, setSelectedItemId] = useState();
 
-  const infectedDateHandler = async (date) => {
-    const currentDate = new Date().getTime();
-    if (currentDate < date) {
-      Alert.alert(
-        "A date in the future has been selected!",
-        "Please change it",
-        [
-          {
-            text: "Okay",
-          },
-        ]
-      );
-      if (Platform.OS === "android") {
-        hideDatePicker();
+  const infectedDateHandler = useCallback(
+    async (date) => {
+      const currentDate = new Date().getTime();
+      if (currentDate < date) {
+        Alert.alert(
+          "A date in the future has been selected!",
+          "Please change it",
+          [
+            {
+              text: "Okay",
+            },
+          ]
+        );
+        if (Platform.OS === "android") {
+          hideDatePicker();
+        }
+      } else if (currentDate - date > 1209600000) {
+        Alert.alert(
+          "A date older than 14 days has been selected!",
+          "Please change it",
+          [
+            {
+              text: "Okay",
+            },
+          ]
+        );
+        if (Platform.OS === "android") {
+          hideDatePicker();
+        }
+      } else {
+        try {
+          setDate(date);
+          hideDatePicker();
+          setIsLoading(true);
+          setError(null);
+          isUpdating
+            ? await dispatch(
+                userActions.updateInfectedDate(date, selectedItemId)
+              )
+            : await dispatch(userActions.sendInfectedDate(date));
+        } catch (error) {
+          setError(error.message);
+        }
+        setIsLoading(false);
       }
-    } else if (currentDate - date > 1209600000) {
-      Alert.alert(
-        "A date older than 14 days has been selected!",
-        "Please change it",
-        [
-          {
-            text: "Okay",
-          },
-        ]
-      );
-      if (Platform.OS === "android") {
-        hideDatePicker();
-      }
-    } else {
-      setDate(date);
-      hideDatePicker();
-      setIsLoading(true);
-      setError(null);
-      try {
-        isUpdating
-          ? await dispatch(userActions.updateInfectedDate(date, selectedItemId))
-          : await dispatch(userActions.sendInfectedDate(date));
-      } catch (error) {
-        setError(error.message);
-      }
-      setIsLoading(false);
-    }
-  };
+    },
+    [date]
+  );
 
   const fetchInfectedDatesHandler = async () => {
-    await dispatch(userActions.fetchInfectedDates());
+    setIsLoading(true);
+    await dispatch(userActions.fetchInfectedDates()).then(() =>
+      setIsLoading(false)
+    );
   };
 
   const deleteInfectedDateHandler = async (id) => {
@@ -108,7 +117,7 @@ const Profile = () => {
 
   useEffect(() => {
     fetchInfectedDatesHandler();
-  }, [isLoading]);
+  }, [infectedDateHandler]);
 
   useEffect(() => {
     if (error) {
@@ -132,34 +141,64 @@ const Profile = () => {
     TouchableButton = TouchableOpacity;
   }
 
+  let selfIsolationProgress = 0;
+  let dayToGo = "No countdown found!";
+  if (userInfectedDates.length > 0) {
+    const currentDate = new Date().getTime();
+    const selectedDate = new Date(userInfectedDates[0].infectedDate).getTime();
+    selfIsolationProgress = ((currentDate - selectedDate) / 1209600000) * 100;
+
+    dayToGo = 14 - Math.floor((currentDate - selectedDate) / 86400000);
+    console.log(userInfectedDates, selfIsolationProgress);
+  }
+
   return (
     <ScrollView contentContainerStyle={styles.container}>
-      <View>
-        <TouchableButton
-          onPress={() => {
-            setIsUpdating(false);
-            showDatePicker();
-          }}
-        >
-          <View style={styles.datePickerButton}>
-            <MaterialCommunityIcons name="calendar" size={22} color="#fff" />
-            <Text style={styles.datePickerButtonText}>
-              Set up a self-isolaton coundown
-            </Text>
+      {isLoading ? (
+        <ActivityIndicator />
+      ) : (
+        <View>
+          <View style={styles.progressCircle}>
+            <ProgressCircle
+              percent={userInfectedDates.length > 0 ? selfIsolationProgress : 0}
+              radius={120}
+              borderWidth={15}
+              shadowColor={Colors.lightGray}
+              color={Colors.green}
+              bgColor="#fff"
+              outerCircleStyle={{ marginVertical: 30 }}
+            >
+              <Text style={styles.progressCircleText}>{dayToGo}</Text>
+            </ProgressCircle>
           </View>
-        </TouchableButton>
 
-        <DateTimePickerModal
-          isVisible={isDatePickerVisible}
-          mode="datetime"
-          onConfirm={infectedDateHandler}
-          onCancel={hideDatePicker}
-        />
-      </View>
+          <TouchableButton
+            onPress={() => {
+              setIsUpdating(false);
+              showDatePicker();
+            }}
+          >
+            <View style={styles.datePickerButton}>
+              <MaterialCommunityIcons name="calendar" size={22} color="#fff" />
+              <Text style={styles.datePickerButtonText}>
+                Set up a self-isolaton coundown
+              </Text>
+            </View>
+          </TouchableButton>
+
+          <DateTimePickerModal
+            isVisible={isDatePickerVisible}
+            mode="datetime"
+            onConfirm={infectedDateHandler}
+            onCancel={hideDatePicker}
+          />
+        </View>
+      )}
+
       {userInfectedDates.map((date) => (
         <View key={date.id}>
           <Text onPress={() => deleteInfectedDateHandler(date.id)}>
-            {JSON.stringify(date.infectedDate)}
+            {new Date(date.infectedDate).getTime()}
           </Text>
           <Text
             onPress={() => {
@@ -198,5 +237,13 @@ const styles = StyleSheet.create({
     color: "#fff",
     fontSize: 16,
     marginLeft: 10,
+  },
+  progressCircle: {
+    alignItems: "center",
+  },
+  progressCircleText: {
+    textAlign: "center",
+    fontFamily: "open-sans",
+    fontSize: 16,
   },
 });
