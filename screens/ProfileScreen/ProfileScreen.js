@@ -41,7 +41,7 @@ const ProfileScreen = (props) => {
     setIsLoading(true);
     try {
       await dispatch(action);
-      props.navigation.navigate("ProfileLogin");
+      props.navigation.replace("ProfileLogin");
     } catch (err) {
       setError(err.message);
       setIsLoading(false);

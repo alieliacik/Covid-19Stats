@@ -2,6 +2,7 @@ export const SEND_INFECTED_DATE = "SEND_INFECTED_DATE";
 export const FETCH_INFECTED_DATES = "FETCH_INFECTED_DATES";
 export const DELETE_INFECTED_DATES = "DELETE_INFECTED_DATES";
 export const UPDATE_INFECTED_DATE = "UPDATE_INFECTED_DATE";
+export const SET_USER_COUNTRY = "SET_USER_COUNTRY";
 
 export const sendInfectedDate = (infectedDate) => {
   return async (disptach, getState) => {
@@ -88,5 +89,12 @@ export const updateInfectedDate = (infectedDate, id) => {
     dispatch({
       type: UPDATE_INFECTED_DATE,
     });
+  };
+};
+
+export const userCountryHandler = (userCountry) => {
+  return {
+    type: SET_USER_COUNTRY,
+    userCountry: userCountry,
   };
 };

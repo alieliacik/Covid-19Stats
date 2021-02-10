@@ -1,7 +1,8 @@
-import { FETCH_INFECTED_DATES } from "../actions/user";
+import { FETCH_INFECTED_DATES, SET_USER_COUNTRY } from "../actions/user";
 
 const initialState = {
   userInfectedDates: [],
+  userCountry: "",
 };
 
 export default (state = initialState, action) => {
@@ -10,6 +11,11 @@ export default (state = initialState, action) => {
       return {
         ...state,
         userInfectedDates: action.userInfectedDates,
+      };
+    case SET_USER_COUNTRY:
+      return {
+        ...state,
+        userCountry: action.userCountry,
       };
     default:
       return state;
