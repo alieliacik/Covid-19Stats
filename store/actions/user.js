@@ -22,8 +22,7 @@ export const sendInfectedDate = (infectedDate) => {
     );
 
     if (!response.ok) {
-      const errorResData = await response.json();
-      throw new Error(errorResData);
+      throw new Error("Something went wrong!");
     }
 
     disptach({
@@ -41,7 +40,7 @@ export const fetchInfectedDates = () => {
     );
 
     if (!response.ok) {
-      const errorResData = response.json();
+      throw new Error("Something went wrong!");
     }
 
     const resData = await response.json();
@@ -62,6 +61,10 @@ export const deleteInfectedDate = (id) => {
         method: "DELETE",
       }
     );
+
+    if (!response.ok) {
+      throw new Error("Something went wrong!");
+    }
     dispatch({
       type: DELETE_INFECTED_DATES,
     });
@@ -84,6 +87,10 @@ export const updateInfectedDate = (infectedDate, id) => {
         }),
       }
     );
+
+    if (!response.ok) {
+      throw new Error("Something went wrong!");
+    }
 
     const resData = await response.json();
     dispatch({

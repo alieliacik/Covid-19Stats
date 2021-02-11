@@ -13,12 +13,11 @@ import {
 } from "react-native";
 import DateTimePickerModal from "react-native-modal-datetime-picker";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
-import moment from "moment";
 import ProgressCircle from "react-native-progress-circle";
+import { vw } from "react-native-expo-viewport-units";
 
 import * as userActions from "../../store/actions/user";
 import Colors from "../../constants/Colors";
-import { vw } from "react-native-expo-viewport-units";
 
 const Profile = () => {
   const dispatch = useDispatch();
@@ -78,7 +77,7 @@ const Profile = () => {
           ? await dispatch(userActions.updateInfectedDate(date, selectedItemId))
           : await dispatch(userActions.sendInfectedDate(date));
       } catch (error) {
-        setError(error.message);
+        setError(error);
       }
     }
   };
@@ -87,28 +86,23 @@ const Profile = () => {
     await dispatch(userActions.fetchInfectedDates());
   };
 
-  const deleteInfectedDateHandler = useCallback(
-    async (id) => {
-      Alert.alert("Are you sure?", "Do you really want to delete this date?", [
-        { text: "No" },
-        {
-          text: "Yes",
-          onPress: async () => {
-            setError(null);
-            try {
-              await dispatch(userActions.deleteInfectedDate(id));
-              setDate(new Date());
-            } catch (error) {
-              setError(error.message);
-            }
-          },
+  const deleteInfectedDateHandler = async (id) => {
+    Alert.alert("Are you sure?", "Do you really want to delete this date?", [
+      { text: "No" },
+      {
+        text: "Yes",
+        onPress: async () => {
+          setError(null);
+          try {
+            await dispatch(userActions.deleteInfectedDate(id));
+            setDate(new Date());
+          } catch (error) {
+            setError(error);
+          }
         },
-      ]);
-    },
-    [dispatch]
-  );
-
-  console.log("asd");
+      },
+    ]);
+  };
 
   useEffect(() => {
     setIsLoading(true);
