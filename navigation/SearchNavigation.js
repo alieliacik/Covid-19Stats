@@ -14,7 +14,11 @@ const SearchNavigaton = (props) => (
       headerBackground: () => <HeaderBackgroundComponent />,
     }}
   >
-    <SearchStack.Screen name="Search" component={SearchScreen} />
+    <SearchStack.Screen
+      name="Search"
+      component={SearchScreen}
+      initialParams={{ isUserCountry: false }}
+    />
   </SearchStack.Navigator>
 );
 export default SearchNavigaton;

@@ -10,16 +10,22 @@ import {
   StyleSheet,
   ScrollView,
   Platform,
+  InteractionManager,
 } from "react-native";
 import DateTimePickerModal from "react-native-modal-datetime-picker";
-import { MaterialCommunityIcons } from "@expo/vector-icons";
+import {
+  MaterialCommunityIcons,
+  FontAwesome5,
+  Entypo,
+} from "@expo/vector-icons";
 import ProgressCircle from "react-native-progress-circle";
 import { vw } from "react-native-expo-viewport-units";
 
 import * as userActions from "../../store/actions/user";
 import Colors from "../../constants/Colors";
+import { useFocusEffect } from "@react-navigation/native";
 
-const Profile = () => {
+const Profile = (props) => {
   const dispatch = useDispatch();
   const userInfectedDates = useSelector((state) => {
     let infectedDates = state.user.userInfectedDates;
@@ -32,8 +38,19 @@ const Profile = () => {
     }
     return modifiedInfectedDates;
   });
+  const userCountry = useSelector((state) => {
+    let country = state.user.userCountry;
+    let modifiedCountry = [];
+    for (const key in country) {
+      modifiedCountry.push({
+        id: key,
+        country: country[key].userCountry,
+      });
+    }
+    return modifiedCountry;
+  });
 
-  const [isLoading, setIsLoading] = useState();
+  const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState();
   const [date, setDate] = useState(new Date());
   const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
@@ -69,10 +86,16 @@ const Profile = () => {
         hideDatePicker();
       }
     } else {
-      setDate(date);
+      if (Platform.OS === "ios") {
+        setDate(date);
+      }
       hideDatePicker();
       setError(null);
       try {
+        if (Platform.OS === "android") {
+          setDate(date);
+        }
+
         isUpdating
           ? await dispatch(userActions.updateInfectedDate(date, selectedItemId))
           : await dispatch(userActions.sendInfectedDate(date));
@@ -104,10 +127,34 @@ const Profile = () => {
     ]);
   };
 
-  useEffect(() => {
-    setIsLoading(true);
-    fetchInfectedDatesHandler().then(() => setIsLoading(false));
-  }, [date]);
+  const deleteUserCountryHandler = async (id) => {
+    Alert.alert(
+      "Are you sure?",
+      "Do you realy want to delete your selected country?",
+      [
+        { text: "No" },
+        {
+          text: "Yes",
+          onPress: async () => {
+            await dispatch(userActions.deleteUserCountry(id));
+            setDate(new Date());
+          },
+        },
+      ]
+    );
+  };
+
+  const fetchUserCountryHandler = async () => {
+    await dispatch(userActions.fetchUserCountry());
+  };
+
+  useFocusEffect(
+    useCallback(() => {
+      setIsLoading(true);
+      fetchInfectedDatesHandler().then(() => setIsLoading(false));
+      fetchUserCountryHandler();
+    }, [date])
+  );
 
   useEffect(() => {
     if (error) {
@@ -176,7 +223,7 @@ const Profile = () => {
           )}
         </View>
         {daysToGo > 0 ? (
-          <View style={styles.editDeleteContainer}>
+          <View style={styles.buttonNarrowContainer}>
             <TouchableButton
               onPress={() => {
                 setSelectedItemId(userInfectedDates[0].id);
@@ -184,29 +231,25 @@ const Profile = () => {
                 setIsUpdating(true);
               }}
             >
-              <View style={styles.editDeleteButton}>
+              <View style={styles.buttonNarrow}>
                 <MaterialCommunityIcons
                   name="calendar-edit"
                   size={20}
                   color="#fff"
                 />
-                <Text style={styles.editDeleteText}>Edit</Text>
+                <Text style={styles.buttonNarrowText}>Edit</Text>
               </View>
             </TouchableButton>
             <TouchableButton
-              onPress={() => {
-                deleteInfectedDateHandler(userInfectedDates[0].id);
-              }}
+              onPress={() => deleteInfectedDateHandler(userInfectedDates[0].id)}
             >
-              <View
-                style={[styles.editDeleteButton, { backgroundColor: "red" }]}
-              >
+              <View style={[styles.buttonNarrow, { backgroundColor: "red" }]}>
                 <MaterialCommunityIcons
                   name="delete-empty"
                   size={22}
                   color="#fff"
                 />
-                <Text style={styles.editDeleteText}>Delete</Text>
+                <Text style={styles.buttonNarrowText}>Delete</Text>
               </View>
             </TouchableButton>
           </View>
@@ -217,15 +260,63 @@ const Profile = () => {
               showDatePicker();
             }}
           >
-            <View style={styles.datePickerButton}>
+            <View style={styles.buttonWide}>
               <MaterialCommunityIcons name="calendar" size={22} color="#fff" />
-              <Text style={styles.datePickerButtonText}>
+              <Text style={styles.buttonWideText}>
                 Set up a self-isolaton coundown
               </Text>
             </View>
           </TouchableButton>
         )}
 
+        <View style={styles.hr}></View>
+        {userCountry.length <= 0 ? (
+          <TouchableButton
+            onPress={() => {
+              props.navigation.navigate("SelectMyCountry", {
+                isUpdatingCountry: false,
+              });
+            }}
+          >
+            <View style={styles.buttonWide}>
+              <FontAwesome5 name="globe-americas" size={18} color="#fff" />
+              <Text style={styles.buttonWideText}>Select your country</Text>
+            </View>
+          </TouchableButton>
+        ) : (
+          <View style={styles.myCountryContainer}>
+            <Text style={styles.contentHeader}>My Country</Text>
+            <View style={styles.myCountryContentContainer}>
+              <Text style={styles.myCountryText}>{userCountry[0].country}</Text>
+              <View style={styles.myCountryIconContainer}>
+                <Entypo
+                  name="edit"
+                  size={17}
+                  color="#fff"
+                  onPress={() =>
+                    props.navigation.navigate("SelectMyCountry", {
+                      isUpdatingCountry: true,
+                      id: userCountry[0].id,
+                    })
+                  }
+                />
+              </View>
+              <View
+                style={[
+                  styles.myCountryIconContainer,
+                  { backgroundColor: Colors.red },
+                ]}
+              >
+                <Entypo
+                  name="cross"
+                  size={25}
+                  color="#fff"
+                  onPress={() => deleteUserCountryHandler(userCountry[0].id)}
+                />
+              </View>
+            </View>
+          </View>
+        )}
         <View style={styles.hr}></View>
 
         <DateTimePickerModal
@@ -246,23 +337,24 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     marginVertical: 12,
   },
-  datePickerButton: {
+  buttonWide: {
     flexDirection: "row",
     justifyContent: "center",
+    alignItems: "center",
     backgroundColor: Colors.green,
     borderRadius: 8,
     paddingVertical: 9,
     overflow: "hidden",
-    width: vw(80),
+    width: vw(90),
     marginLeft: "auto",
     marginRight: "auto",
     marginTop: 15,
   },
-  datePickerButtonText: {
+  buttonWideText: {
     textAlign: "center",
-    fontFamily: "open-sans-bold",
+    fontFamily: "open-sans-semibold",
     color: "#fff",
-    fontSize: 16,
+    fontSize: 15,
     marginLeft: 10,
   },
   progressCircle: {
@@ -284,14 +376,14 @@ const styles = StyleSheet.create({
     marginBottom: 30,
     fontSize: 16,
   },
-  editDeleteContainer: {
-    width: vw(80),
+  buttonNarrowContainer: {
+    width: vw(90),
     marginRight: "auto",
     marginLeft: "auto",
     flexDirection: "row",
     justifyContent: "space-between",
   },
-  editDeleteButton: {
+  buttonNarrow: {
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "center",
@@ -300,13 +392,12 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     paddingVertical: 7,
   },
-  editDeleteText: {
+  buttonNarrowText: {
     color: "#fff",
     fontFamily: "open-sans-semibold",
     fontSize: 16,
     marginLeft: 7,
   },
-
   hr: {
     height: 2,
     width: vw(90),
@@ -314,5 +405,37 @@ const styles = StyleSheet.create({
     marginRight: "auto",
     marginLeft: "auto",
     marginVertical: 15,
+  },
+  myCountryContainer: {
+    width: vw(90),
+    marginLeft: "auto",
+    marginRight: "auto",
+  },
+  contentHeader: {
+    fontFamily: "open-sans-semibold",
+    fontSize: 16,
+    textDecorationLine: "underline",
+    textDecorationStyle: "solid",
+    textDecorationColor: "black",
+    marginBottom: 5,
+  },
+  myCountryContentContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+  },
+  myCountryText: {
+    marginRight: "auto",
+    fontFamily: "open-sans",
+    fontSize: 16,
+  },
+  myCountryIconContainer: {
+    backgroundColor: Colors.blue,
+    opacity: 0.9,
+    borderRadius: 5,
+    height: 30,
+    width: 30,
+    alignItems: "center",
+    justifyContent: "center",
+    marginLeft: 10,
   },
 });

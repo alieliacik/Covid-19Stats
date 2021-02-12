@@ -4,7 +4,7 @@ import { createStackNavigator } from "@react-navigation/stack";
 
 import ProfileScreen from "../screens/ProfileScreen/ProfileScreen";
 import Profile from "../screens/ProfileScreen/Profile";
-
+import SelectMyCountry from "../screens/ProfileScreen/SelectMyCountry";
 const ProfileStack = createStackNavigator();
 
 const ProfileNavigaton = () => {
@@ -19,6 +19,7 @@ const ProfileNavigaton = () => {
           headerTitle: userEmail,
         }}
       />
+      <ProfileStack.Screen name="SelectMyCountry" component={SelectMyCountry} />
     </ProfileStack.Navigator>
   );
 };

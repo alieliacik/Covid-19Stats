@@ -16,8 +16,9 @@ import { countryCodeEmoji } from "country-code-emoji";
 
 import Colors from "../../constants/Colors";
 import * as statsActions from "../../store/actions/stats";
+import * as userActions from "../../store/actions/user";
 
-const Search = (props) => {
+const SelectMyCountry = (props) => {
   const dispatch = useDispatch();
   const [isLoading, setIsLoading] = useState(false);
   const [searchVal, setSearchVal] = useState("");
@@ -50,6 +51,14 @@ const Search = (props) => {
     }
   };
 
+  const setUserCountryHandler = async (userCountry) => {
+    await dispatch(userActions.setUserCountry(userCountry));
+  };
+
+  const updateUserCountryHandler = async (userCountry, id) => {
+    await dispatch(userActions.updateUserCountry(userCountry, id));
+  };
+
   useEffect(() => {
     loadCountryStats().then(() => setIsLoading(false));
   }, [searchVal]);
@@ -61,24 +70,6 @@ const Search = (props) => {
   } else {
     TouchableButton = TouchableOpacity;
   }
-
-  const FlatListHeader = () => (
-    <TouchableButton
-      style={styles.worldwideContainer}
-      onPress={() => props.navigation.navigate("Home", { screen: "Global" })}
-    >
-      <View style={styles.country}>
-        <View style={styles.countryContainer}>
-          <Image
-            style={styles.globePng}
-            source={require("../../assets/worldwide.png")}
-          />
-
-          <Text style={styles.countryName}>Worldwide</Text>
-        </View>
-      </View>
-    </TouchableButton>
-  );
   return (
     <View style={styles.container}>
       <View style={styles.textInputContainer}>
@@ -103,7 +94,6 @@ const Search = (props) => {
         <FlatList
           data={countryTotals}
           keyExtractor={(itemData) => itemData.country}
-          ListHeaderComponent={() => <FlatListHeader />}
           keyboardShouldPersistTaps="always"
           style={{ width: "100%" }}
           renderItem={(itemData) => {
@@ -111,14 +101,18 @@ const Search = (props) => {
             return (
               <View style={{ marginHorizontal: 5, marginVertical: 3.5 }}>
                 <TouchableButton
-                  onPress={() =>
-                    props.navigation.navigate("Home", {
-                      screen: "MyCountry",
-                      params: {
-                        selectedCountry: itemData.item,
-                      },
-                    })
-                  }
+                  onPress={() => {
+                    if (props.route.params.isUpdatingCountry) {
+                      console.log(props.route.params.id);
+                      updateUserCountryHandler(
+                        itemData.item.country,
+                        props.route.params.id
+                      );
+                    } else {
+                      setUserCountryHandler(itemData.item.country);
+                    }
+                    props.navigation.goBack();
+                  }}
                 >
                   <View style={styles.country}>
                     <View style={styles.countryContainer}>
@@ -138,7 +132,7 @@ const Search = (props) => {
   );
 };
 
-export default Search;
+export default SelectMyCountry;
 
 const styles = StyleSheet.create({
   container: {

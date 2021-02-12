@@ -224,8 +224,6 @@ export default ProfileScreen;
 const styles = StyleSheet.create({
   container: { backgroundColor: "#fff", flex: 1, minHeight: vh(100) },
   headerContainer: {
-    borderBottomLeftRadius: 5,
-    borderBottomRightRadius: 5,
     overflow: "hidden",
   },
   header: {
