@@ -1801,6 +1801,12 @@
     react-native-reanimated "^2.0.0-alpha.5"
     react-native-svg "^12.1.0"
 
+"@react-native-async-storage/async-storage@react-native-community/async-storage":
+  version "1.13.0"
+  resolved "https://codeload.github.com/react-native-community/async-storage/tar.gz/078d228928ae175c799905727b2affc02bde166a"
+  dependencies:
+    deep-assign "^3.0.0"
+
 "@react-native-community/cli-debugger-ui@^4.13.1":
   version "4.13.1"
   resolved "https://registry.yarnpkg.com/@react-native-community/cli-debugger-ui/-/cli-debugger-ui-4.13.1.tgz#07de6d4dab80ec49231de1f1fbf658b4ad39b32c"

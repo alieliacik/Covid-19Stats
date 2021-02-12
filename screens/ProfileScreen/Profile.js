@@ -10,7 +10,6 @@ import {
   StyleSheet,
   ScrollView,
   Platform,
-  InteractionManager,
 } from "react-native";
 import DateTimePickerModal from "react-native-modal-datetime-picker";
 import {
@@ -95,7 +94,6 @@ const Profile = (props) => {
         if (Platform.OS === "android") {
           setDate(date);
         }
-
         isUpdating
           ? await dispatch(userActions.updateInfectedDate(date, selectedItemId))
           : await dispatch(userActions.sendInfectedDate(date));
@@ -106,7 +104,12 @@ const Profile = (props) => {
   };
 
   const fetchInfectedDatesHandler = async () => {
-    await dispatch(userActions.fetchInfectedDates());
+    setError(null);
+    try {
+      await dispatch(userActions.fetchInfectedDates());
+    } catch (error) {
+      setError(error);
+    }
   };
 
   const deleteInfectedDateHandler = async (id) => {
@@ -136,8 +139,13 @@ const Profile = (props) => {
         {
           text: "Yes",
           onPress: async () => {
-            await dispatch(userActions.deleteUserCountry(id));
-            setDate(new Date());
+            setError(null);
+            try {
+              await dispatch(userActions.deleteUserCountry(id));
+              setDate(new Date());
+            } catch (error) {
+              setError(error);
+            }
           },
         },
       ]
@@ -151,8 +159,9 @@ const Profile = (props) => {
   useFocusEffect(
     useCallback(() => {
       setIsLoading(true);
-      fetchInfectedDatesHandler().then(() => setIsLoading(false));
-      fetchUserCountryHandler();
+      fetchInfectedDatesHandler()
+        .then(() => fetchUserCountryHandler())
+        .then(() => setIsLoading(false));
     }, [date])
   );
 

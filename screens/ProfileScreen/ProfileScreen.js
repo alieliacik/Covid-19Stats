@@ -46,6 +46,7 @@ const ProfileScreen = (props) => {
       setError(err.message);
       setIsLoading(false);
     }
+    setIsLoading(false);
   };
 
   useEffect(() => {
@@ -178,7 +179,7 @@ const ProfileScreen = (props) => {
               <TouchableButton onPress={handleSubmit} title="Submit">
                 <View style={[styles.btn, { marginTop: 15 }]}>
                   {isLoading ? (
-                    <ActivityIndicator color="#fff" />
+                    <ActivityIndicator size="small" color="#fff" />
                   ) : (
                     <Text style={styles.btnText}>
                       {isSigningUp ? "Sign Up" : "Log In"}
@@ -274,7 +275,7 @@ const styles = StyleSheet.create({
   btn: {
     backgroundColor: Colors.blue,
     borderRadius: 8,
-    paddingVertical: 12,
+    paddingVertical: 8,
     overflow: "hidden",
     width: vw(75),
   },
