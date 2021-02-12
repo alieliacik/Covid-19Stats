@@ -121,6 +121,10 @@ export const setUserCountry = (userCountry) => {
       }
     );
 
+    if (!response.ok) {
+      throw new Error("Something went wrong!");
+    }
+
     const resdData = await response.json();
     return dispatch({
       type: SET_USER_COUNTRY,
@@ -134,6 +138,10 @@ export const fetchUserCountry = () => {
     const response = await fetch(
       `https://cov19stats-8f95e-default-rtdb.firebaseio.com/${userId}/user-country.json`
     );
+
+    if (!response.ok) {
+      throw new Error("Something went wrong!");
+    }
 
     const resData = await response.json();
     dispatch({
@@ -153,6 +161,10 @@ export const deleteUserCountry = (id) => {
         method: "DELETE",
       }
     );
+
+    if (!response.ok) {
+      throw new Error("Something went wrong!");
+    }
 
     const resData = await response.json();
     dispatch({
