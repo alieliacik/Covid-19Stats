@@ -1,25 +1,31 @@
-import { LOGIN, SIGNUP } from "../actions/auth";
+import {
+  LOGIN,
+  SIGNUP,
+  AUTHENTICATE,
+  IS_STILL_LOGGED_IN,
+} from "../actions/auth";
 
 const initialState = {
   token: "",
   userId: "",
   email: "",
+  isLoggedIn: null,
 };
 
 export default (state = initialState, action) => {
   switch (action.type) {
-    case SIGNUP:
+    case AUTHENTICATE:
       return {
         token: action.token,
         userId: action.userId,
         email: action.email,
+        isLoggedIn: action.isLoggedIn,
       };
-    case LOGIN:
+    case IS_STILL_LOGGED_IN: {
       return {
-        token: action.token,
-        userId: action.userId,
-        email: action.email,
+        isLoggedIn: action.isLoggedIn,
       };
+    }
     default:
       return state;
   }

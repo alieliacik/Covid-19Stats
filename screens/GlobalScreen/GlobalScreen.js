@@ -1,4 +1,9 @@
-import React, { useEffect, useState, useCallback } from "react";
+import React, {
+  useEffect,
+  useState,
+  useCallback,
+  useLayoutEffect,
+} from "react";
 import { useSelector, useDispatch } from "react-redux";
 import styled from "styled-components/native";
 import {
@@ -21,6 +26,8 @@ import Colors from "../../constants/Colors";
 import * as statsActions from "../../store/actions/stats";
 import Card from "../../components/Card";
 import FadeInView from "../../constants/FadeInView";
+import StartUpScreen from "../StartupScreen";
+import HeaderBackgroundComponent from "../../components/HeaderBackgroundComponent";
 const Container = styled.View`
   flex: 1;
   justify-content: center;
@@ -98,106 +105,23 @@ const GlobalScreen = (props) => {
     TouchableButton = TouchableOpacity;
   }
 
-  if (isLoading) {
-    return (
-      <View>
-        <SkeletonPlaceholder backgroundColor="#fff">
+  const { navigation } = props;
+  useLayoutEffect(() => {
+    props.navigation.setOptions({
+      title: isLoading ? "" : "Global Stats",
+      headerBackground: () =>
+        isLoading ? (
           <View
-            style={{
-              marginVertical: 3.5,
-              marginHorizontal: 6,
-              height: 180,
-            }}
+            style={{ backgroundColor: Colors.backgroundBlue, flex: 1 }}
           ></View>
-          <View
-            style={{ height: 33, marginVertical: 5.5, marginHorizontal: 6 }}
-          ></View>
-          <View
-            style={{
-              height: 50,
-              marginVertical: 3.5,
-              marginHorizontal: 6,
-              borderRadius: 5,
-            }}
-          ></View>
-          <View
-            style={{
-              height: 50,
-              marginVertical: 3.5,
-              marginHorizontal: 6,
-              borderRadius: 5,
-            }}
-          ></View>
+        ) : (
+          <HeaderBackgroundComponent />
+        ),
+    });
+  }, [navigation, isLoading]);
 
-          <View
-            style={{
-              height: 50,
-              marginVertical: 3.5,
-              marginHorizontal: 6,
-              borderRadius: 5,
-            }}
-          ></View>
-          <View
-            style={{
-              height: 50,
-              marginVertical: 3.5,
-              marginHorizontal: 6,
-              borderRadius: 5,
-            }}
-          ></View>
-          <View
-            style={{
-              height: 50,
-              marginVertical: 3.5,
-              marginHorizontal: 6,
-              borderRadius: 5,
-            }}
-          ></View>
-          <View
-            style={{
-              height: 50,
-              marginVertical: 3.5,
-              marginHorizontal: 6,
-              borderRadius: 5,
-            }}
-          ></View>
-          <View
-            style={{
-              height: 50,
-              marginVertical: 3.5,
-              marginHorizontal: 6,
-              borderRadius: 5,
-            }}
-          ></View>
-        </SkeletonPlaceholder>
-        <SkeletonPlaceholder backgroundColor="#fff">
-          <View
-            style={{
-              height: 50,
-              marginVertical: 3.5,
-              marginHorizontal: 6,
-              borderRadius: 5,
-            }}
-          ></View>
-          <View
-            style={{
-              height: 50,
-              marginVertical: 3.5,
-              marginHorizontal: 6,
-              borderRadius: 5,
-            }}
-          ></View>
-          <View
-            style={{
-              height: 50,
-              marginVertical: 3.5,
-              marginHorizontal: 6,
-              borderRadius: 5,
-            }}
-          ></View>
-        </SkeletonPlaceholder>
-      </View>
-    );
+  if (isLoading) {
+    return <StartUpScreen />;
   }
 
   const FlatListHeader = () => (

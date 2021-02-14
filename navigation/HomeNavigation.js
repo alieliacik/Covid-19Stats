@@ -4,7 +4,6 @@ import { createStackNavigator } from "@react-navigation/stack";
 import GlobalScreen from "../screens/GlobalScreen/GlobalScreen";
 import CountryScreen from "../screens/CountryScreen/CountryScreen";
 import Colors from "../constants/Colors";
-import HeaderBackgroundComponent from "../components/HeaderBackgroundComponent";
 
 const HomeStack = createStackNavigator();
 
@@ -27,7 +26,6 @@ const HomeNavigation = () => {
           headerTitleStyle: {
             color: "#fff",
           },
-          headerBackground: () => <HeaderBackgroundComponent />,
         }}
       />
       <HomeStack.Screen

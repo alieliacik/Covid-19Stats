@@ -6,10 +6,10 @@ import { Provider } from "react-redux";
 import ReduxThunk from "redux-thunk";
 import { NavigationContainer } from "@react-navigation/native";
 
-import TabNavigation from "./navigation/TabNavigation";
 import statsReducer from "./store/reducers/stats";
 import authReducer from "./store/reducers/auth";
 import userReducer from "./store/reducers/user";
+import TabNavigation from "./navigation/TabNavigation";
 
 export default function App() {
   let [fontsLoaded] = useFonts({

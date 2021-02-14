@@ -9,6 +9,26 @@ const ProfileStack = createStackNavigator();
 
 const ProfileNavigaton = () => {
   const userEmail = useSelector((state) => state.auth.email);
+  const isLoggedIn = useSelector((state) => state.auth.isLoggedIn);
+
+  if (isLoggedIn) {
+    return (
+      <ProfileStack.Navigator>
+        <ProfileStack.Screen
+          name="ProfileLogin"
+          component={Profile}
+          options={{
+            headerTitle: userEmail,
+          }}
+        />
+        <ProfileStack.Screen
+          name="SelectMyCountry"
+          component={SelectMyCountry}
+        />
+      </ProfileStack.Navigator>
+    );
+  }
+
   return (
     <ProfileStack.Navigator>
       <ProfileStack.Screen name="Profile" component={ProfileScreen} />
