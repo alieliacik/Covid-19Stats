@@ -8,6 +8,9 @@ import {
   TouchableNativeFeedback,
   TouchableOpacity,
   FlatList,
+  RefreshControl,
+  LogBox,
+  ScrollView,
 } from "react-native";
 import TimeAgo from "react-native-timeago";
 
@@ -17,14 +20,17 @@ import SkeletonPlaceholder from "react-native-skeleton-placeholder";
 const News = (props) => {
   const dispatch = useDispatch();
   const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState();
+  const [isRefreshing, setIsRefreshing] = useState(false);
 
   const allNews = useSelector((state) => state.stats.allNews);
 
   const loadNews = async () => {
+    setError(null);
     try {
       await dispatch(statsActions.fetchNews());
     } catch (error) {
-      console.log(error.message);
+      setError(error.message);
     }
   };
   useEffect(() => {
@@ -32,7 +38,22 @@ const News = (props) => {
     loadNews().then(() => setIsLoading(false));
   }, []);
 
-  if (isLoading) {
+  useEffect(() => {
+    LogBox.ignoreLogs(["VirtualizedLists should never be nested"]);
+  }, []);
+
+  useEffect(() => {
+    if (error) {
+      Alert.alert("An Error Occurred!", error, [{ text: "Okay" }]);
+    }
+  }, []);
+
+  const handleRefresh = () => {
+    setIsRefreshing(true);
+    loadNews().then(() => setIsRefreshing(false));
+  };
+
+  if (isLoading || isRefreshing) {
     return <SkeletonComponent />;
   }
 
@@ -45,7 +66,11 @@ const News = (props) => {
   }
 
   return (
-    <View>
+    <ScrollView
+      refreshControl={
+        <RefreshControl refreshing={isRefreshing} onRefresh={handleRefresh} />
+      }
+    >
       <FlatList
         contentContainerStyle={styles.container}
         data={allNews.items}
@@ -84,7 +109,7 @@ const News = (props) => {
           </TouchableButton>
         )}
       />
-    </View>
+    </ScrollView>
   );
 };
 

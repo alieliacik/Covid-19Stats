@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { useFocusEffect } from "@react-navigation/native";
 import {
   View,
   Text,
@@ -21,8 +22,8 @@ import ProgressCircle from "react-native-progress-circle";
 import { vw } from "react-native-expo-viewport-units";
 
 import * as userActions from "../../store/actions/user";
+import * as authActions from "../../store/actions/auth";
 import Colors from "../../constants/Colors";
-import { useFocusEffect } from "@react-navigation/native";
 
 const Profile = (props) => {
   const dispatch = useDispatch();
@@ -98,7 +99,7 @@ const Profile = (props) => {
           ? await dispatch(userActions.updateInfectedDate(date, selectedItemId))
           : await dispatch(userActions.sendInfectedDate(date));
       } catch (error) {
-        setError(error);
+        setError(error.message);
       }
     }
   };
@@ -108,7 +109,7 @@ const Profile = (props) => {
     try {
       await dispatch(userActions.fetchInfectedDates());
     } catch (error) {
-      setError(error);
+      setError(error.message);
     }
   };
 
@@ -123,7 +124,7 @@ const Profile = (props) => {
             await dispatch(userActions.deleteInfectedDate(id));
             setDate(new Date());
           } catch (error) {
-            setError(error);
+            setError(error.mesage);
           }
         },
       },
@@ -144,7 +145,7 @@ const Profile = (props) => {
               await dispatch(userActions.deleteUserCountry(id));
               setDate(new Date());
             } catch (error) {
-              setError(error);
+              setError(error.message);
             }
           },
         },
@@ -232,66 +233,80 @@ const Profile = (props) => {
           )}
         </View>
         {daysToGo > 0 ? (
-          <View style={styles.buttonNarrowContainer}>
+          <View style={styles.buttonNarrowContentContainer}>
+            <View style={styles.buttonNarrowContainer}>
+              <TouchableButton
+                onPress={() => {
+                  setSelectedItemId(userInfectedDates[0].id);
+                  showDatePicker();
+                  setIsUpdating(true);
+                }}
+              >
+                <View style={styles.buttonNarrow}>
+                  <MaterialCommunityIcons
+                    name="calendar-edit"
+                    size={20}
+                    color="#fff"
+                  />
+                  <Text style={styles.buttonNarrowText}>Edit</Text>
+                </View>
+              </TouchableButton>
+            </View>
+            <View style={styles.buttonNarrowContainer}>
+              <TouchableButton
+                onPress={() =>
+                  deleteInfectedDateHandler(userInfectedDates[0].id)
+                }
+              >
+                <View style={[styles.buttonNarrow, { backgroundColor: "red" }]}>
+                  <MaterialCommunityIcons
+                    name="delete-empty"
+                    size={22}
+                    color="#fff"
+                  />
+                  <Text style={styles.buttonNarrowText}>Delete</Text>
+                </View>
+              </TouchableButton>
+            </View>
+          </View>
+        ) : (
+          <View style={styles.buttonWideContainer}>
             <TouchableButton
               onPress={() => {
-                setSelectedItemId(userInfectedDates[0].id);
+                setIsUpdating(false);
                 showDatePicker();
-                setIsUpdating(true);
               }}
             >
-              <View style={styles.buttonNarrow}>
+              <View style={styles.buttonWide}>
                 <MaterialCommunityIcons
-                  name="calendar-edit"
-                  size={20}
-                  color="#fff"
-                />
-                <Text style={styles.buttonNarrowText}>Edit</Text>
-              </View>
-            </TouchableButton>
-            <TouchableButton
-              onPress={() => deleteInfectedDateHandler(userInfectedDates[0].id)}
-            >
-              <View style={[styles.buttonNarrow, { backgroundColor: "red" }]}>
-                <MaterialCommunityIcons
-                  name="delete-empty"
+                  name="calendar"
                   size={22}
                   color="#fff"
                 />
-                <Text style={styles.buttonNarrowText}>Delete</Text>
+                <Text style={styles.buttonWideText}>
+                  Set up a self-isolaton coundown
+                </Text>
               </View>
             </TouchableButton>
           </View>
-        ) : (
-          <TouchableButton
-            onPress={() => {
-              setIsUpdating(false);
-              showDatePicker();
-            }}
-          >
-            <View style={styles.buttonWide}>
-              <MaterialCommunityIcons name="calendar" size={22} color="#fff" />
-              <Text style={styles.buttonWideText}>
-                Set up a self-isolaton coundown
-              </Text>
-            </View>
-          </TouchableButton>
         )}
 
         <View style={styles.hr}></View>
         {userCountry.length <= 0 ? (
-          <TouchableButton
-            onPress={() => {
-              props.navigation.navigate("SelectMyCountry", {
-                isUpdatingCountry: false,
-              });
-            }}
-          >
-            <View style={styles.buttonWide}>
-              <FontAwesome5 name="globe-americas" size={18} color="#fff" />
-              <Text style={styles.buttonWideText}>Select your country</Text>
-            </View>
-          </TouchableButton>
+          <View style={styles.buttonWideContainer}>
+            <TouchableButton
+              onPress={() => {
+                props.navigation.navigate("SelectMyCountry", {
+                  isUpdatingCountry: false,
+                });
+              }}
+            >
+              <View style={styles.buttonWide}>
+                <FontAwesome5 name="globe-americas" size={18} color="#fff" />
+                <Text style={styles.buttonWideText}>Select your country</Text>
+              </View>
+            </TouchableButton>
+          </View>
         ) : (
           <View style={styles.myCountryContainer}>
             <Text style={styles.contentHeader}>My Country</Text>
@@ -327,14 +342,38 @@ const Profile = (props) => {
           </View>
         )}
         <View style={styles.hr}></View>
-
-        <DateTimePickerModal
-          isVisible={isDatePickerVisible}
-          mode="datetime"
-          onConfirm={infectedDateHandler}
-          onCancel={hideDatePicker}
-        />
+        <View
+          style={{
+            alignSelf: "stretch",
+            justifyContent: "center",
+            borderRadius: 10,
+            margin: 10,
+            overflow: "hidden",
+          }}
+        >
+          <View style={styles.logoutButtonContainer}>
+            <TouchableButton
+              onPress={() => {
+                dispatch(authActions.logout());
+                props.navigation.replace("Profile");
+              }}
+            >
+              <View style={styles.logoutButton}>
+                <MaterialCommunityIcons name="logout" size={18} color="black" />
+                <Text style={[styles.buttonWideText, { color: "black" }]}>
+                  Log Out
+                </Text>
+              </View>
+            </TouchableButton>
+          </View>
+        </View>
       </View>
+      <DateTimePickerModal
+        isVisible={isDatePickerVisible}
+        mode="datetime"
+        onConfirm={infectedDateHandler}
+        onCancel={hideDatePicker}
+      />
     </ScrollView>
   );
 };
@@ -346,18 +385,28 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     marginVertical: 12,
   },
-  buttonWide: {
-    flexDirection: "row",
-    justifyContent: "center",
-    alignItems: "center",
-    backgroundColor: Colors.green,
+  buttonWideContainer: {
     borderRadius: 8,
-    paddingVertical: 9,
     overflow: "hidden",
     width: vw(90),
     marginLeft: "auto",
     marginRight: "auto",
     marginTop: 15,
+    elevation: 5,
+    shadowColor: "black",
+    shadowOffset: {
+      width: 5,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 8,
+  },
+  buttonWide: {
+    flexDirection: "row",
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: Colors.green,
+    paddingVertical: 9,
   },
   buttonWideText: {
     textAlign: "center",
@@ -385,20 +434,31 @@ const styles = StyleSheet.create({
     marginBottom: 30,
     fontSize: 16,
   },
-  buttonNarrowContainer: {
+  buttonNarrowContentContainer: {
     width: vw(90),
     marginRight: "auto",
     marginLeft: "auto",
     flexDirection: "row",
     justifyContent: "space-between",
   },
+  buttonNarrowContainer: {
+    width: vw(35),
+    borderRadius: 5,
+    overflow: "hidden",
+    elevation: 5,
+    shadowColor: "black",
+    shadowOffset: {
+      width: 5,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 8,
+  },
   buttonNarrow: {
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "center",
     backgroundColor: Colors.blue,
-    width: vw(35),
-    borderRadius: 5,
     paddingVertical: 7,
   },
   buttonNarrowText: {
@@ -446,5 +506,28 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     marginLeft: 10,
+  },
+  logoutButtonContainer: {
+    width: vw(70),
+    marginLeft: "auto",
+    marginRight: "auto",
+    marginVertical: 35,
+    elevation: 5,
+    shadowColor: "black",
+    shadowOffset: {
+      width: 5,
+      height: 2,
+    },
+    shadowOpacity: 0.05,
+    shadowRadius: 8,
+    borderRadius: 8,
+    overflow: "hidden",
+  },
+  logoutButton: {
+    flexDirection: "row",
+    justifyContent: "center",
+    alignItems: "center",
+    paddingVertical: 9,
+    backgroundColor: "#fff",
   },
 });

@@ -5,7 +5,6 @@ import React, {
   useLayoutEffect,
 } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import styled from "styled-components/native";
 import {
   Alert,
   FlatList,
@@ -14,6 +13,9 @@ import {
   View,
   Platform,
   TouchableOpacity,
+  RefreshControl,
+  ScrollView,
+  LogBox,
 } from "react-native";
 import * as Location from "expo-location";
 import * as Permissions from "expo-permissions";
@@ -28,17 +30,15 @@ import Card from "../../components/Card";
 import FadeInView from "../../constants/FadeInView";
 import StartUpScreen from "../StartupScreen";
 import HeaderBackgroundComponent from "../../components/HeaderBackgroundComponent";
-const Container = styled.View`
-  flex: 1;
-  justify-content: center;
-  align-items: center;
-`;
 
 const GlobalScreen = (props) => {
   const dispatch = useDispatch();
+  const [error, setError] = useState();
   const countryTotals = useSelector((state) => state.stats.countryTotals);
   const globalStats = useSelector((state) => state.stats.globalStats);
   const [isLoading, setIsLoading] = useState(true);
+  const [isRefreshing, setIsRefreshing] = useState(false);
+
   // const fetchData = async () => {
   //   const response = await fetch(
   //     "http://api.coronatracker.com/v3/stats/worldometer/country"
@@ -56,11 +56,12 @@ const GlobalScreen = (props) => {
   // };
 
   const loadGlobalStats = useCallback(async () => {
+    setError(null);
     try {
       await dispatch(statsActions.fetchCountryTotalStats());
       await dispatch(statsActions.fetchGlobalStats());
-    } catch (err) {
-      console.log(err.message);
+    } catch (error) {
+      setError(error.message);
     }
   }, []);
   const getLocation = async () => {
@@ -80,7 +81,6 @@ const GlobalScreen = (props) => {
     };
     let currCountry = await Location.reverseGeocodeAsync(latAndLong).then(
       (res) => {
-        console.log(res[0].isoCountryCode);
         setCurrentCountry("Turkey");
         // setCurrentCountry(res[0].country);
       }
@@ -96,6 +96,23 @@ const GlobalScreen = (props) => {
     // fetchData().catch((err) => console.log(err));
     // getLocation();
   }, [dispatch]);
+
+  useEffect(() => {
+    if (error) {
+      Alert.alert("An Error Occurred", error, [{ text: "Okay" }]);
+    }
+  }, []);
+
+  const handleRefresh = () => {
+    setIsRefreshing(true);
+    loadGlobalStats().then(() => {
+      setIsRefreshing(false);
+    });
+  };
+
+  useEffect(() => {
+    LogBox.ignoreLogs(["VirtualizedLists should never be nested"]);
+  }, []);
 
   let TouchableButton;
 
@@ -175,13 +192,17 @@ const GlobalScreen = (props) => {
         >
           Country
         </Text>
-        <Text style={{ fontFamily: "open-sans-bold" }}>Case Number</Text>
+        <Text style={{ fontFamily: "open-sans-bold" }}>Case numbers</Text>
       </View>
     </View>
   );
 
   return (
-    <Container>
+    <ScrollView
+      refreshControl={
+        <RefreshControl refreshing={isRefreshing} onRefresh={handleRefresh} />
+      }
+    >
       <FlatList
         style={{ width: "100%" }}
         data={countryTotals}
@@ -208,14 +229,12 @@ const GlobalScreen = (props) => {
                   </View>
                   <View style={styles.countryContainer}>
                     {Number(itemData.item.dailyDeaths) !== 0 && (
-                      <FadeInView duration={500}>
-                        <View style={styles.dailyNewCasesContainer}>
-                          <AntDesign name="arrowup" size={12} color="#fff" />
-                          <Text style={styles.dailyNewCaseCount}>
-                            {itemData.item.dailyConfirmed}
-                          </Text>
-                        </View>
-                      </FadeInView>
+                      <View style={styles.dailyNewCasesContainer}>
+                        <AntDesign name="arrowup" size={12} color="#fff" />
+                        <Text style={styles.dailyNewCaseCount}>
+                          {itemData.item.dailyConfirmed}
+                        </Text>
+                      </View>
                     )}
                     <Text style={styles.totalCaseCount}>
                       {itemData.item.totalConfirmed}
@@ -227,13 +246,14 @@ const GlobalScreen = (props) => {
           );
         }}
       />
-    </Container>
+    </ScrollView>
   );
 };
 
 export default GlobalScreen;
 
 const styles = StyleSheet.create({
+  container: { flex: 1, alignItems: "center", justifyContent: "center" },
   cardContainer: {
     flexDirection: "row",
     justifyContent: "space-between",

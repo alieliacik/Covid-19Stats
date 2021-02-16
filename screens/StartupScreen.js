@@ -19,7 +19,6 @@ const StartUpScreen = () => {
 
       const transformedData = JSON.parse(userData);
       const { userId, token, email, expirationDate } = transformedData;
-      console.log("transformed", email);
       if (
         Number(expirationDate) <= new Date().getTime() ||
         !token ||
@@ -34,7 +33,7 @@ const StartUpScreen = () => {
       dispatch(authActions.isStillLoggenIn(true));
     };
     tryLogin();
-  }, [dispatch]);
+  }, []);
 
   return (
     <ImageBackground

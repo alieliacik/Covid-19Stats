@@ -9,8 +9,8 @@ import {
   Image,
   FlatList,
   Modal,
+  LogBox,
 } from "react-native";
-import { LogBox } from "react-native";
 import { vw } from "react-native-expo-viewport-units";
 import { AntDesign } from "@expo/vector-icons";
 
@@ -248,7 +248,7 @@ const styles = StyleSheet.create({
   },
   selfAssessmentButton: {
     backgroundColor: Colors.lightBlue,
-    borderRadius: 8,
+    // borderRadius: 8,
     paddingVertical: 12,
     marginBottom: 16,
     overflow: "hidden",
@@ -273,7 +273,6 @@ const styles = StyleSheet.create({
     backgroundColor: "#F9FAFC",
     borderRadius: 16,
     overflow: "hidden",
-    elevation: 5,
     shadowColor: "black",
     shadowOffset: {
       width: 5,
@@ -302,7 +301,6 @@ const styles = StyleSheet.create({
     marginBottom: 16,
     borderRadius: 16,
     overflow: "hidden",
-    elevation: 5,
     shadowColor: "black",
     shadowOffset: {
       width: 5,

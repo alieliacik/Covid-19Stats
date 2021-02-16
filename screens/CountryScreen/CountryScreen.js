@@ -9,7 +9,10 @@ import {
   ActivityIndicator,
   TouchableNativeFeedback,
   TouchableOpacity,
+  RefreshControl,
+  Alert,
 } from "react-native";
+import { useFocusEffect } from "@react-navigation/native";
 import { AntDesign } from "@expo/vector-icons";
 import TimeAgo from "react-native-timeago";
 
@@ -19,11 +22,13 @@ import CaseNumberChart from "../../components/CaseNumberChart";
 import MonthlyStats from "./MonthlyStats/MonthlyStats";
 
 const CountryScreen = (props) => {
+  const dispatch = useDispatch();
   const scrollRef = useRef();
   const timerRef = useRef();
-  const dispatch = useDispatch();
   const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState();
   const [showMonth, setShowMonth] = useState(false);
+  const [isRefreshing, setIsRefreshing] = useState(false);
   const allStats = useSelector((state) => state.stats.allStats);
   const {
     countryName,
@@ -36,10 +41,11 @@ const CountryScreen = (props) => {
   } = props.route.params.selectedCountry;
 
   const loadSelectedCountryStats = useCallback(async () => {
+    setError(null);
     try {
       await dispatch(statsActions.fetchCountryDailyStats(countryCode));
     } catch (error) {
-      console.log(error.message);
+      setError(error.message);
       props.navigation.goBack();
     }
   }, [countryCode]);
@@ -47,8 +53,27 @@ const CountryScreen = (props) => {
   useEffect(() => {
     setIsLoading(true);
     loadSelectedCountryStats().then(() => setIsLoading(false));
-    clearTimeout(timerRef.current);
+    return () => clearTimeout(timerRef.current);
   }, [dispatch]);
+
+  useFocusEffect(
+    useCallback(() => {
+      setShowMonth(false);
+      scrollRef.current?.scrollTo({
+        y: 0,
+        animated: false,
+      });
+      setIsLoading(true);
+      loadSelectedCountryStats().then(() => setIsLoading(false));
+      return () => clearTimeout(timerRef.current);
+    }, [])
+  );
+
+  useEffect(() => {
+    if (error) {
+      Alert.alert("An Error Occurred", error, [{ text: "Okay" }]);
+    }
+  }, [error]);
 
   const handleScroll = () => {
     setShowMonth((prevState) => !prevState);
@@ -60,6 +85,14 @@ const CountryScreen = (props) => {
     }, 1);
   };
 
+  const handleRefresh = () => {
+    setIsLoading(true);
+    loadSelectedCountryStats().then(() => {
+      setIsRefreshing(false);
+      setIsLoading(false);
+    });
+  };
+
   let TouchableButton;
 
   if (Platform.OS === "android") {
@@ -69,7 +102,13 @@ const CountryScreen = (props) => {
   }
 
   return (
-    <ScrollView ref={scrollRef} contentContainerStyle={{ paddingBottom: 10 }}>
+    <ScrollView
+      ref={scrollRef}
+      contentContainerStyle={{ paddingBottom: 10 }}
+      refreshControl={
+        <RefreshControl refreshing={isRefreshing} onRefresh={handleRefresh} />
+      }
+    >
       <View style={styles.header}>
         <Image
           style={styles.virusImage1}

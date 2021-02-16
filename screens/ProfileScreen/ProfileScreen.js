@@ -29,11 +29,14 @@ const ProfileScreen = (props) => {
   const [isEmailFocused, setIsEmailFocused] = useState();
   const [isPasswordFocused, setIsPasswordFocused] = useState();
   const [isSigningUp, setIsSigningUp] = useState();
+  const [isResettingPassword, setIsResettingPassword] = useState(false);
 
   const authHandler = async (email, password) => {
     let action;
     if (isSigningUp) {
       action = authActions.signUp(email, password);
+    } else if (isResettingPassword) {
+      action = authActions.sendPasswordResetEmail(email);
     } else {
       action = authActions.login(email, password);
     }
@@ -41,7 +44,16 @@ const ProfileScreen = (props) => {
     setIsLoading(true);
     try {
       await dispatch(action);
-      props.navigation.replace("ProfileLogin");
+      if (isResettingPassword) {
+        setIsResettingPassword(false);
+        Alert.alert(
+          "Password Reset",
+          `A password reset link has been sent to ${email}`,
+          [{ text: "Okay" }]
+        );
+      } else {
+        props.navigation.replace("ProfileLogin");
+      }
     } catch (err) {
       setError(err.message);
       setIsLoading(false);
@@ -63,7 +75,7 @@ const ProfileScreen = (props) => {
     TouchableButton = TouchableOpacity;
   }
 
-  const authValidationSchema = yup.object().shape({
+  let authValidationSchema = yup.object().shape({
     email: yup
       .string()
       .email("Please enter a valid email adress!")
@@ -73,6 +85,15 @@ const ProfileScreen = (props) => {
       .min(8, ({ min }) => `Password must be at least ${min} characters!`)
       .required("Password is required"),
   });
+
+  if (isResettingPassword) {
+    authValidationSchema = yup.object().shape({
+      email: yup
+        .string()
+        .email("Please enter a valid email adress!")
+        .required("Email adress is required!"),
+    });
+  }
 
   return (
     <ScrollView
@@ -90,7 +111,13 @@ const ProfileScreen = (props) => {
             end={[0.9, 1]}
             style={styles.linearGradient}
           />
-          <Text style={styles.headerText}>Welcome</Text>
+          <Text style={styles.headerText}>
+            {isResettingPassword
+              ? "Reset Password"
+              : isSigningUp
+              ? "Sign Up"
+              : "Log In"}
+          </Text>
         </ImageBackground>
       </View>
       <View style={styles.contentContainer}>
@@ -141,77 +168,98 @@ const ProfileScreen = (props) => {
                   <Text style={styles.inputError}>{errors.email}</Text>
                 )}
               </View>
-              <View>
-                <Text
-                  style={[
-                    styles.inputText,
-                    isPasswordFocused && styles.touched,
-                  ]}
-                >
-                  Password
-                </Text>
-                <View style={styles.textInputContainer}>
-                  <MaterialCommunityIcons
-                    name="key"
-                    size={24}
-                    color={Colors.lightBlue}
-                  />
-                  <TextInput
-                    onChangeText={handleChange("password")}
-                    onFocus={() => setIsPasswordFocused(true)}
-                    onBlur={() => setIsPasswordFocused(false)}
-                    value={values.password}
-                    placeholderTextColor={Colors.lightBlue}
-                    placeholder={
-                      isPasswordFocused || values.password.length > 0
-                        ? ""
-                        : "Password"
-                    }
-                    style={styles.textInput}
-                    secureTextEntry
-                  />
-                </View>
+              {!isResettingPassword && (
+                <View>
+                  <Text
+                    style={[
+                      styles.inputText,
+                      isPasswordFocused && styles.touched,
+                    ]}
+                  >
+                    Password
+                  </Text>
+                  <View style={styles.textInputContainer}>
+                    <MaterialCommunityIcons
+                      name="key"
+                      size={24}
+                      color={Colors.lightBlue}
+                    />
+                    <TextInput
+                      onChangeText={handleChange("password")}
+                      onFocus={() => setIsPasswordFocused(true)}
+                      onBlur={() => setIsPasswordFocused(false)}
+                      value={values.password}
+                      placeholderTextColor={Colors.lightBlue}
+                      placeholder={
+                        isPasswordFocused || values.password.length > 0
+                          ? ""
+                          : "Password"
+                      }
+                      style={styles.textInput}
+                      secureTextEntry
+                    />
+                  </View>
 
-                {errors.password && (
-                  <Text style={styles.inputError}>{errors.password}</Text>
-                )}
-              </View>
-              <TouchableButton onPress={handleSubmit} title="Submit">
-                <View style={[styles.btn, { marginTop: 15 }]}>
-                  {isLoading ? (
-                    <ActivityIndicator size="small" color="#fff" />
-                  ) : (
-                    <Text style={styles.btnText}>
-                      {isSigningUp ? "Sign Up" : "Log In"}
-                    </Text>
+                  {errors.password && (
+                    <Text style={styles.inputError}>{errors.password}</Text>
                   )}
                 </View>
-              </TouchableButton>
-              {!isSigningUp && (
+              )}
+              <View style={[styles.btnContainer, { marginTop: 15 }]}>
+                <TouchableButton onPress={handleSubmit} title="Submit">
+                  <View style={styles.btn}>
+                    {isLoading ? (
+                      <View style={{ marginVertical: 2 }}>
+                        <ActivityIndicator color="#fff" />
+                      </View>
+                    ) : (
+                      <Text style={styles.btnText}>
+                        {isResettingPassword
+                          ? "Reset Password"
+                          : isSigningUp
+                          ? "Sign Up"
+                          : "Log In"}
+                      </Text>
+                    )}
+                  </View>
+                </TouchableButton>
+              </View>
+              {!isSigningUp && !isResettingPassword && (
                 <TouchableOpacity onPress={handleSubmit}>
-                  <Text style={styles.forgotPassword}>Forgot Password?</Text>
+                  <Text
+                    onPress={() => setIsResettingPassword(true)}
+                    style={styles.forgotPassword}
+                  >
+                    Forgot Password?
+                  </Text>
+                </TouchableOpacity>
+              )}
+              <View style={styles.hr} />
+              {isResettingPassword && (
+                <TouchableOpacity onPress={() => setIsResettingPassword(false)}>
+                  <Text style={styles.backToLogin}>Back To Login</Text>
                 </TouchableOpacity>
               )}
 
-              <View style={styles.hr} />
-              <TouchableButton
-                onPress={() => {
-                  setIsSigningUp((prevstate) => !prevstate);
-                }}
-              >
-                <View
-                  style={[
-                    styles.btn,
-                    { backgroundColor: Colors.green, width: vw(50) },
-                  ]}
-                >
-                  <Text style={styles.btnText}>
-                    {isSigningUp
-                      ? "Alreay have an account?"
-                      : "Create New Account"}
-                  </Text>
+              {!isResettingPassword && (
+                <View style={[styles.btnContainer, { width: vw(60) }]}>
+                  <TouchableButton
+                    onPress={() => {
+                      setIsSigningUp((prevstate) => !prevstate);
+                    }}
+                  >
+                    <View
+                      style={[styles.btn, { backgroundColor: Colors.green }]}
+                    >
+                      <Text style={styles.btnText}>
+                        {isSigningUp
+                          ? "Alreay have an account?"
+                          : "Create New Account"}
+                      </Text>
+                    </View>
+                  </TouchableButton>
                 </View>
-              </TouchableButton>
+              )}
             </>
           )}
         </Formik>
@@ -243,7 +291,6 @@ const styles = StyleSheet.create({
     width: "100%",
     height: "100%",
     opacity: 0.8,
-    borderRadius: 10,
   },
   contentContainer: {
     marginTop: 30,
@@ -272,12 +319,23 @@ const styles = StyleSheet.create({
   placeholderStyle: {
     color: Colors.lightBlue,
   },
+
+  btnContainer: {
+    width: vw(75),
+    borderRadius: 5,
+    overflow: "hidden",
+    elevation: 5,
+    shadowColor: "black",
+    shadowOffset: {
+      width: 5,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 8,
+  },
   btn: {
     backgroundColor: Colors.blue,
-    borderRadius: 8,
     paddingVertical: 8,
-    overflow: "hidden",
-    width: vw(75),
   },
   btnText: {
     textAlign: "center",
@@ -301,5 +359,10 @@ const styles = StyleSheet.create({
     fontSize: 11,
     color: "#C0CCDA",
     textAlign: "right",
+  },
+
+  backToLogin: {
+    color: "black",
+    fontFamily: "open-sans-semibold",
   },
 });

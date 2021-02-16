@@ -20,7 +20,7 @@ import * as userActions from "../../store/actions/user";
 
 const SelectMyCountry = (props) => {
   const dispatch = useDispatch();
-  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState();
   const [searchVal, setSearchVal] = useState("");
   const countryTotals = useSelector((state) => state.stats.countryTotals)
     .filter(
@@ -43,11 +43,12 @@ const SelectMyCountry = (props) => {
   };
 
   const loadCountryStats = async () => {
+    setError(null);
     try {
       setIsLoading(true);
       await dispatch(statsActions.fetchCountryTotalStats);
     } catch (error) {
-      console.log(error.message);
+      setError(error.message);
     }
   };
 
@@ -62,6 +63,12 @@ const SelectMyCountry = (props) => {
   useEffect(() => {
     loadCountryStats().then(() => setIsLoading(false));
   }, [searchVal]);
+
+  useEffect(() => {
+    if (error) {
+      Alert.alert("An Error Occurred", error, [{ text: "Okay" }]);
+    }
+  }, [error]);
 
   let TouchableButton;
 
@@ -103,7 +110,6 @@ const SelectMyCountry = (props) => {
                 <TouchableButton
                   onPress={() => {
                     if (props.route.params.isUpdatingCountry) {
-                      console.log(props.route.params.id);
                       updateUserCountryHandler(
                         itemData.item.country,
                         props.route.params.id

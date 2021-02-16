@@ -21,6 +21,7 @@ const ProfileNavigaton = () => {
             headerTitle: userEmail,
           }}
         />
+        <ProfileStack.Screen name="Profile" component={ProfileScreen} />
         <ProfileStack.Screen
           name="SelectMyCountry"
           component={SelectMyCountry}

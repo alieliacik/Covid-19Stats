@@ -2,7 +2,8 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export const AUTHENTICATE = "AUTHENTICATE";
 export const IS_STILL_LOGGED_IN = "IS_LOGGED_IN";
-
+export const LOGOUT = "LOGOUT";
+export const SEND_PASSWORD_RESET_EMAIL = "SEND_PASSWORD_RESET_EMAIL";
 export const authenticate = (userId, token, email) => {
   return {
     type: AUTHENTICATE,
@@ -45,11 +46,12 @@ export const signUp = (email, password) => {
 
     dispatch(authenticate(resData.localId, resData.idToken, resData.email));
 
-    const expirationDate =
-      new Date().getTime() + Number(resData.expiresIn * 1000);
+    const expirationDate = new Date(
+      new Date().getTime() + parseInt(resData.expiresIn) * 1000
+    );
     saveDataToStorage(
-      resData.localId,
       resData.idToken,
+      resData.localId,
       resData.email,
       expirationDate
     );
@@ -91,10 +93,10 @@ export const login = (email, password) => {
     dispatch(authenticate(resData.localId, resData.idToken, resData.email));
 
     const expirationDate =
-      new Date().getTime() + Number(resData.expiresIn * 1000) / 200;
+      new Date().getTime() + Number(resData.expiresIn * 1000) / 100;
     saveDataToStorage(
-      resData.localId,
       resData.idToken,
+      resData.localId,
       resData.email,
       expirationDate
     );
@@ -108,14 +110,42 @@ export const isStillLoggenIn = (isLoggedIn) => {
   };
 };
 
+export const logout = () => {
+  return {
+    type: LOGOUT,
+  };
+};
+
 const saveDataToStorage = (token, userId, email, expirationDate) => {
   AsyncStorage.setItem(
     "userData",
     JSON.stringify({
-      token,
-      userId,
-      email,
-      expirationDate,
+      token: token,
+      userId: userId,
+      email: email,
+      expirationDate: expirationDate,
     })
   );
+};
+
+export const sendPasswordResetEmail = (email) => {
+  return async (dispatch) => {
+    const response = await fetch(
+      `https://identitytoolkit.googleapis.com/v1/accounts:sendOobCode?key=AIzaSyANj-4XGD0qPEJPPZR0OXyEqcNacKaj78E`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          requestType: "PASSWORD_RESET",
+          email: email,
+        }),
+      }
+    );
+
+    dispatch({
+      type: SEND_PASSWORD_RESET_EMAIL,
+    });
+  };
 };

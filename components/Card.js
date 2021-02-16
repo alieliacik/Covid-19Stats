@@ -63,14 +63,12 @@ const Card = (props) => {
         <TotalStats color={props.color}>{props.totalConfirmed}</TotalStats>
       </View>
       {props.dailyConfirmed && (
-        <FadeInView duration={800}>
-          <DailyStatsContainer color={props.color}>
-            <DailyStats color={props.color}>
-              <AntDesign name="arrowup" size={15} color="#fff" />
-              {props.dailyConfirmed}
-            </DailyStats>
-          </DailyStatsContainer>
-        </FadeInView>
+        <DailyStatsContainer color={props.color}>
+          <DailyStats color={props.color}>
+            <AntDesign name="arrowup" size={15} color="#fff" />
+            {props.dailyConfirmed}
+          </DailyStats>
+        </DailyStatsContainer>
       )}
     </StyledCard>
   );

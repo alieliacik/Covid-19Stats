@@ -10,6 +10,7 @@ import {
   TouchableNativeFeedback,
   TouchableOpacity,
   Image,
+  Alert,
 } from "react-native";
 import { Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
 import { countryCodeEmoji } from "country-code-emoji";
@@ -19,7 +20,7 @@ import * as statsActions from "../../store/actions/stats";
 
 const Search = (props) => {
   const dispatch = useDispatch();
-  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState();
   const [searchVal, setSearchVal] = useState("");
   const countryTotals = useSelector((state) => state.stats.countryTotals)
     .filter(
@@ -31,7 +32,6 @@ const Search = (props) => {
   const textChangeHandler = (text) => {
     let modifiedSearchVal;
 
-    setIsLoading(true);
     if (text.trim().length > 0) {
       modifiedSearchVal = text;
     } else {
@@ -42,17 +42,23 @@ const Search = (props) => {
   };
 
   const loadCountryStats = async () => {
+    setError(null);
     try {
-      setIsLoading(true);
       await dispatch(statsActions.fetchCountryTotalStats);
     } catch (error) {
-      console.log(error.message);
+      setError(error.message);
     }
   };
 
   useEffect(() => {
-    loadCountryStats().then(() => setIsLoading(false));
+    loadCountryStats();
   }, [searchVal]);
+
+  useEffect(() => {
+    if (error) {
+      Alert.alert("An Error Occurred", error, [{ text: "Okay" }]);
+    }
+  }, [error]);
 
   let TouchableButton;
 
