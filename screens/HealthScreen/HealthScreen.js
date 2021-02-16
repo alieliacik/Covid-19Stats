@@ -27,13 +27,13 @@ const images = [
 ];
 
 const HealthScreen = (props) => {
+  const scrollRef = useRef();
   const [showModal, setShowModal] = useState(false);
   const [modalSource, setModalSource] = useState(images[0].uri);
   const [showSymptoms, setShowSymptoms] = useState(false);
   const [symptomsLayoutY, setSymptomsLayoutY] = useState(false);
   const [showPreventive, setShowPreventive] = useState(false);
   const [preventiveLayoutY, setPreventiveLayoutY] = useState(false);
-  const scrollRef = useRef();
 
   let TouchableButton;
 
@@ -49,17 +49,6 @@ const HealthScreen = (props) => {
 
   return (
     <ScrollView ref={scrollRef} contentContainerStyle={styles.container}>
-      <Modal animationType="fade" visible={showModal} transparent>
-        <View style={styles.modalContainer}>
-          <Image style={styles.modalImage} source={modalSource} />
-          <AntDesign
-            onPress={() => setShowModal(false)}
-            name="closecircle"
-            size={40}
-            color="#fff"
-          />
-        </View>
-      </Modal>
       <Text style={styles.title}>Healthy Tips</Text>
       <TouchableButton
         useForeground={true}
@@ -235,6 +224,17 @@ const HealthScreen = (props) => {
           </TouchableButton>
         )}
       />
+      <Modal animationType="fade" visible={showModal} transparent>
+        <View style={styles.modalContainer}>
+          <Image style={styles.modalImage} source={modalSource} />
+          <AntDesign
+            onPress={() => setShowModal(false)}
+            name="closecircle"
+            size={40}
+            color="#fff"
+          />
+        </View>
+      </Modal>
     </ScrollView>
   );
 };

@@ -4,6 +4,7 @@ export const AUTHENTICATE = "AUTHENTICATE";
 export const IS_STILL_LOGGED_IN = "IS_LOGGED_IN";
 export const LOGOUT = "LOGOUT";
 export const SEND_PASSWORD_RESET_EMAIL = "SEND_PASSWORD_RESET_EMAIL";
+
 export const authenticate = (userId, token, email) => {
   return {
     type: AUTHENTICATE,
@@ -93,7 +94,7 @@ export const login = (email, password) => {
     dispatch(authenticate(resData.localId, resData.idToken, resData.email));
 
     const expirationDate =
-      new Date().getTime() + Number(resData.expiresIn * 1000) / 100;
+      new Date().getTime() + Number(resData.expiresIn * 1000);
     saveDataToStorage(
       resData.idToken,
       resData.localId,
@@ -111,6 +112,7 @@ export const isStillLoggenIn = (isLoggedIn) => {
 };
 
 export const logout = () => {
+  AsyncStorage.clear();
   return {
     type: LOGOUT,
   };

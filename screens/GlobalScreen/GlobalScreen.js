@@ -22,14 +22,13 @@ import * as Permissions from "expo-permissions";
 import { TouchableNativeFeedback } from "react-native-gesture-handler";
 import { countryCodeEmoji } from "country-code-emoji";
 import { AntDesign } from "@expo/vector-icons";
-import SkeletonPlaceholder from "react-native-skeleton-placeholder";
 
 import Colors from "../../constants/Colors";
-import * as statsActions from "../../store/actions/stats";
 import Card from "../../components/Card";
-import FadeInView from "../../constants/FadeInView";
 import StartUpScreen from "../StartupScreen";
 import HeaderBackgroundComponent from "../../components/HeaderBackgroundComponent";
+import * as statsActions from "../../store/actions/stats";
+import * as userActions from "../../store/actions/user";
 
 const GlobalScreen = (props) => {
   const dispatch = useDispatch();
@@ -175,23 +174,12 @@ const GlobalScreen = (props) => {
           />
         </View>
       </View>
-      <View
-        style={{
-          width: "100%",
-          flexDirection: "row",
-          justifyContent: "space-between",
-          paddingHorizontal: 15,
-          paddingVertical: 5,
-        }}
-      >
-        <Text
-          style={{
-            fontFamily: "open-sans-bold",
-            fontSize: 12,
-          }}
-        >
-          Country
-        </Text>
+      <View style={styles.headerTextConteiner}>
+        <Text style={styles.headerText}>My country</Text>
+        <Text style={{ fontFamily: "open-sans-bold" }}>Case numbers</Text>
+      </View>
+      <View style={styles.headerTextConteiner}>
+        <Text style={styles.headerText}>Country</Text>
         <Text style={{ fontFamily: "open-sans-bold" }}>Case numbers</Text>
       </View>
     </View>
@@ -300,5 +288,16 @@ const styles = StyleSheet.create({
     fontSize: 14,
     fontFamily: "open-sans-bold",
     color: Colors.red,
+  },
+  headerTextConteiner: {
+    width: "100%",
+    flexDirection: "row",
+    justifyContent: "space-between",
+    paddingHorizontal: 15,
+    paddingVertical: 5,
+  },
+  headerText: {
+    fontFamily: "open-sans-bold",
+    fontSize: 12,
   },
 });
