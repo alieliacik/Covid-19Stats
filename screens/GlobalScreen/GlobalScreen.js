@@ -32,11 +32,19 @@ import * as userActions from "../../store/actions/user";
 
 const GlobalScreen = (props) => {
   const dispatch = useDispatch();
+  const [isLoading, setIsLoading] = useState(true);
+  const [isRefreshing, setIsRefreshing] = useState(false);
   const [error, setError] = useState();
   const countryTotals = useSelector((state) => state.stats.countryTotals);
   const globalStats = useSelector((state) => state.stats.globalStats);
-  const [isLoading, setIsLoading] = useState(true);
-  const [isRefreshing, setIsRefreshing] = useState(false);
+  const userCountry = useSelector((state) => state.user.userCountry);
+
+  let userCountryStats;
+  if (userCountry.length > 0) {
+    userCountryStats = countryTotals.filter(
+      (c) => c.countryName === userCountry[0].country
+    )[0];
+  }
 
   // const fetchData = async () => {
   //   const response = await fetch(
@@ -88,13 +96,19 @@ const GlobalScreen = (props) => {
     setLocation(JSON.stringify(location, null, 2));
   };
 
+  const fetchUserCountryHandler = async () => {
+    await dispatch(userActions.fetchUserCountry());
+  };
+
   useEffect(() => {
     setIsLoading(true);
-    loadGlobalStats().then(() => setIsLoading(false));
+    loadGlobalStats()
+      .then(() => fetchUserCountryHandler())
+      .then(() => setIsLoading(false));
 
     // fetchData().catch((err) => console.log(err));
     // getLocation();
-  }, [dispatch]);
+  }, []);
 
   useEffect(() => {
     if (error) {
@@ -122,6 +136,7 @@ const GlobalScreen = (props) => {
   }
 
   const { navigation } = props;
+
   useLayoutEffect(() => {
     props.navigation.setOptions({
       title: isLoading ? "" : "Global Stats",
@@ -174,10 +189,46 @@ const GlobalScreen = (props) => {
           />
         </View>
       </View>
-      <View style={styles.headerTextConteiner}>
-        <Text style={styles.headerText}>My country</Text>
-        <Text style={{ fontFamily: "open-sans-bold" }}>Case numbers</Text>
-      </View>
+      {!!userCountry.length && (
+        <View style={{ paddingHorizontal: 8, marginVertical: 4 }}>
+          <Text
+            style={[styles.headerText, { paddingLeft: 8, marginVertical: 8 }]}
+          >
+            My country
+          </Text>
+          <TouchableButton
+            onPress={() =>
+              props.navigation.navigate("MyCountry", {
+                selectedCountry: userCountryStats,
+              })
+            }
+          >
+            <View style={styles.country}>
+              <View style={styles.countryContainer}>
+                <Text style={styles.countryFlag}>
+                  {countryCodeEmoji(userCountryStats.countryCode)}
+                </Text>
+                <Text style={styles.countryName}>
+                  {userCountryStats.country}
+                </Text>
+              </View>
+              <View style={styles.countryContainer}>
+                {Number(userCountryStats.dailyDeaths) !== 0 && (
+                  <View style={styles.dailyNewCasesContainer}>
+                    <AntDesign name="arrowup" size={12} color="#fff" />
+                    <Text style={styles.dailyNewCaseCount}>
+                      {userCountryStats.dailyConfirmed}
+                    </Text>
+                  </View>
+                )}
+                <Text style={styles.totalCaseCount}>
+                  {userCountryStats.totalConfirmed}
+                </Text>
+              </View>
+            </View>
+          </TouchableButton>
+        </View>
+      )}
       <View style={styles.headerTextConteiner}>
         <Text style={styles.headerText}>Country</Text>
         <Text style={{ fontFamily: "open-sans-bold" }}>Case numbers</Text>

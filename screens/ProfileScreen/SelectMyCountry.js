@@ -10,6 +10,7 @@ import {
   TouchableNativeFeedback,
   TouchableOpacity,
   Image,
+  Alert,
 } from "react-native";
 import { Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
 import { countryCodeEmoji } from "country-code-emoji";
@@ -32,7 +33,6 @@ const SelectMyCountry = (props) => {
   const textChangeHandler = (text) => {
     let modifiedSearchVal;
 
-    setIsLoading(true);
     if (text.trim().length > 0) {
       modifiedSearchVal = text;
     } else {
@@ -45,7 +45,6 @@ const SelectMyCountry = (props) => {
   const loadCountryStats = async () => {
     setError(null);
     try {
-      setIsLoading(true);
       await dispatch(statsActions.fetchCountryTotalStats);
     } catch (error) {
       setError(error.message);
@@ -61,7 +60,7 @@ const SelectMyCountry = (props) => {
   };
 
   useEffect(() => {
-    loadCountryStats().then(() => setIsLoading(false));
+    loadCountryStats();
   }, [searchVal]);
 
   useEffect(() => {

@@ -27,29 +27,10 @@ import Colors from "../../constants/Colors";
 
 const Profile = (props) => {
   const dispatch = useDispatch();
-  const userInfectedDates = useSelector((state) => {
-    let infectedDates = state.user.userInfectedDates;
-    let modifiedInfectedDates = [];
-    for (const key in infectedDates) {
-      modifiedInfectedDates.push({
-        id: key,
-        infectedDate: infectedDates[key].infectedDate,
-      });
-    }
-    return modifiedInfectedDates;
-  });
-  const userCountry = useSelector((state) => {
-    let country = state.user.userCountry;
-    let modifiedCountry = [];
-    for (const key in country) {
-      modifiedCountry.push({
-        id: key,
-        country: country[key].userCountry,
-      });
-    }
-    return modifiedCountry;
-  });
-
+  const userInfectedDates = useSelector(
+    (state) => state.user.userInfectedDates
+  );
+  const userCountry = useSelector((state) => state.user.userCountry);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState();
   const [date, setDate] = useState(new Date());

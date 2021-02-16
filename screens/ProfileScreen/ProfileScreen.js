@@ -13,6 +13,8 @@ import {
   Keyboard,
   ActivityIndicator,
 } from "react-native";
+import CheckBox from "@react-native-community/checkbox";
+
 import { vw, vh } from "react-native-expo-viewport-units";
 import { LinearGradient } from "expo-linear-gradient";
 import { MaterialCommunityIcons, Ionicons } from "@expo/vector-icons";

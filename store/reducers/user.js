@@ -1,4 +1,5 @@
 import { FETCH_INFECTED_DATES, FETCH_USER_COUNTRY } from "../actions/user";
+import { LOGOUT } from "../actions/auth";
 
 const initialState = {
   userInfectedDates: [],
@@ -17,6 +18,8 @@ export default (state = initialState, action) => {
         ...state,
         userCountry: action.userCountry,
       };
+    case LOGOUT:
+      return initialState;
     default:
       return state;
   }

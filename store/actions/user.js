@@ -48,9 +48,18 @@ export const fetchInfectedDates = () => {
     }
 
     const resData = await response.json();
+
+    let modifiedInfectedDates = [];
+    for (const key in resData) {
+      modifiedInfectedDates.push({
+        id: key,
+        infectedDate: resData[key].infectedDate,
+      });
+    }
+
     dispatch({
       type: FETCH_INFECTED_DATES,
-      userInfectedDates: resData,
+      userInfectedDates: modifiedInfectedDates,
     });
   };
 };
@@ -144,9 +153,17 @@ export const fetchUserCountry = () => {
     }
 
     const resData = await response.json();
+
+    let modifiedCountry = [];
+    for (const key in resData) {
+      modifiedCountry.push({
+        id: key,
+        country: resData[key].userCountry,
+      });
+    }
     dispatch({
       type: FETCH_USER_COUNTRY,
-      userCountry: resData,
+      userCountry: modifiedCountry,
     });
   };
 };
