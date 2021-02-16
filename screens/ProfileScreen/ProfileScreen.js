@@ -13,7 +13,6 @@ import {
   Keyboard,
   ActivityIndicator,
 } from "react-native";
-import CheckBox from "@react-native-community/checkbox";
 
 import { vw, vh } from "react-native-expo-viewport-units";
 import { LinearGradient } from "expo-linear-gradient";
@@ -32,6 +31,8 @@ const ProfileScreen = (props) => {
   const [isPasswordFocused, setIsPasswordFocused] = useState();
   const [isSigningUp, setIsSigningUp] = useState();
   const [isResettingPassword, setIsResettingPassword] = useState(false);
+
+  const isRememberMe = useSelector((state) => state.auth.isRememberMe);
 
   const authHandler = async (email, password) => {
     let action;
@@ -87,6 +88,11 @@ const ProfileScreen = (props) => {
       .min(8, ({ min }) => `Password must be at least ${min} characters!`)
       .required("Password is required"),
   });
+
+  const rememberMeHandler = () => {
+    console.log("asd");
+    dispatch(authActions.rememberMeHandler());
+  };
 
   if (isResettingPassword) {
     authValidationSchema = yup.object().shape({
@@ -226,6 +232,21 @@ const ProfileScreen = (props) => {
                   </View>
                 </TouchableButton>
               </View>
+              {!isResettingPassword && (
+                <View style={styles.checboxContainer}>
+                  <MaterialCommunityIcons
+                    onPress={rememberMeHandler}
+                    name={
+                      isRememberMe
+                        ? "checkbox-marked-outline"
+                        : "checkbox-blank-outline"
+                    }
+                    size={22}
+                    color="black"
+                  />
+                  <Text style={styles.checkboxText}>Remember me</Text>
+                </View>
+              )}
               {!isSigningUp && !isResettingPassword && (
                 <TouchableOpacity onPress={handleSubmit}>
                   <Text
@@ -347,7 +368,7 @@ const styles = StyleSheet.create({
   },
   forgotPassword: {
     fontFamily: "open-sans-semibold",
-    color: Colors.blue,
+    color: "black",
     fontSize: 14,
     marginTop: 16,
   },
@@ -366,5 +387,17 @@ const styles = StyleSheet.create({
   backToLogin: {
     color: "black",
     fontFamily: "open-sans-semibold",
+  },
+  checboxContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    alignSelf: "flex-start",
+    marginLeft: vw(12),
+    marginVertical: 10,
+  },
+  checkboxText: {
+    fontFamily: "open-sans",
+    marginLeft: 5,
+    color: "black",
   },
 });

@@ -10,7 +10,6 @@ const ProfileStack = createStackNavigator();
 const ProfileNavigaton = () => {
   const userEmail = useSelector((state) => state.auth.email);
   const isLoggedIn = useSelector((state) => state.auth.isLoggedIn);
-
   if (isLoggedIn) {
     return (
       <ProfileStack.Navigator>

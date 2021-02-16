@@ -265,7 +265,7 @@ const Profile = (props) => {
                   color="#fff"
                 />
                 <Text style={styles.buttonWideText}>
-                  Set up a self-isolaton coundown
+                  When did you get infected?
                 </Text>
               </View>
             </TouchableButton>

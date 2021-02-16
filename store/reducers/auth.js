@@ -1,10 +1,16 @@
-import { AUTHENTICATE, IS_STILL_LOGGED_IN, LOGOUT } from "../actions/auth";
+import {
+  AUTHENTICATE,
+  IS_STILL_LOGGED_IN,
+  LOGOUT,
+  REMEMBER_ME_HANDLER,
+} from "../actions/auth";
 
 const initialState = {
   token: "",
   userId: "",
   email: "",
   isLoggedIn: null,
+  isRememberMe: false,
 };
 
 export default (state = initialState, action) => {
@@ -25,6 +31,11 @@ export default (state = initialState, action) => {
     }
     case LOGOUT:
       return initialState;
+    case REMEMBER_ME_HANDLER:
+      return {
+        ...state,
+        isRememberMe: !state.isRememberMe,
+      };
     default:
       return state;
   }

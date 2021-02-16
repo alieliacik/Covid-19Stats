@@ -19,6 +19,7 @@ const StartUpScreen = () => {
 
       const transformedData = JSON.parse(userData);
       const { userId, token, email, expirationDate } = transformedData;
+
       if (
         Number(expirationDate) <= new Date().getTime() ||
         !token ||

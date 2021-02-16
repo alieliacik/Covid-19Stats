@@ -4,6 +4,7 @@ export const AUTHENTICATE = "AUTHENTICATE";
 export const IS_STILL_LOGGED_IN = "IS_LOGGED_IN";
 export const LOGOUT = "LOGOUT";
 export const SEND_PASSWORD_RESET_EMAIL = "SEND_PASSWORD_RESET_EMAIL";
+export const REMEMBER_ME_HANDLER = "REMEMBER_ME_HANDLER";
 
 export const authenticate = (userId, token, email) => {
   return {
@@ -15,7 +16,8 @@ export const authenticate = (userId, token, email) => {
 };
 
 export const signUp = (email, password) => {
-  return async (dispatch) => {
+  return async (dispatch, getState) => {
+    const isRememberMe = getState().auth.isRememberMe;
     const response = await fetch(
       "https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=AIzaSyANj-4XGD0qPEJPPZR0OXyEqcNacKaj78E",
       {
@@ -47,9 +49,11 @@ export const signUp = (email, password) => {
 
     dispatch(authenticate(resData.localId, resData.idToken, resData.email));
 
-    const expirationDate = new Date(
-      new Date().getTime() + parseInt(resData.expiresIn) * 1000
-    );
+    let expirationDate =
+      new Date().getTime() + Number(resData.expiresIn * 1000);
+    if (isRememberMe) {
+      expirationDate = 999999999999999999999999999999999;
+    }
     saveDataToStorage(
       resData.idToken,
       resData.localId,
@@ -60,7 +64,8 @@ export const signUp = (email, password) => {
 };
 
 export const login = (email, password) => {
-  return async (dispatch) => {
+  return async (dispatch, getState) => {
+    const isRememberMe = getState().auth.isRememberMe;
     const response = await fetch(
       "https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=AIzaSyANj-4XGD0qPEJPPZR0OXyEqcNacKaj78E",
       {
@@ -93,8 +98,11 @@ export const login = (email, password) => {
     const resData = await response.json();
     dispatch(authenticate(resData.localId, resData.idToken, resData.email));
 
-    const expirationDate =
+    let expirationDate =
       new Date().getTime() + Number(resData.expiresIn * 1000);
+    if (isRememberMe) {
+      expirationDate = 999999999999999999999999999999999;
+    }
     saveDataToStorage(
       resData.idToken,
       resData.localId,
@@ -150,4 +158,8 @@ export const sendPasswordResetEmail = (email) => {
       type: SEND_PASSWORD_RESET_EMAIL,
     });
   };
+};
+
+export const rememberMeHandler = () => {
+  return { type: REMEMBER_ME_HANDLER };
 };

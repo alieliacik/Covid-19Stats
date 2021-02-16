@@ -6,7 +6,7 @@ import {
 } from "../actions/stats";
 
 const initialState = {
-  allCountriesStats: [],
+  countryTotals: [],
   globalStats: {},
   lastThirtyDaysStats: [],
   allStats: [],
