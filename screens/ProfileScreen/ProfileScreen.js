@@ -90,7 +90,6 @@ const ProfileScreen = (props) => {
   });
 
   const rememberMeHandler = () => {
-    console.log("asd");
     dispatch(authActions.rememberMeHandler());
   };
 
@@ -233,28 +232,30 @@ const ProfileScreen = (props) => {
                 </TouchableButton>
               </View>
               {!isResettingPassword && (
-                <View style={styles.checboxContainer}>
-                  <MaterialCommunityIcons
-                    onPress={rememberMeHandler}
-                    name={
-                      isRememberMe
-                        ? "checkbox-marked-outline"
-                        : "checkbox-blank-outline"
-                    }
-                    size={22}
-                    color="black"
-                  />
-                  <Text style={styles.checkboxText}>Remember me</Text>
-                </View>
+                <TouchableButton
+                  onPress={rememberMeHandler}
+                  style={{ alignSelf: "flex-start" }}
+                >
+                  <View style={styles.checboxContainer}>
+                    <MaterialCommunityIcons
+                      name={
+                        isRememberMe
+                          ? "checkbox-marked-outline"
+                          : "checkbox-blank-outline"
+                      }
+                      size={22}
+                      color="black"
+                    />
+                    <Text style={styles.checkboxText}>Remember me</Text>
+                  </View>
+                </TouchableButton>
               )}
               {!isSigningUp && !isResettingPassword && (
-                <TouchableOpacity onPress={handleSubmit}>
-                  <Text
-                    onPress={() => setIsResettingPassword(true)}
-                    style={styles.forgotPassword}
-                  >
-                    Forgot Password?
-                  </Text>
+                <TouchableOpacity
+                  onPress={handleSubmit}
+                  onPress={() => setIsResettingPassword(true)}
+                >
+                  <Text style={styles.forgotPassword}>Forgot Password?</Text>
                 </TouchableOpacity>
               )}
               <View style={styles.hr} />
@@ -394,6 +395,7 @@ const styles = StyleSheet.create({
     alignSelf: "flex-start",
     marginLeft: vw(12),
     marginVertical: 10,
+    zIndex: 5,
   },
   checkboxText: {
     fontFamily: "open-sans",

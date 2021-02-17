@@ -17,7 +17,7 @@ import { countryCodeEmoji } from "country-code-emoji";
 
 import Colors from "../../constants/Colors";
 import * as statsActions from "../../store/actions/stats";
-
+import * as permissionActions from "../../store/actions/permission";
 const Search = (props) => {
   const dispatch = useDispatch();
   const [error, setError] = useState();
@@ -28,6 +28,10 @@ const Search = (props) => {
         country.countryName.toUpperCase().indexOf(searchVal.toUpperCase()) > -1
     )
     .sort((a, b) => a.countryName.localeCompare(b.countryName));
+
+  const getLocationHandler = async () => {
+    await dispatch(permissionActions.getLocation());
+  };
 
   const textChangeHandler = (text) => {
     let modifiedSearchVal;
@@ -100,6 +104,7 @@ const Search = (props) => {
           onChangeText={textChangeHandler}
         />
         <Ionicons
+          onPress={getLocationHandler}
           name="ios-location-outline"
           size={24}
           color={Colors.bottomTabGray}

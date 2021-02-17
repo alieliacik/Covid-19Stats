@@ -43,17 +43,24 @@ const CountryScreen = (props) => {
   const loadSelectedCountryStats = useCallback(async () => {
     setError(null);
     try {
+      setIsLoading(true);
       await dispatch(statsActions.fetchCountryDailyStats(countryCode));
     } catch (error) {
       setError(error.message);
       props.navigation.goBack();
     }
+    setIsLoading(false);
   }, [countryCode]);
 
   useEffect(() => {
-    setIsLoading(true);
-    loadSelectedCountryStats().then(() => setIsLoading(false));
-    return () => clearTimeout(timerRef.current);
+    let isRequestCancelled;
+    if (!isRequestCancelled) {
+      loadSelectedCountryStats();
+    }
+    return () => {
+      clearTimeout(timerRef.current);
+      isRequestCancelled = true;
+    };
   }, [dispatch]);
 
   useFocusEffect(
@@ -63,9 +70,15 @@ const CountryScreen = (props) => {
         y: 0,
         animated: false,
       });
-      setIsLoading(true);
-      loadSelectedCountryStats().then(() => setIsLoading(false));
-      return () => clearTimeout(timerRef.current);
+
+      let isRequestCancelled;
+      if (!isRequestCancelled) {
+        loadSelectedCountryStats();
+      }
+      return () => {
+        clearTimeout(timerRef.current);
+        isRequestCancelled = true;
+      };
     }, [])
   );
 

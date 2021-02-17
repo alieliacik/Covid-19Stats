@@ -11,7 +11,7 @@ const SearchNavigaton = (props) => (
     screenOptions={{
       title: "Search for a country",
       headerTintColor: "#fff",
-      // headerBackground: () => <HeaderBackgroundComponent />,
+      headerBackground: () => <HeaderBackgroundComponent />,
     }}
   >
     <SearchStack.Screen

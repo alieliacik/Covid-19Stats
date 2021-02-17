@@ -9,6 +9,7 @@ import { NavigationContainer } from "@react-navigation/native";
 import statsReducer from "./store/reducers/stats";
 import authReducer from "./store/reducers/auth";
 import userReducer from "./store/reducers/user";
+import permissionReducer from "./store/reducers/permission";
 import TabNavigation from "./navigation/TabNavigation";
 
 export default function App() {
@@ -22,6 +23,7 @@ export default function App() {
     stats: statsReducer,
     auth: authReducer,
     user: userReducer,
+    permission: permissionReducer,
   });
   const store = createStore(rootReducer, applyMiddleware(ReduxThunk));
 

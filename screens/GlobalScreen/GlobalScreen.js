@@ -17,8 +17,7 @@ import {
   ScrollView,
   LogBox,
 } from "react-native";
-import * as Location from "expo-location";
-import * as Permissions from "expo-permissions";
+
 import { TouchableNativeFeedback } from "react-native-gesture-handler";
 import { countryCodeEmoji } from "country-code-emoji";
 import { AntDesign } from "@expo/vector-icons";
@@ -29,6 +28,7 @@ import StartUpScreen from "../StartupScreen";
 import HeaderBackgroundComponent from "../../components/HeaderBackgroundComponent";
 import * as statsActions from "../../store/actions/stats";
 import * as userActions from "../../store/actions/user";
+import * as permissionActions from "../../store/actions/permission";
 
 const GlobalScreen = (props) => {
   const dispatch = useDispatch();
@@ -38,6 +38,7 @@ const GlobalScreen = (props) => {
   const countryTotals = useSelector((state) => state.stats.countryTotals);
   const globalStats = useSelector((state) => state.stats.globalStats);
   const userCountry = useSelector((state) => state.user.userCountry);
+  const userLocation = useSelector((state) => state.permission.userLocation);
 
   let userCountryStats;
   if (userCountry.length > 0) {
@@ -46,21 +47,14 @@ const GlobalScreen = (props) => {
     )[0];
   }
 
-  // const fetchData = async () => {
-  //   const response = await fetch(
-  //     "http://api.coronatracker.com/v3/stats/worldometer/country"
-  //   );
-
-  //   if (!response.ok) {
-  //     const message = `An error has occured: ${response.status}`;
-  //     throw new Error(message);
-  //   }
-
-  //   const resData = await response.json();
-  //   const filteredResData = await resData.filter((c) => !!c.countryCode);
-  //   setCountresData(filteredResData);
-  //   setIsLoading(false);
-  // };
+  let locatedCountrysStats;
+  if (userCountry.length > 0) {
+    locatedCountrysStats = countryTotals.filter(
+      (c) => c.countryCode === userLocation
+    )[0];
+  }
+  console.log(userLocation);
+  console.log(locatedCountrysStats);
 
   const loadGlobalStats = useCallback(async () => {
     setError(null);
@@ -71,30 +65,6 @@ const GlobalScreen = (props) => {
       setError(error.message);
     }
   }, []);
-  const getLocation = async () => {
-    let { status } = await Location.requestPermissionsAsync(
-      Permissions.LOCATION
-    );
-    if (status !== "granted") {
-      Alert.alert("Location permissions required");
-      return;
-    }
-
-    let location = await Location.getCurrentPositionAsync({});
-
-    const latAndLong = {
-      latitude: Number(location.coords.latitude),
-      longitude: Number(location.coords.longitude),
-    };
-    let currCountry = await Location.reverseGeocodeAsync(latAndLong).then(
-      (res) => {
-        setCurrentCountry("Turkey");
-        // setCurrentCountry(res[0].country);
-      }
-    );
-
-    setLocation(JSON.stringify(location, null, 2));
-  };
 
   const fetchUserCountryHandler = async () => {
     await dispatch(userActions.fetchUserCountry());
@@ -105,9 +75,6 @@ const GlobalScreen = (props) => {
     loadGlobalStats()
       .then(() => fetchUserCountryHandler())
       .then(() => setIsLoading(false));
-
-    // fetchData().catch((err) => console.log(err));
-    // getLocation();
   }, []);
 
   useEffect(() => {
