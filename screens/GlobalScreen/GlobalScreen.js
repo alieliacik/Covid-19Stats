@@ -38,7 +38,6 @@ const GlobalScreen = (props) => {
   const countryTotals = useSelector((state) => state.stats.countryTotals);
   const globalStats = useSelector((state) => state.stats.globalStats);
   const userCountry = useSelector((state) => state.user.userCountry);
-  const userLocation = useSelector((state) => state.permission.userLocation);
 
   let userCountryStats;
   if (userCountry.length > 0) {
@@ -46,15 +45,6 @@ const GlobalScreen = (props) => {
       (c) => c.countryName === userCountry[0].country
     )[0];
   }
-
-  let locatedCountrysStats;
-  if (userCountry.length > 0) {
-    locatedCountrysStats = countryTotals.filter(
-      (c) => c.countryCode === userLocation
-    )[0];
-  }
-  console.log(userLocation);
-  console.log(locatedCountrysStats);
 
   const loadGlobalStats = useCallback(async () => {
     setError(null);

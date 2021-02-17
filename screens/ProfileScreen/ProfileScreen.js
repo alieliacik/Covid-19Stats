@@ -244,7 +244,7 @@ const ProfileScreen = (props) => {
                           : "checkbox-blank-outline"
                       }
                       size={22}
-                      color="black"
+                      color={Colors.gray}
                     />
                     <Text style={styles.checkboxText}>Remember me</Text>
                   </View>
@@ -369,7 +369,7 @@ const styles = StyleSheet.create({
   },
   forgotPassword: {
     fontFamily: "open-sans-semibold",
-    color: "black",
+    color: Colors.gray,
     fontSize: 14,
     marginTop: 16,
   },
@@ -400,6 +400,6 @@ const styles = StyleSheet.create({
   checkboxText: {
     fontFamily: "open-sans",
     marginLeft: 5,
-    color: "black",
+    color: Colors.gray,
   },
 });

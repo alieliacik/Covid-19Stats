@@ -9,7 +9,6 @@ import {
   Platform,
   TouchableNativeFeedback,
   TouchableOpacity,
-  Image,
   Alert,
 } from "react-native";
 import { Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
