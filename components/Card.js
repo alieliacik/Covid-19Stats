@@ -31,6 +31,8 @@ const Card = (props) => {
   )
 }
 
+
+
 export default Card
 
 const styles = StyleSheet.create({
