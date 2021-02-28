@@ -144,21 +144,3 @@ const styles = StyleSheet.create({
     marginRight: 15,
   },
 })
-
-const SkeletonComponent = () => (
-  <SkeletonPlaceholder backgroundColor='#fff'>
-    <View style={styles.table}>
-      <View style={styles.skeletonItemLong}></View>
-      <View style={styles.skeletonItem}></View>
-      <View style={styles.skeletonItemLong}></View>
-      <View style={styles.skeletonItem}></View>
-      <View style={styles.skeletonItemLong}></View>
-      <View style={styles.skeletonItem}></View>
-      <View style={{ flex: 1, flexDirection: 'row', width: 150 }}>
-        <View style={styles.skeletonItemShort}></View>
-        <View style={styles.skeletonItemShort}></View>
-        <View style={styles.skeletonItemShort}></View>
-      </View>
-    </View>
-  </SkeletonPlaceholder>
-)

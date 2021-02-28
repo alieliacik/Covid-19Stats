@@ -1,10 +1,5 @@
-import React, {
-  useEffect,
-  useState,
-  useCallback,
-  useLayoutEffect,
-} from "react";
-import { useSelector, useDispatch } from "react-redux";
+import React, { useEffect, useState, useCallback, useLayoutEffect } from 'react'
+import { useSelector, useDispatch } from 'react-redux'
 import {
   Alert,
   FlatList,
@@ -16,87 +11,92 @@ import {
   RefreshControl,
   ScrollView,
   LogBox,
-} from "react-native";
+} from 'react-native'
 
-import { TouchableNativeFeedback } from "react-native-gesture-handler";
-import { countryCodeEmoji } from "country-code-emoji";
-import { AntDesign } from "@expo/vector-icons";
+import { TouchableNativeFeedback } from 'react-native-gesture-handler'
+import { countryCodeEmoji } from 'country-code-emoji'
+import { AntDesign } from '@expo/vector-icons'
 
-import Colors from "../../constants/Colors";
-import Card from "../../components/Card";
-import StartUpScreen from "../StartupScreen";
-import HeaderBackgroundComponent from "../../components/HeaderBackgroundComponent";
-import * as statsActions from "../../store/actions/stats";
-import * as userActions from "../../store/actions/user";
-import * as permissionActions from "../../store/actions/permission";
+import Colors from '../../constants/Colors'
+import Card from '../../components/Card'
+import StartUpScreen from '../StartupScreen'
+import HeaderBackgroundComponent from '../../components/HeaderBackgroundComponent'
+import * as statsActions from '../../store/actions/stats'
+import * as userActions from '../../store/actions/user'
+import * as permissionActions from '../../store/actions/permission'
 
 const GlobalScreen = (props) => {
-  const dispatch = useDispatch();
-  const [isLoading, setIsLoading] = useState(true);
-  const [isRefreshing, setIsRefreshing] = useState(false);
-  const [error, setError] = useState();
-  const countryTotals = useSelector((state) => state.stats.countryTotals);
-  const globalStats = useSelector((state) => state.stats.globalStats);
-  const userCountry = useSelector((state) => state.user.userCountry);
+  const dispatch = useDispatch()
+  const [isLoading, setIsLoading] = useState(true)
+  const [isRefreshing, setIsRefreshing] = useState(false)
+  const [error, setError] = useState()
+  const countryTotals = useSelector((state) => state.stats.countryTotals)
+  const globalStats = useSelector((state) => state.stats.globalStats)
+  const userCountry = useSelector((state) => state.user.userCountry)
 
-  let userCountryStats;
+  let userCountryStats
   if (userCountry.length > 0) {
     userCountryStats = countryTotals.filter(
       (c) => c.countryName === userCountry[0].country
-    )[0];
+    )[0]
   }
 
   const loadGlobalStats = useCallback(async () => {
-    setError(null);
+    setError(null)
     try {
-      await dispatch(statsActions.fetchCountryTotalStats());
-      await dispatch(statsActions.fetchGlobalStats());
+      await dispatch(statsActions.fetchCountryTotalStats())
+      await dispatch(statsActions.fetchGlobalStats())
     } catch (error) {
-      setError(error.message);
+      setError(error.message)
     }
-  }, []);
+  }, [])
 
   const fetchUserCountryHandler = async () => {
-    await dispatch(userActions.fetchUserCountry());
-  };
+    setError(null)
+    try {
+      await dispatch(userActions.fetchUserCountry())
+    } catch (error) {
+      setError(error.message)
+    }
+  }
 
   useEffect(() => {
-    setIsLoading(true);
+    setIsLoading(true)
     loadGlobalStats()
       .then(() => fetchUserCountryHandler())
-      .then(() => setIsLoading(false));
-  }, []);
+      .then(() => setIsLoading(false))
+  }, [])
+
+  const handleRefresh = () => {
+    setIsRefreshing(true)
+    loadGlobalStats().then(() => {
+      setIsRefreshing(false)
+    })
+  }
+
+  useEffect(() => {
+    LogBox.ignoreLogs(['VirtualizedLists should never be nested'])
+  }, [])
 
   useEffect(() => {
     if (error) {
-      Alert.alert("An Error Occurred", error, [{ text: "Okay" }]);
+      Alert.alert('An Error Occurred', error, [{ text: 'Okay' }])
     }
-  }, []);
+  }, [])
 
-  const handleRefresh = () => {
-    setIsRefreshing(true);
-    loadGlobalStats().then(() => {
-      setIsRefreshing(false);
-    });
-  };
+  let TouchableButton
 
-  useEffect(() => {
-    LogBox.ignoreLogs(["VirtualizedLists should never be nested"]);
-  }, []);
-
-  let TouchableButton;
-
-  if (Platform.OS === "android") {
-    TouchableButton = TouchableNativeFeedback;
+  if (Platform.OS === 'android') {
+    TouchableButton = TouchableNativeFeedback
   } else {
-    TouchableButton = TouchableOpacity;
+    TouchableButton = TouchableOpacity
   }
 
-  const { navigation } = props;
+  const { navigation } = props
 
   useLayoutEffect(() => {
     props.navigation.setOptions({
-      title: isLoading ? "" : "Global Stats",
+      title: isLoading ? '' : 'Global Stats',
       headerBackground: () =>
         isLoading ? (
           <View
@@ -105,11 +105,11 @@ const GlobalScreen = (props) => {
         ) : (
           <HeaderBackgroundComponent />
         ),
-    });
-  }, [navigation, isLoading]);
+    })
+  }, [navigation, isLoading])
 
   if (isLoading) {
-    return <StartUpScreen />;
+    return <StartUpScreen />
   }
 
   const FlatListHeader = () => (
@@ -117,15 +117,15 @@ const GlobalScreen = (props) => {
       <View>
         <View style={styles.cardContainer}>
           <Card
-            width="47"
-            category="CONFIRMED"
+            width='47'
+            category='CONFIRMED'
             totalConfirmed={globalStats.totalConfirmed}
             dailyConfirmed={globalStats.totalNewCases}
             color={Colors.red}
           />
           <Card
-            width="47"
-            category="DECEASED"
+            width='47'
+            category='DECEASED'
             totalConfirmed={globalStats.totalDeaths}
             dailyConfirmed={globalStats.totalNewDeaths}
             color={Colors.gray}
@@ -133,14 +133,14 @@ const GlobalScreen = (props) => {
         </View>
         <View style={styles.cardContainer}>
           <Card
-            width="47"
-            category="ACTIVE"
+            width='47'
+            category='ACTIVE'
             totalConfirmed={globalStats.totalActiveCases}
             color={Colors.blue}
           />
           <Card
-            width="47"
-            category="RECOVERD"
+            width='47'
+            category='RECOVERD'
             totalConfirmed={globalStats.totalRecovered}
             color={Colors.green}
           />
@@ -155,7 +155,7 @@ const GlobalScreen = (props) => {
           </Text>
           <TouchableButton
             onPress={() =>
-              props.navigation.navigate("MyCountry", {
+              props.navigation.navigate('MyCountry', {
                 selectedCountry: userCountryStats,
               })
             }
@@ -172,7 +172,7 @@ const GlobalScreen = (props) => {
               <View style={styles.countryContainer}>
                 {Number(userCountryStats.dailyDeaths) !== 0 && (
                   <View style={styles.dailyNewCasesContainer}>
-                    <AntDesign name="arrowup" size={12} color="#fff" />
+                    <AntDesign name='arrowup' size={12} color='#fff' />
                     <Text style={styles.dailyNewCaseCount}>
                       {userCountryStats.dailyConfirmed}
                     </Text>
@@ -188,10 +188,10 @@ const GlobalScreen = (props) => {
       )}
       <View style={styles.headerTextConteiner}>
         <Text style={styles.headerText}>Country</Text>
-        <Text style={{ fontFamily: "open-sans-bold" }}>Case numbers</Text>
+        <Text style={{ fontFamily: 'open-sans-bold' }}>Case numbers</Text>
       </View>
     </View>
-  );
+  )
 
   return (
     <ScrollView
@@ -200,17 +200,17 @@ const GlobalScreen = (props) => {
       }
     >
       <FlatList
-        style={{ width: "100%" }}
+        style={{ width: '100%' }}
         data={countryTotals}
         keyExtractor={(itemData) => itemData.country}
         ListHeaderComponent={() => <FlatListHeader />}
         renderItem={(itemData) => {
-          const flagImg = countryCodeEmoji(itemData.item.countryCode);
+          const flagImg = countryCodeEmoji(itemData.item.countryCode)
           return (
             <View style={{ marginHorizontal: 5, marginVertical: 3.5 }}>
               <TouchableButton
                 onPress={() =>
-                  props.navigation.navigate("MyCountry", {
+                  props.navigation.navigate('MyCountry', {
                     selectedCountry: itemData.item,
                   })
                 }
@@ -226,7 +226,7 @@ const GlobalScreen = (props) => {
                   <View style={styles.countryContainer}>
                     {Number(itemData.item.dailyDeaths) !== 0 && (
                       <View style={styles.dailyNewCasesContainer}>
-                        <AntDesign name="arrowup" size={12} color="#fff" />
+                        <AntDesign name='arrowup' size={12} color='#fff' />
                         <Text style={styles.dailyNewCaseCount}>
                           {itemData.item.dailyConfirmed}
                         </Text>
@@ -239,30 +239,30 @@ const GlobalScreen = (props) => {
                 </View>
               </TouchableButton>
             </View>
-          );
+          )
         }}
       />
     </ScrollView>
-  );
-};
+  )
+}
 
-export default GlobalScreen;
+export default GlobalScreen
 
 const styles = StyleSheet.create({
-  container: { flex: 1, alignItems: "center", justifyContent: "center" },
+  container: { flex: 1, alignItems: 'center', justifyContent: 'center' },
   cardContainer: {
-    flexDirection: "row",
-    justifyContent: "space-between",
+    flexDirection: 'row',
+    justifyContent: 'space-between',
   },
   country: {
     paddingVertical: 16,
     paddingHorizontal: 10,
-    flexDirection: "row",
-    justifyContent: "space-between",
-    backgroundColor: "#fff",
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    backgroundColor: '#fff',
     borderRadius: 3,
     elevation: 5,
-    shadowColor: "black",
+    shadowColor: 'black',
     shadowOffset: {
       width: 2,
       height: 2,
@@ -271,41 +271,41 @@ const styles = StyleSheet.create({
     shadowRadius: 2,
   },
   countryContainer: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-between",
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
   },
   index: { fontSize: 10, marginRight: 4 },
   countryFlag: { fontSize: 16, marginRight: 8 },
-  countryName: { fontSize: 16, fontFamily: "open-sans" },
+  countryName: { fontSize: 16, fontFamily: 'open-sans' },
   dailyNewCasesContainer: {
     backgroundColor: Colors.red,
     padding: 3,
     marginRight: 7,
     borderRadius: 5,
-    flexDirection: "row",
-    alignItems: "center",
+    flexDirection: 'row',
+    alignItems: 'center',
     paddingRight: 6,
   },
   dailyNewCaseCount: {
     fontSize: 12,
-    fontFamily: "open-sans-bold",
-    color: "#fff",
+    fontFamily: 'open-sans-bold',
+    color: '#fff',
   },
   totalCaseCount: {
     fontSize: 14,
-    fontFamily: "open-sans-bold",
+    fontFamily: 'open-sans-bold',
     color: Colors.red,
   },
   headerTextConteiner: {
-    width: "100%",
-    flexDirection: "row",
-    justifyContent: "space-between",
+    width: '100%',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
     paddingHorizontal: 15,
     paddingVertical: 5,
   },
   headerText: {
-    fontFamily: "open-sans-bold",
+    fontFamily: 'open-sans-bold',
     fontSize: 12,
   },
-});
+})

@@ -19,7 +19,7 @@ import TimeAgo from 'react-native-timeago'
 import * as statsActions from '../../store/actions/stats'
 import Colors from '../../constants/Colors'
 import CaseNumberChart from '../../components/CaseNumberChart'
-import MonthlyStats from './MonthlyStats'
+import MonthlyStats from './LastMonthsStats'
 
 const CountryScreen = (props) => {
   const dispatch = useDispatch()
@@ -53,10 +53,8 @@ const CountryScreen = (props) => {
   }, [countryCode])
 
   useEffect(() => {
-    let isRequestCancelled
-    if (!isRequestCancelled) {
-      loadSelectedCountryStats()
-    }
+    loadSelectedCountryStats()
+
     return () => {
       clearTimeout(timerRef.current)
     }
