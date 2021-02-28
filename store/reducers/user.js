@@ -1,26 +1,26 @@
-import { FETCH_INFECTED_DATES, FETCH_USER_COUNTRY } from "../actions/user";
-import { LOGOUT } from "../actions/auth";
+import { FETCH_INFECTED_DATES, FETCH_USER_COUNTRY } from '../actions/user'
+import { LOGOUT } from '../actions/auth'
 
 const initialState = {
-  userInfectedDates: [],
+  userInfectedDate: [],
   userCountry: [],
-};
+}
 
 export default (state = initialState, action) => {
   switch (action.type) {
     case FETCH_INFECTED_DATES:
       return {
         ...state,
-        userInfectedDates: action.userInfectedDates,
-      };
+        userInfectedDate: action.userInfectedDate,
+      }
     case FETCH_USER_COUNTRY:
       return {
         ...state,
         userCountry: action.userCountry,
-      };
+      }
     case LOGOUT:
-      return initialState;
+      return initialState
     default:
-      return state;
+      return state
   }
-};
+}

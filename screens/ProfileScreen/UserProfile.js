@@ -1,6 +1,6 @@
-import React, { useState, useEffect, useCallback } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { useFocusEffect } from "@react-navigation/native";
+import React, { useState, useEffect, useCallback } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
+import { useFocusEffect } from '@react-navigation/native'
 import {
   View,
   Text,
@@ -11,180 +11,178 @@ import {
   StyleSheet,
   ScrollView,
   Platform,
-} from "react-native";
-import DateTimePickerModal from "react-native-modal-datetime-picker";
+} from 'react-native'
+import DateTimePickerModal from 'react-native-modal-datetime-picker'
 import {
   MaterialCommunityIcons,
   FontAwesome5,
   Entypo,
-} from "@expo/vector-icons";
-import ProgressCircle from "react-native-progress-circle";
-import { vw } from "react-native-expo-viewport-units";
+} from '@expo/vector-icons'
+import ProgressCircle from 'react-native-progress-circle'
+import { vw } from 'react-native-expo-viewport-units'
 
-import * as userActions from "../../store/actions/user";
-import * as authActions from "../../store/actions/auth";
-import Colors from "../../constants/Colors";
+import * as userActions from '../../store/actions/user'
+import * as authActions from '../../store/actions/auth'
+import Colors from '../../constants/Colors'
 
 const Profile = (props) => {
-  const dispatch = useDispatch();
-  const userInfectedDates = useSelector(
-    (state) => state.user.userInfectedDates
-  );
-  const userCountry = useSelector((state) => state.user.userCountry);
-  const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState();
-  const [date, setDate] = useState(new Date());
-  const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
-  const [isUpdating, setIsUpdating] = useState(false);
-  const [selectedItemId, setSelectedItemId] = useState();
+  const dispatch = useDispatch()
+  const userInfectedDate = useSelector((state) => state.user.userInfectedDate)
+  const userCountry = useSelector((state) => state.user.userCountry)
+  const [isLoading, setIsLoading] = useState(true)
+  const [error, setError] = useState()
+  const [date, setDate] = useState(new Date())
+  const [isDatePickerVisible, setDatePickerVisibility] = useState(false)
+  const [isUpdating, setIsUpdating] = useState(false)
+  const [selectedItemId, setSelectedItemId] = useState()
 
   const infectedDateHandler = async (date) => {
-    const currentDate = new Date().getTime();
+    const currentDate = new Date().getTime()
     if (currentDate < date) {
       Alert.alert(
-        "A date in the future has been selected!",
-        "Please change it",
+        'A date in the future has been selected!',
+        'Please change it',
         [
           {
-            text: "Okay",
+            text: 'Okay',
           },
         ]
-      );
-      if (Platform.OS === "android") {
-        hideDatePicker();
+      )
+      if (Platform.OS === 'android') {
+        hideDatePicker()
       }
     } else if (currentDate - date > 1209600000) {
       Alert.alert(
-        "A date older than 14 days has been selected!",
-        "Please change it",
+        'A date older than 14 days has been selected!',
+        'Please change it',
         [
           {
-            text: "Okay",
+            text: 'Okay',
           },
         ]
-      );
-      if (Platform.OS === "android") {
-        hideDatePicker();
+      )
+      if (Platform.OS === 'android') {
+        hideDatePicker()
       }
     } else {
-      if (Platform.OS === "ios") {
-        setDate(date);
+      if (Platform.OS === 'ios') {
+        setDate(date)
       }
-      hideDatePicker();
-      setError(null);
+      hideDatePicker()
+      setError(null)
       try {
-        if (Platform.OS === "android") {
-          setDate(date);
+        if (Platform.OS === 'android') {
+          setDate(date)
         }
         isUpdating
           ? await dispatch(userActions.updateInfectedDate(date, selectedItemId))
-          : await dispatch(userActions.sendInfectedDate(date));
+          : await dispatch(userActions.sendInfectedDate(date))
       } catch (error) {
-        setError(error.message);
+        setError(error.message)
       }
     }
-  };
+  }
 
   const fetchInfectedDatesHandler = async () => {
-    setError(null);
+    setError(null)
     try {
-      await dispatch(userActions.fetchInfectedDates());
+      await dispatch(userActions.fetchInfectedDates())
     } catch (error) {
-      setError(error.message);
+      setError(error.message)
     }
-  };
+  }
 
   const deleteInfectedDateHandler = async (id) => {
-    Alert.alert("Are you sure?", "Do you really want to delete this date?", [
-      { text: "No" },
+    Alert.alert('Are you sure?', 'Do you really want to delete this date?', [
+      { text: 'No' },
       {
-        text: "Yes",
+        text: 'Yes',
         onPress: async () => {
-          setError(null);
+          setError(null)
           try {
-            await dispatch(userActions.deleteInfectedDate(id));
-            setDate(new Date());
+            await dispatch(userActions.deleteInfectedDate(id))
+            setDate(new Date())
           } catch (error) {
-            setError(error.mesage);
+            setError(error.mesage)
           }
         },
       },
-    ]);
-  };
+    ])
+  }
 
   const deleteUserCountryHandler = async (id) => {
     Alert.alert(
-      "Are you sure?",
-      "Do you realy want to delete your selected country?",
+      'Are you sure?',
+      'Do you realy want to delete your selected country?',
       [
-        { text: "No" },
+        { text: 'No' },
         {
-          text: "Yes",
+          text: 'Yes',
           onPress: async () => {
-            setError(null);
+            setError(null)
             try {
-              await dispatch(userActions.deleteUserCountry(id));
-              setDate(new Date());
+              await dispatch(userActions.deleteUserCountry(id))
+              setDate(new Date())
             } catch (error) {
-              setError(error.message);
+              setError(error.message)
             }
           },
         },
       ]
-    );
-  };
+    )
+  }
 
   const fetchUserCountryHandler = async () => {
-    await dispatch(userActions.fetchUserCountry());
-  };
+    await dispatch(userActions.fetchUserCountry())
+  }
 
   useFocusEffect(
     useCallback(() => {
-      setIsLoading(true);
+      setIsLoading(true)
       fetchInfectedDatesHandler()
         .then(() => fetchUserCountryHandler())
-        .then(() => setIsLoading(false));
+        .then(() => setIsLoading(false))
     }, [date])
-  );
+  )
 
   useEffect(() => {
     if (error) {
-      Alert.alert("An Error Occurred!", error, [{ text: "Okay" }]);
+      Alert.alert('An Error Occurred!', error, [{ text: 'Okay' }])
     }
-  }, [error]);
+  }, [error])
 
   const showDatePicker = () => {
-    setDatePickerVisibility(true);
-  };
-
-  const hideDatePicker = () => {
-    setDatePickerVisibility(false);
-  };
-
-  let TouchableButton;
-
-  if (Platform.OS === "android") {
-    TouchableButton = TouchableNativeFeedback;
-  } else {
-    TouchableButton = TouchableOpacity;
+    setDatePickerVisibility(true)
   }
 
-  let selfIsolationProgress = 0;
-  let daysToGo = "No countdown found!";
-  if (userInfectedDates.length > 0) {
-    const currentDate = new Date().getTime();
-    const selectedDate = new Date(userInfectedDates[0].infectedDate).getTime();
-    selfIsolationProgress = ((currentDate - selectedDate) / 1209600000) * 100;
+  const hideDatePicker = () => {
+    setDatePickerVisibility(false)
+  }
 
-    daysToGo = 14 - Math.floor((currentDate - selectedDate) / 86400000);
+  let TouchableButton
+
+  if (Platform.OS === 'android') {
+    TouchableButton = TouchableNativeFeedback
+  } else {
+    TouchableButton = TouchableOpacity
+  }
+
+  let selfIsolationProgress = 0
+  let daysToGo = 'No countdown found!'
+  if (userInfectedDate.length > 0) {
+    const currentDate = new Date().getTime()
+    const selectedDate = new Date(userInfectedDate[0].infectedDate).getTime()
+    selfIsolationProgress = ((currentDate - selectedDate) / 1209600000) * 100
+
+    daysToGo = 14 - Math.floor((currentDate - selectedDate) / 86400000)
   }
 
   if (isLoading) {
     return (
-      <View style={{ flex: 1, justifyContent: "center", paddingVertical: 90 }}>
-        <ActivityIndicator size="large" color={Colors.blue} />
+      <View style={{ flex: 1, justifyContent: 'center', paddingVertical: 90 }}>
+        <ActivityIndicator size='large' color={Colors.blue} />
       </View>
-    );
+    )
   }
 
   return (
@@ -192,12 +190,12 @@ const Profile = (props) => {
       <View>
         <View style={styles.progressCircle}>
           <ProgressCircle
-            percent={userInfectedDates.length > 0 ? selfIsolationProgress : 0}
+            percent={userInfectedDate.length > 0 ? selfIsolationProgress : 0}
             radius={100}
             borderWidth={12}
             shadowColor={Colors.lightGray}
             color={Colors.green}
-            bgColor="#fff"
+            bgColor='#fff'
             outerCircleStyle={{ marginVertical: 15 }}
           >
             <Text
@@ -218,16 +216,16 @@ const Profile = (props) => {
             <View style={styles.buttonNarrowContainer}>
               <TouchableButton
                 onPress={() => {
-                  setSelectedItemId(userInfectedDates[0].id);
-                  showDatePicker();
-                  setIsUpdating(true);
+                  setSelectedItemId(userInfectedDate[0].id)
+                  showDatePicker()
+                  setIsUpdating(true)
                 }}
               >
                 <View style={styles.buttonNarrow}>
                   <MaterialCommunityIcons
-                    name="calendar-edit"
+                    name='calendar-edit'
                     size={20}
-                    color="#fff"
+                    color='#fff'
                   />
                   <Text style={styles.buttonNarrowText}>Edit</Text>
                 </View>
@@ -236,14 +234,14 @@ const Profile = (props) => {
             <View style={styles.buttonNarrowContainer}>
               <TouchableButton
                 onPress={() =>
-                  deleteInfectedDateHandler(userInfectedDates[0].id)
+                  deleteInfectedDateHandler(userInfectedDate[0].id)
                 }
               >
-                <View style={[styles.buttonNarrow, { backgroundColor: "red" }]}>
+                <View style={[styles.buttonNarrow, { backgroundColor: 'red' }]}>
                   <MaterialCommunityIcons
-                    name="delete-empty"
+                    name='delete-empty'
                     size={22}
-                    color="#fff"
+                    color='#fff'
                   />
                   <Text style={styles.buttonNarrowText}>Delete</Text>
                 </View>
@@ -254,15 +252,15 @@ const Profile = (props) => {
           <View style={styles.buttonWideContainer}>
             <TouchableButton
               onPress={() => {
-                setIsUpdating(false);
-                showDatePicker();
+                setIsUpdating(false)
+                showDatePicker()
               }}
             >
               <View style={styles.buttonWide}>
                 <MaterialCommunityIcons
-                  name="calendar"
+                  name='calendar'
                   size={22}
-                  color="#fff"
+                  color='#fff'
                 />
                 <Text style={styles.buttonWideText}>
                   When did you get infected?
@@ -277,13 +275,13 @@ const Profile = (props) => {
           <View style={styles.buttonWideContainer}>
             <TouchableButton
               onPress={() => {
-                props.navigation.navigate("SelectMyCountry", {
+                props.navigation.navigate('SelectMyCountry', {
                   isUpdatingCountry: false,
-                });
+                })
               }}
             >
               <View style={styles.buttonWide}>
-                <FontAwesome5 name="globe-americas" size={18} color="#fff" />
+                <FontAwesome5 name='globe-americas' size={18} color='#fff' />
                 <Text style={styles.buttonWideText}>Select your country</Text>
               </View>
             </TouchableButton>
@@ -295,11 +293,11 @@ const Profile = (props) => {
               <Text style={styles.myCountryText}>{userCountry[0].country}</Text>
               <View style={styles.myCountryIconContainer}>
                 <Entypo
-                  name="edit"
+                  name='edit'
                   size={17}
-                  color="#fff"
+                  color='#fff'
                   onPress={() =>
-                    props.navigation.navigate("SelectMyCountry", {
+                    props.navigation.navigate('SelectMyCountry', {
                       isUpdatingCountry: true,
                       id: userCountry[0].id,
                     })
@@ -313,9 +311,9 @@ const Profile = (props) => {
                 ]}
               >
                 <Entypo
-                  name="cross"
+                  name='cross'
                   size={25}
-                  color="#fff"
+                  color='#fff'
                   onPress={() => deleteUserCountryHandler(userCountry[0].id)}
                 />
               </View>
@@ -325,23 +323,23 @@ const Profile = (props) => {
         <View style={styles.hr}></View>
         <View
           style={{
-            alignSelf: "stretch",
-            justifyContent: "center",
+            alignSelf: 'stretch',
+            justifyContent: 'center',
             borderRadius: 10,
             margin: 10,
-            overflow: "hidden",
+            overflow: 'hidden',
           }}
         >
           <View style={styles.logoutButtonContainer}>
             <TouchableButton
               onPress={() => {
-                dispatch(authActions.logout());
-                props.navigation.replace("Profile");
+                dispatch(authActions.logout())
+                props.navigation.replace('Profile')
               }}
             >
               <View style={styles.logoutButton}>
-                <MaterialCommunityIcons name="logout" size={18} color="black" />
-                <Text style={[styles.buttonWideText, { color: "black" }]}>
+                <MaterialCommunityIcons name='logout' size={18} color='black' />
+                <Text style={[styles.buttonWideText, { color: 'black' }]}>
                   Log Out
                 </Text>
               </View>
@@ -351,15 +349,15 @@ const Profile = (props) => {
       </View>
       <DateTimePickerModal
         isVisible={isDatePickerVisible}
-        mode="datetime"
+        mode='datetime'
         onConfirm={infectedDateHandler}
         onCancel={hideDatePicker}
       />
     </ScrollView>
-  );
-};
+  )
+}
 
-export default Profile;
+export default Profile
 
 const styles = StyleSheet.create({
   container: {
@@ -368,13 +366,13 @@ const styles = StyleSheet.create({
   },
   buttonWideContainer: {
     borderRadius: 8,
-    overflow: "hidden",
+    overflow: 'hidden',
     width: vw(90),
-    marginLeft: "auto",
-    marginRight: "auto",
+    marginLeft: 'auto',
+    marginRight: 'auto',
     marginTop: 15,
     elevation: 5,
-    shadowColor: "black",
+    shadowColor: 'black',
     shadowOffset: {
       width: 5,
       height: 2,
@@ -383,51 +381,51 @@ const styles = StyleSheet.create({
     shadowRadius: 8,
   },
   buttonWide: {
-    flexDirection: "row",
-    justifyContent: "center",
-    alignItems: "center",
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
     backgroundColor: Colors.green,
     paddingVertical: 9,
   },
   buttonWideText: {
-    textAlign: "center",
-    fontFamily: "open-sans-semibold",
-    color: "#fff",
+    textAlign: 'center',
+    fontFamily: 'open-sans-semibold',
+    color: '#fff',
     fontSize: 15,
     marginLeft: 10,
   },
   progressCircle: {
-    alignItems: "center",
+    alignItems: 'center',
   },
   progressCircleText: {
-    textAlign: "center",
-    fontFamily: "open-sans-semibold",
+    textAlign: 'center',
+    fontFamily: 'open-sans-semibold',
     fontSize: 18,
     paddingHorizontal: 20,
   },
   daysToGo: {
     color: Colors.blue,
-    fontFamily: "open-sans-bold",
+    fontFamily: 'open-sans-bold',
     fontSize: 70,
   },
   progressBarBottomText: {
-    fontFamily: "open-sans-bold",
+    fontFamily: 'open-sans-bold',
     marginBottom: 30,
     fontSize: 16,
   },
   buttonNarrowContentContainer: {
     width: vw(90),
-    marginRight: "auto",
-    marginLeft: "auto",
-    flexDirection: "row",
-    justifyContent: "space-between",
+    marginRight: 'auto',
+    marginLeft: 'auto',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
   },
   buttonNarrowContainer: {
     width: vw(35),
     borderRadius: 5,
-    overflow: "hidden",
+    overflow: 'hidden',
     elevation: 5,
-    shadowColor: "black",
+    shadowColor: 'black',
     shadowOffset: {
       width: 5,
       height: 2,
@@ -436,46 +434,46 @@ const styles = StyleSheet.create({
     shadowRadius: 8,
   },
   buttonNarrow: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "center",
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
     backgroundColor: Colors.blue,
     paddingVertical: 7,
   },
   buttonNarrowText: {
-    color: "#fff",
-    fontFamily: "open-sans-semibold",
+    color: '#fff',
+    fontFamily: 'open-sans-semibold',
     fontSize: 16,
     marginLeft: 7,
   },
   hr: {
     height: 2,
     width: vw(90),
-    backgroundColor: "#E5E9F2",
-    marginRight: "auto",
-    marginLeft: "auto",
+    backgroundColor: '#E5E9F2',
+    marginRight: 'auto',
+    marginLeft: 'auto',
     marginVertical: 15,
   },
   myCountryContainer: {
     width: vw(90),
-    marginLeft: "auto",
-    marginRight: "auto",
+    marginLeft: 'auto',
+    marginRight: 'auto',
   },
   contentHeader: {
-    fontFamily: "open-sans-semibold",
+    fontFamily: 'open-sans-semibold',
     fontSize: 16,
-    textDecorationLine: "underline",
-    textDecorationStyle: "solid",
-    textDecorationColor: "black",
+    textDecorationLine: 'underline',
+    textDecorationStyle: 'solid',
+    textDecorationColor: 'black',
     marginBottom: 5,
   },
   myCountryContentContainer: {
-    flexDirection: "row",
-    alignItems: "center",
+    flexDirection: 'row',
+    alignItems: 'center',
   },
   myCountryText: {
-    marginRight: "auto",
-    fontFamily: "open-sans",
+    marginRight: 'auto',
+    fontFamily: 'open-sans',
     fontSize: 16,
   },
   myCountryIconContainer: {
@@ -484,17 +482,17 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     height: 30,
     width: 30,
-    alignItems: "center",
-    justifyContent: "center",
+    alignItems: 'center',
+    justifyContent: 'center',
     marginLeft: 10,
   },
   logoutButtonContainer: {
     width: vw(70),
-    marginLeft: "auto",
-    marginRight: "auto",
+    marginLeft: 'auto',
+    marginRight: 'auto',
     marginVertical: 35,
     elevation: 5,
-    shadowColor: "black",
+    shadowColor: 'black',
     shadowOffset: {
       width: 5,
       height: 2,
@@ -502,13 +500,13 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.05,
     shadowRadius: 8,
     borderRadius: 8,
-    overflow: "hidden",
+    overflow: 'hidden',
   },
   logoutButton: {
-    flexDirection: "row",
-    justifyContent: "center",
-    alignItems: "center",
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
     paddingVertical: 9,
-    backgroundColor: "#fff",
+    backgroundColor: '#fff',
   },
-});
+})
