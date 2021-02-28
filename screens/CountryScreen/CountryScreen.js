@@ -29,7 +29,7 @@ const CountryScreen = (props) => {
   const [error, setError] = useState()
   const [showMonth, setShowMonth] = useState(false)
   const [isRefreshing, setIsRefreshing] = useState(false)
-  const allStats = useSelector((state) => state.stats.allStats)
+  const allCountryStats = useSelector((state) => state.stats.allCountryStats)
   const {
     countryName,
     lastUpdated,
@@ -157,7 +157,7 @@ const CountryScreen = (props) => {
               <ActivityIndicator size='large' color={Colors.red} />
             </View>
           ) : (
-            <CaseNumberChart allStats={allStats} />
+            <CaseNumberChart allCountryStats={allCountryStats} />
           )}
         </View>
         <View style={styles.card}>
@@ -176,10 +176,11 @@ const CountryScreen = (props) => {
               <View style={{ marginLeft: 10, marginBottom: 10 }}>
                 <ActivityIndicator size='small' color={Colors.green} />
               </View>
-            ) : allStats[allStats.length - 1].new_recovered !== '0' ? (
+            ) : allCountryStats[allCountryStats.length - 1].new_recovered !==
+              '0' ? (
               <Text style={[styles.dailyNumber, { color: Colors.green }]}>
                 <AntDesign name='arrowup' size={15} color={Colors.green} />
-                {allStats[allStats.length - 1].new_recovered}
+                {allCountryStats[allCountryStats.length - 1].new_recovered}
               </Text>
             ) : null}
           </View>
@@ -200,10 +201,11 @@ const CountryScreen = (props) => {
               <View style={{ marginLeft: 10, marginBottom: 10 }}>
                 <ActivityIndicator size='small' color={Colors.gray} />
               </View>
-            ) : allStats[allStats.length - 1].new_deaths !== '0' ? (
+            ) : allCountryStats[allCountryStats.length - 1].new_deaths !==
+              '0' ? (
               <Text style={[styles.dailyNumber, { color: Colors.gray }]}>
                 <AntDesign name='arrowup' size={15} color={Colors.gray} />
-                {allStats[allStats.length - 1].new_deaths}
+                {allCountryStats[allCountryStats.length - 1].new_deaths}
               </Text>
             ) : null}
           </View>
