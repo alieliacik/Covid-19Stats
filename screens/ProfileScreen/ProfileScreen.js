@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import React, { useState, useEffect } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
 import {
   View,
   Text,
@@ -12,94 +12,94 @@ import {
   Alert,
   Keyboard,
   ActivityIndicator,
-} from "react-native";
+} from 'react-native'
 
-import { vw, vh } from "react-native-expo-viewport-units";
-import { LinearGradient } from "expo-linear-gradient";
-import { MaterialCommunityIcons, Ionicons } from "@expo/vector-icons";
-import { Formik } from "formik";
-import * as yup from "yup";
+import { vw, vh } from 'react-native-expo-viewport-units'
+import { LinearGradient } from 'expo-linear-gradient'
+import { MaterialCommunityIcons, Ionicons } from '@expo/vector-icons'
+import { Formik } from 'formik'
+import * as yup from 'yup'
 
-import Colors from "../../constants/Colors";
-import * as authActions from "../../store/actions/auth";
+import Colors from '../../constants/Colors'
+import * as authActions from '../../store/actions/auth'
 
 const ProfileScreen = (props) => {
-  const dispatch = useDispatch();
-  const [isLoading, setIsLoading] = useState();
-  const [error, setError] = useState();
-  const [isEmailFocused, setIsEmailFocused] = useState();
-  const [isPasswordFocused, setIsPasswordFocused] = useState();
-  const [isSigningUp, setIsSigningUp] = useState();
-  const [isResettingPassword, setIsResettingPassword] = useState(false);
+  const dispatch = useDispatch()
+  const [isLoading, setIsLoading] = useState()
+  const [error, setError] = useState()
+  const [isEmailFocused, setIsEmailFocused] = useState()
+  const [isPasswordFocused, setIsPasswordFocused] = useState()
+  const [isSigningUp, setIsSigningUp] = useState()
+  const [isResettingPassword, setIsResettingPassword] = useState(false)
 
-  const isRememberMe = useSelector((state) => state.auth.isRememberMe);
+  const isRememberMe = useSelector((state) => state.auth.isRememberMe)
 
   const authHandler = async (email, password) => {
-    let action;
+    let action
     if (isSigningUp) {
-      action = authActions.signUp(email, password);
+      action = authActions.signUp(email, password)
     } else if (isResettingPassword) {
-      action = authActions.sendPasswordResetEmail(email);
+      action = authActions.sendPasswordResetEmail(email)
     } else {
-      action = authActions.login(email, password);
+      action = authActions.login(email, password)
     }
-    setError(null);
-    setIsLoading(true);
+    setError(null)
+    setIsLoading(true)
     try {
-      await dispatch(action);
+      await dispatch(action)
       if (isResettingPassword) {
-        setIsResettingPassword(false);
+        setIsResettingPassword(false)
         Alert.alert(
-          "Password Reset",
+          'Password Reset',
           `A password reset link has been sent to ${email}`,
-          [{ text: "Okay" }]
-        );
+          [{ text: 'Okay' }]
+        )
       } else {
-        props.navigation.replace("ProfileLogin");
+        props.navigation.replace('UserProfile')
       }
     } catch (err) {
-      setError(err.message);
-      setIsLoading(false);
+      setError(err.message)
+      setIsLoading(false)
     }
-    setIsLoading(false);
-  };
+    setIsLoading(false)
+  }
 
   useEffect(() => {
     if (error) {
-      Alert.alert("An Error Occurred!", error, [{ text: "Okay" }]);
+      Alert.alert('An Error Occurred!', error, [{ text: 'Okay' }])
     }
-  }, [error]);
+  }, [error])
 
-  let TouchableButton;
+  let TouchableButton
 
-  if (Platform.OS === "android") {
-    TouchableButton = TouchableNativeFeedback;
+  if (Platform.OS === 'android') {
+    TouchableButton = TouchableNativeFeedback
   } else {
-    TouchableButton = TouchableOpacity;
+    TouchableButton = TouchableOpacity
   }
 
   let authValidationSchema = yup.object().shape({
     email: yup
       .string()
-      .email("Please enter a valid email adress!")
-      .required("Email adress is required!"),
+      .email('Please enter a valid email adress!')
+      .required('Email adress is required!'),
     password: yup
       .string()
       .min(8, ({ min }) => `Password must be at least ${min} characters!`)
-      .required("Password is required"),
-  });
+      .required('Password is required'),
+  })
 
   const rememberMeHandler = () => {
-    dispatch(authActions.rememberMeHandler());
-  };
+    dispatch(authActions.rememberMeHandler())
+  }
 
   if (isResettingPassword) {
     authValidationSchema = yup.object().shape({
       email: yup
         .string()
-        .email("Please enter a valid email adress!")
-        .required("Email adress is required!"),
-    });
+        .email('Please enter a valid email adress!')
+        .required('Email adress is required!'),
+    })
   }
 
   return (
@@ -110,34 +110,34 @@ const ProfileScreen = (props) => {
       <View style={styles.headerContainer}>
         <ImageBackground
           style={styles.header}
-          source={require("../../assets/worldmap.png")}
+          source={require('../../assets/worldmap.png')}
         >
           <LinearGradient
-            colors={[Colors.backgroundBlue, "#24C6DC"]}
+            colors={[Colors.backgroundBlue, '#24C6DC']}
             start={[0.3, 0.6]}
             end={[0.9, 1]}
             style={styles.linearGradient}
           />
           <Text style={styles.headerText}>
             {isResettingPassword
-              ? "Reset Password"
+              ? 'Reset Password'
               : isSigningUp
-              ? "Sign Up"
-              : "Log In"}
+              ? 'Sign Up'
+              : 'Log In'}
           </Text>
         </ImageBackground>
       </View>
       <View style={styles.contentContainer}>
         <Formik
           initialValues={{
-            email: "",
-            password: "",
-            confirmPassword: "",
-            fullName: "",
+            email: '',
+            password: '',
+            confirmPassword: '',
+            fullName: '',
           }}
           validationSchema={authValidationSchema}
           onSubmit={(values) => {
-            authHandler(values.email, values.password);
+            authHandler(values.email, values.password)
           }}
         >
           {({ handleChange, handleSubmit, values, errors }) => (
@@ -154,21 +154,21 @@ const ProfileScreen = (props) => {
                 </Text>
                 <View style={styles.textInputContainer}>
                   <MaterialCommunityIcons
-                    name="email-edit-outline"
+                    name='email-edit-outline'
                     size={24}
                     color={Colors.lightBlue}
                   />
                   <TextInput
-                    onChangeText={handleChange("email")}
+                    onChangeText={handleChange('email')}
                     onFocus={() => setIsEmailFocused(true)}
                     onBlur={() => setIsEmailFocused(false)}
                     value={values.email}
                     style={styles.textInput}
                     placeholderTextColor={Colors.lightBlue}
                     placeholder={
-                      isEmailFocused || values.email.length > 0 ? "" : "Email"
+                      isEmailFocused || values.email.length > 0 ? '' : 'Email'
                     }
-                    keyboardType="email-address"
+                    keyboardType='email-address'
                   />
                 </View>
                 {errors.email && (
@@ -187,20 +187,20 @@ const ProfileScreen = (props) => {
                   </Text>
                   <View style={styles.textInputContainer}>
                     <MaterialCommunityIcons
-                      name="key"
+                      name='key'
                       size={24}
                       color={Colors.lightBlue}
                     />
                     <TextInput
-                      onChangeText={handleChange("password")}
+                      onChangeText={handleChange('password')}
                       onFocus={() => setIsPasswordFocused(true)}
                       onBlur={() => setIsPasswordFocused(false)}
                       value={values.password}
                       placeholderTextColor={Colors.lightBlue}
                       placeholder={
                         isPasswordFocused || values.password.length > 0
-                          ? ""
-                          : "Password"
+                          ? ''
+                          : 'Password'
                       }
                       style={styles.textInput}
                       secureTextEntry
@@ -213,19 +213,19 @@ const ProfileScreen = (props) => {
                 </View>
               )}
               <View style={[styles.btnContainer, { marginTop: 15 }]}>
-                <TouchableButton onPress={handleSubmit} title="Submit">
+                <TouchableButton onPress={handleSubmit} title='Submit'>
                   <View style={styles.btn}>
                     {isLoading ? (
                       <View style={{ marginVertical: 2 }}>
-                        <ActivityIndicator color="#fff" />
+                        <ActivityIndicator color='#fff' />
                       </View>
                     ) : (
                       <Text style={styles.btnText}>
                         {isResettingPassword
-                          ? "Reset Password"
+                          ? 'Reset Password'
                           : isSigningUp
-                          ? "Sign Up"
-                          : "Log In"}
+                          ? 'Sign Up'
+                          : 'Log In'}
                       </Text>
                     )}
                   </View>
@@ -234,14 +234,14 @@ const ProfileScreen = (props) => {
               {!isResettingPassword && (
                 <TouchableButton
                   onPress={rememberMeHandler}
-                  style={{ alignSelf: "flex-start" }}
+                  style={{ alignSelf: 'flex-start' }}
                 >
                   <View style={styles.checboxContainer}>
                     <MaterialCommunityIcons
                       name={
                         isRememberMe
-                          ? "checkbox-marked-outline"
-                          : "checkbox-blank-outline"
+                          ? 'checkbox-marked-outline'
+                          : 'checkbox-blank-outline'
                       }
                       size={22}
                       color={Colors.gray}
@@ -269,7 +269,7 @@ const ProfileScreen = (props) => {
                 <View style={[styles.btnContainer, { width: vw(60) }]}>
                   <TouchableButton
                     onPress={() => {
-                      setIsSigningUp((prevstate) => !prevstate);
+                      setIsSigningUp((prevstate) => !prevstate)
                     }}
                   >
                     <View
@@ -277,8 +277,8 @@ const ProfileScreen = (props) => {
                     >
                       <Text style={styles.btnText}>
                         {isSigningUp
-                          ? "Alreay have an account?"
-                          : "Create New Account"}
+                          ? 'Alreay have an account?'
+                          : 'Create New Account'}
                       </Text>
                     </View>
                   </TouchableButton>
@@ -289,40 +289,40 @@ const ProfileScreen = (props) => {
         </Formik>
       </View>
     </ScrollView>
-  );
-};
+  )
+}
 
-export default ProfileScreen;
+export default ProfileScreen
 
 const styles = StyleSheet.create({
-  container: { backgroundColor: "#fff", flex: 1, minHeight: vh(100) },
+  container: { backgroundColor: '#fff', flex: 1, minHeight: vh(100) },
   headerContainer: {
-    overflow: "hidden",
+    overflow: 'hidden',
   },
   header: {
     height: vh(25),
-    position: "relative",
+    position: 'relative',
   },
   headerText: {
-    color: "#fff",
+    color: '#fff',
     fontSize: 25,
-    fontFamily: "open-sans-semibold",
-    position: "absolute",
+    fontFamily: 'open-sans-semibold',
+    position: 'absolute',
     left: 40,
-    top: "40%",
+    top: '40%',
   },
   linearGradient: {
-    width: "100%",
-    height: "100%",
+    width: '100%',
+    height: '100%',
     opacity: 0.8,
   },
   contentContainer: {
     marginTop: 30,
-    alignItems: "center",
+    alignItems: 'center',
   },
   textInputContainer: {
-    flexDirection: "row",
-    alignItems: "center",
+    flexDirection: 'row',
+    alignItems: 'center',
     borderBottomColor: Colors.lightBlue,
     borderBottomWidth: 1,
     width: vw(75),
@@ -330,12 +330,12 @@ const styles = StyleSheet.create({
   textInput: {
     flex: 1,
     fontSize: 14,
-    fontFamily: "open-sans",
+    fontFamily: 'open-sans',
     marginLeft: 25,
   },
   inputText: {
     fontSize: 12,
-    fontFamily: "open-sans",
+    fontFamily: 'open-sans',
     color: Colors.lightBlue,
     opacity: 0,
   },
@@ -347,9 +347,9 @@ const styles = StyleSheet.create({
   btnContainer: {
     width: vw(75),
     borderRadius: 5,
-    overflow: "hidden",
+    overflow: 'hidden',
     elevation: 5,
-    shadowColor: "black",
+    shadowColor: 'black',
     shadowOffset: {
       width: 5,
       height: 2,
@@ -362,13 +362,13 @@ const styles = StyleSheet.create({
     paddingVertical: 8,
   },
   btnText: {
-    textAlign: "center",
-    fontFamily: "open-sans-bold",
-    color: "#fff",
+    textAlign: 'center',
+    fontFamily: 'open-sans-bold',
+    color: '#fff',
     fontSize: 16,
   },
   forgotPassword: {
-    fontFamily: "open-sans-semibold",
+    fontFamily: 'open-sans-semibold',
     color: Colors.gray,
     fontSize: 14,
     marginTop: 16,
@@ -381,25 +381,25 @@ const styles = StyleSheet.create({
   },
   inputError: {
     fontSize: 11,
-    color: "#C0CCDA",
-    textAlign: "right",
+    color: '#C0CCDA',
+    textAlign: 'right',
   },
 
   backToLogin: {
-    color: "black",
-    fontFamily: "open-sans-semibold",
+    color: 'black',
+    fontFamily: 'open-sans-semibold',
   },
   checboxContainer: {
-    flexDirection: "row",
-    alignItems: "center",
-    alignSelf: "flex-start",
+    flexDirection: 'row',
+    alignItems: 'center',
+    alignSelf: 'flex-start',
     marginLeft: vw(12),
     marginVertical: 10,
     zIndex: 5,
   },
   checkboxText: {
-    fontFamily: "open-sans",
+    fontFamily: 'open-sans',
     marginLeft: 5,
     color: Colors.gray,
   },
-});
+})
