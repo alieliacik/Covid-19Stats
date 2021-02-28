@@ -5,7 +5,7 @@ import {
   Image,
   View,
   Text,
-  ScrollView,       
+  ScrollView,
   ActivityIndicator,
   TouchableNativeFeedback,
   TouchableOpacity,
@@ -19,7 +19,7 @@ import TimeAgo from 'react-native-timeago'
 import * as statsActions from '../../store/actions/stats'
 import Colors from '../../constants/Colors'
 import CaseNumberChart from '../../components/CaseNumberChart'
-import MonthlyStats from './MonthlyStats/MonthlyStats'
+import MonthlyStats from './MonthlyStats'
 
 const CountryScreen = (props) => {
   const dispatch = useDispatch()
@@ -59,7 +59,6 @@ const CountryScreen = (props) => {
     }
     return () => {
       clearTimeout(timerRef.current)
-      isRequestCancelled = true
     }
   }, [dispatch])
 
@@ -70,14 +69,9 @@ const CountryScreen = (props) => {
         y: 0,
         animated: false,
       })
-
-      let isRequestCancelled
-      if (!isRequestCancelled) {
-        loadSelectedCountryStats()
-      }
+      loadSelectedCountryStats()
       return () => {
         clearTimeout(timerRef.current)
-        isRequestCancelled = true
       }
     }, [])
   )

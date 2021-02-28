@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useState, useRef } from 'react'
 import {
   View,
   Text,
@@ -10,42 +10,42 @@ import {
   FlatList,
   Modal,
   LogBox,
-} from "react-native";
-import { vw } from "react-native-expo-viewport-units";
-import { AntDesign } from "@expo/vector-icons";
+} from 'react-native'
+import { vw } from 'react-native-expo-viewport-units'
+import { AntDesign } from '@expo/vector-icons'
 
-import FadeInView from "../../constants/FadeInView";
-import Colors from "../../constants/Colors";
+import FadeInView from '../../constants/FadeInView'
+import Colors from '../../constants/Colors'
 
 const images = [
-  { id: 1, uri: require("../../assets/advice1.png") },
-  { id: 2, uri: require("../../assets/advice2.png") },
-  { id: 3, uri: require("../../assets/advice3.png") },
-  { id: 4, uri: require("../../assets/advice4.png") },
-  { id: 5, uri: require("../../assets/advice5.png") },
-  { id: 6, uri: require("../../assets/advice6.png") },
-];
+  { id: 1, uri: require('../../assets/advice1.png') },
+  { id: 2, uri: require('../../assets/advice2.png') },
+  { id: 3, uri: require('../../assets/advice3.png') },
+  { id: 4, uri: require('../../assets/advice4.png') },
+  { id: 5, uri: require('../../assets/advice5.png') },
+  { id: 6, uri: require('../../assets/advice6.png') },
+]
 
 const HealthScreen = (props) => {
-  const scrollRef = useRef();
-  const [showModal, setShowModal] = useState(false);
-  const [modalSource, setModalSource] = useState(images[0].uri);
-  const [showSymptoms, setShowSymptoms] = useState(false);
-  const [symptomsLayoutY, setSymptomsLayoutY] = useState(false);
-  const [showPreventive, setShowPreventive] = useState(false);
-  const [preventiveLayoutY, setPreventiveLayoutY] = useState(false);
+  const scrollRef = useRef()
+  const [showModal, setShowModal] = useState(false)
+  const [modalSource, setModalSource] = useState(images[0].uri)
+  const [showSymptoms, setShowSymptoms] = useState(false)
+  const [symptomsLayoutY, setSymptomsLayoutY] = useState(false)
+  const [showPreventive, setShowPreventive] = useState(false)
+  const [preventiveLayoutY, setPreventiveLayoutY] = useState(false)
 
-  let TouchableButton;
+  let TouchableButton
 
-  if (Platform.OS === "android") {
-    TouchableButton = TouchableNativeFeedback;
+  if (Platform.OS === 'android') {
+    TouchableButton = TouchableNativeFeedback
   } else {
-    TouchableButton = TouchableOpacity;
+    TouchableButton = TouchableOpacity
   }
 
   useEffect(() => {
-    LogBox.ignoreLogs(["VirtualizedLists should never be nested"]);
-  }, []);
+    LogBox.ignoreLogs(['VirtualizedLists should never be nested'])
+  }, [])
 
   return (
     <ScrollView ref={scrollRef} contentContainerStyle={styles.container}>
@@ -54,12 +54,12 @@ const HealthScreen = (props) => {
         useForeground={true}
         onLayout={(e) => setSymptomsLayoutY(e.nativeEvent.layout.y)}
         onPress={() => {
-          setShowSymptoms((prevState) => !prevState);
+          setShowSymptoms((prevState) => !prevState)
           if (!showSymptoms) {
             scrollRef.current?.scrollTo({
               y: symptomsLayoutY - 5,
               animated: true,
-            });
+            })
           }
         }}
       >
@@ -67,7 +67,7 @@ const HealthScreen = (props) => {
           <View>
             <Image
               style={styles.image}
-              source={require("../../assets/symptoms.png")}
+              source={require('../../assets/symptoms.png')}
             />
           </View>
           <View style={{ flex: 1 }}>
@@ -83,33 +83,33 @@ const HealthScreen = (props) => {
           <Text style={styles.cardText}>
             The COVID-19 virus affects different people in different ways. Most
             infected people will develop mild to moderate illness and recover
-            without hospitalization.{"\n"}
+            without hospitalization.{'\n'}
           </Text>
           <Text style={styles.cardTitle}>Most common symptoms:</Text>
           <Text style={styles.cardText}>
-            &#x25CF; fever {"\n"}&#x25CF; dry cough {"\n"}&#x25CF; tiredness{" "}
-            {"\n"}
+            &#x25CF; fever {'\n'}&#x25CF; dry cough {'\n'}&#x25CF; tiredness{' '}
+            {'\n'}
           </Text>
           <Text style={styles.cardTitle}>Less common symptoms:</Text>
           <Text style={styles.cardText}>
-            &#x25CF; aches and pains {"\n"}&#x25CF; sore throat {"\n"}&#x25CF;
-            diarrhoea {"\n"}&#x25CF; conjunctivitis {"\n"}&#x25CF; headache{" "}
-            {"\n"}
-            &#x25CF; loss of taste or smell {"\n"}&#x25CF; a rash on skin, or
-            discolouration of fingers or toes {"\n"}
+            &#x25CF; aches and pains {'\n'}&#x25CF; sore throat {'\n'}&#x25CF;
+            diarrhoea {'\n'}&#x25CF; conjunctivitis {'\n'}&#x25CF; headache{' '}
+            {'\n'}
+            &#x25CF; loss of taste or smell {'\n'}&#x25CF; a rash on skin, or
+            discolouration of fingers or toes {'\n'}
           </Text>
           <Text style={styles.cardTitle}>Serious symptoms:</Text>
           <Text style={styles.cardText}>
-            &#x25CF; difficulty breathing or shortness of breath {"\n"}&#x25CF;
-            chest pain or pressure {"\n"}&#x25CF; loss of speech or movement{" "}
-            {"\n"}
+            &#x25CF; difficulty breathing or shortness of breath {'\n'}&#x25CF;
+            chest pain or pressure {'\n'}&#x25CF; loss of speech or movement{' '}
+            {'\n'}
           </Text>
           <Text style={styles.cardText}>
             Seek immediate medical attention if you have serious symptoms.
-            Always call before visiting your doctor or health facility. {"\n"}
-            {"\n"}People with mild symptoms who are otherwise healthy should
-            manage their symptoms at home. {"\n"}
-            {"\n"}On average it takes 5–6 days from when someone is infected
+            Always call before visiting your doctor or health facility. {'\n'}
+            {'\n'}People with mild symptoms who are otherwise healthy should
+            manage their symptoms at home. {'\n'}
+            {'\n'}On average it takes 5–6 days from when someone is infected
             with the virus for symptoms to show, however it can take up to 14
             days.
           </Text>
@@ -119,12 +119,12 @@ const HealthScreen = (props) => {
         useForeground={true}
         onLayout={(e) => setPreventiveLayoutY(e.nativeEvent.layout.y)}
         onPress={() => {
-          setShowPreventive((prevState) => !prevState);
+          setShowPreventive((prevState) => !prevState)
           if (!showPreventive) {
             scrollRef.current?.scrollTo({
               y: preventiveLayoutY - 5,
               animated: true,
-            });
+            })
           }
         }}
       >
@@ -132,7 +132,7 @@ const HealthScreen = (props) => {
           <View>
             <Image
               style={styles.image}
-              source={require("../../assets/preventive.png")}
+              source={require('../../assets/preventive.png')}
             />
           </View>
           <View style={{ flex: 1 }}>
@@ -149,25 +149,25 @@ const HealthScreen = (props) => {
           <Text style={styles.cardText}>
             Protect yourself and others around you by knowing the facts and
             taking appropriate precautions. Follow advice provided by your local
-            health authority.{"\n"}
+            health authority.{'\n'}
           </Text>
           <Text style={styles.cardTitle}>
             To prevent the spread of COVID-19:
           </Text>
           <Text style={styles.cardText}>
             &#x25CF; Clean your hands often. Use soap and water, or an
-            alcohol-based hand rub. {"\n"}&#x25CF; Maintain a safe distance from
-            anyone who is coughing or sneezing. {"\n"}&#x25CF; Wear a mask when
-            physical distancing is not possible. {"\n"}&#x25CF; Don’t touch your
-            eyes, nose or mouth. {"\n"}&#x25CF; Cover your nose and mouth with
-            your bent elbow or a tissue when you cough or sneeze. {"\n"}&#x25CF;
-            Stay home if you feel unwell. {"\n"}&#x25CF; If you have a fever,
-            cough and difficulty breathing, seek medical attention. {"\n"}
+            alcohol-based hand rub. {'\n'}&#x25CF; Maintain a safe distance from
+            anyone who is coughing or sneezing. {'\n'}&#x25CF; Wear a mask when
+            physical distancing is not possible. {'\n'}&#x25CF; Don’t touch your
+            eyes, nose or mouth. {'\n'}&#x25CF; Cover your nose and mouth with
+            your bent elbow or a tissue when you cough or sneeze. {'\n'}&#x25CF;
+            Stay home if you feel unwell. {'\n'}&#x25CF; If you have a fever,
+            cough and difficulty breathing, seek medical attention. {'\n'}
           </Text>
           <Text style={styles.cardText}>
             Calling in advance allows your healthcare provider to quickly direct
             you to the right health facility. This protects you, and prevents
-            the spread of viruses and other infections. {"\n"}
+            the spread of viruses and other infections. {'\n'}
           </Text>
           <Text style={styles.cardTitle}>Masks</Text>
           <Text style={styles.cardText}>
@@ -180,7 +180,7 @@ const HealthScreen = (props) => {
       )}
       <TouchableButton
         onPress={() => {
-          props.navigation.navigate("Self-Assessment");
+          props.navigation.navigate('Self-Assessment')
         }}
       >
         <View style={styles.selfAssessmentButton}>
@@ -191,7 +191,7 @@ const HealthScreen = (props) => {
       </TouchableButton>
       <TouchableButton
         onPress={() => {
-          props.navigation.navigate("Profile");
+          props.navigation.navigate('Profile')
         }}
       >
         <View style={styles.selfAssessmentButton}>
@@ -204,7 +204,7 @@ const HealthScreen = (props) => {
         data={images}
         keyExtractor={(item) => item.id.toString()}
         numColumns={2}
-        columnWrapperStyle={{ justifyContent: "space-between" }}
+        columnWrapperStyle={{ justifyContent: 'space-between' }}
         ListHeaderComponent={() => (
           <Text style={[styles.cardTitle, { marginBottom: 15 }]}>
             Advice from WHO
@@ -214,8 +214,8 @@ const HealthScreen = (props) => {
           <TouchableButton
             useForeground={true}
             onPress={() => {
-              setShowModal(true);
-              setModalSource(itemData.item.uri);
+              setShowModal(true)
+              setModalSource(itemData.item.uri)
             }}
           >
             <View style={styles.flatListCard}>
@@ -224,22 +224,22 @@ const HealthScreen = (props) => {
           </TouchableButton>
         )}
       />
-      <Modal animationType="fade" visible={showModal} transparent>
+      <Modal animationType='fade' visible={showModal} transparent>
         <View style={styles.modalContainer}>
           <Image style={styles.modalImage} source={modalSource} />
           <AntDesign
             onPress={() => setShowModal(false)}
-            name="closecircle"
+            name='closecircle'
             size={40}
-            color="#fff"
+            color='#fff'
           />
         </View>
       </Modal>
     </ScrollView>
-  );
-};
+  )
+}
 
-export default HealthScreen;
+export default HealthScreen
 
 const styles = StyleSheet.create({
   container: {
@@ -251,29 +251,29 @@ const styles = StyleSheet.create({
     // borderRadius: 8,
     paddingVertical: 12,
     marginBottom: 16,
-    overflow: "hidden",
+    overflow: 'hidden',
   },
   selfAssessmentButtonText: {
-    textAlign: "center",
-    fontFamily: "open-sans-bold",
-    color: "#fff",
+    textAlign: 'center',
+    fontFamily: 'open-sans-bold',
+    color: '#fff',
     fontSize: 16,
   },
   title: {
     fontSize: 20,
-    fontFamily: "open-sans-semibold",
+    fontFamily: 'open-sans-semibold',
     marginTop: 15,
     marginBottom: 10,
   },
 
   cardContainer: {
-    flexDirection: "row",
+    flexDirection: 'row',
     padding: 16,
     marginBottom: 16,
-    backgroundColor: "#F9FAFC",
+    backgroundColor: '#F9FAFC',
     borderRadius: 16,
-    overflow: "hidden",
-    shadowColor: "black",
+    overflow: 'hidden',
+    shadowColor: 'black',
     shadowOffset: {
       width: 5,
       height: 2,
@@ -289,19 +289,19 @@ const styles = StyleSheet.create({
   },
   cardTitle: {
     fontSize: 16,
-    fontFamily: "open-sans-semibold",
+    fontFamily: 'open-sans-semibold',
     marginBottom: 8,
   },
   cardText: {
-    fontFamily: "open-sans",
-    color: "#5A6679",
+    fontFamily: 'open-sans',
+    color: '#5A6679',
     fontSize: 14,
   },
   flatListCard: {
     marginBottom: 16,
     borderRadius: 16,
-    overflow: "hidden",
-    shadowColor: "black",
+    overflow: 'hidden',
+    shadowColor: 'black',
     shadowOffset: {
       width: 5,
       height: 2,
@@ -313,16 +313,16 @@ const styles = StyleSheet.create({
   adviceImage: {
     width: vw(42),
     height: vw(42),
-    resizeMode: "contain",
+    resizeMode: 'contain',
     borderRadius: 15,
   },
   modalContainer: {
-    backgroundColor: "rgba(0,0,0,0.7)",
-    alignItems: "center",
-    justifyContent: "center",
+    backgroundColor: 'rgba(0,0,0,0.7)',
+    alignItems: 'center',
+    justifyContent: 'center',
     flex: 1,
     zIndex: 5,
-    position: "relative",
+    position: 'relative',
   },
   modalImage: {
     width: vw(100),
@@ -331,9 +331,9 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   infoCardContainer: {
-    backgroundColor: "#fff",
+    backgroundColor: '#fff',
     borderRadius: 16,
     padding: 16,
     marginBottom: 20,
   },
-});
+})

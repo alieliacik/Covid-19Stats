@@ -5,7 +5,6 @@ import * as Location from 'expo-location'
 import * as Permissions from 'expo-permissions'
 
 export const getLocation = (isLocationIconTouched) => {
-  console.log('asd')
   return async (dispatch) => {
     let { status } = await Location.requestPermissionsAsync(
       Permissions.LOCATION
