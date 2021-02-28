@@ -5,7 +5,7 @@ import {
   Image,
   View,
   Text,
-  ScrollView,
+  ScrollView,       
   ActivityIndicator,
   TouchableNativeFeedback,
   TouchableOpacity,
