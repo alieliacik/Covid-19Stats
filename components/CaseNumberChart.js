@@ -8,6 +8,7 @@ import {
 } from 'react-native'
 import { LineChart } from 'react-native-chart-kit'
 import { TouchableOpacity } from 'react-native-gesture-handler'
+
 import Colors from '../constants/Colors'
 import FadeInView from '../constants/FadeInView'
 
@@ -98,7 +99,8 @@ const CaseNumberChart = (props) => {
         </FadeInView>
       ) : (
         <Text style={{ fontFamily: 'open-sans', marginTop: 12 }}>
-          Touch to the line chart to see daily stats.
+          View the number of cases for a specific day by touching a dot on the
+          chart.
         </Text>
       )}
       {isLoading ? (
