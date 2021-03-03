@@ -24,6 +24,9 @@ const ProfileNavigaton = () => {
         <ProfileStack.Screen
           name='SelectMyCountry'
           component={SelectMyCountry}
+          options={{
+            headerTitle: 'Select a country',
+          }}
         />
       </ProfileStack.Navigator>
     )
@@ -39,9 +42,13 @@ const ProfileNavigaton = () => {
           headerTitle: userEmail,
         }}
       />
-      <ProfileStack.Screen name='SelectMyCountry' options={{
-        headerTitle='Select a country'
-      }} component={SelectMyCountry} />
+      <ProfileStack.Screen
+        name='SelectMyCountry'
+        options={{
+          headerTitle: 'Select a country',
+        }}
+        component={SelectMyCountry}
+      />
     </ProfileStack.Navigator>
   )
 }
