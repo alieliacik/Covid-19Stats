@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "Covid-19Stats",
-    "slug": "Covid-19Stats",
+    "name": "covStats",
+    "slug": "covStats",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -13,9 +13,7 @@
     "updates": {
       "fallbackToCacheTimeout": 0
     },
-    "assetBundlePatterns": [
-      "**/*"
-    ],
+    "assetBundlePatterns": ["**/*"],
     "ios": {
       "supportsTablet": true
     },
