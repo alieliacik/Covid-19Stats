@@ -14,7 +14,6 @@ import {
 import { vw } from 'react-native-expo-viewport-units'
 import { AntDesign } from '@expo/vector-icons'
 
-import FadeInView from '../../constants/FadeInView'
 import Colors from '../../constants/Colors'
 
 const images = [
@@ -79,7 +78,7 @@ const HealthScreen = (props) => {
         </View>
       </TouchableButton>
       {showSymptoms && (
-        <FadeInView style={styles.infoCardContainer}>
+        <View style={styles.infoCardContainer}>
           <Text style={styles.cardText}>
             The COVID-19 virus affects different people in different ways. Most
             infected people will develop mild to moderate illness and recover
@@ -113,7 +112,7 @@ const HealthScreen = (props) => {
             with the virus for symptoms to show, however it can take up to 14
             days.
           </Text>
-        </FadeInView>
+        </View>
       )}
       <TouchableButton
         useForeground={true}
@@ -145,7 +144,7 @@ const HealthScreen = (props) => {
         </View>
       </TouchableButton>
       {showPreventive && (
-        <FadeInView style={styles.infoCardContainer}>
+        <View style={styles.infoCardContainer}>
           <Text style={styles.cardText}>
             Protect yourself and others around you by knowing the facts and
             taking appropriate precautions. Follow advice provided by your local
@@ -176,7 +175,7 @@ const HealthScreen = (props) => {
             COVID-19, and should be combined with physical distancing and hand
             hygiene. Follow the advice provided by your local health authority.
           </Text>
-        </FadeInView>
+        </View>
       )}
       <TouchableButton
         onPress={() => {

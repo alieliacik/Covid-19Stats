@@ -10,7 +10,7 @@ import { LineChart } from 'react-native-chart-kit'
 import { TouchableOpacity } from 'react-native-gesture-handler'
 
 import Colors from '../constants/Colors'
-import FadeInView from '../constants/FadeInView'
+// import FadeInView from '../constants/FadeInView'
 
 const CaseNumberChart = (props) => {
   const [dotCaseNum, setDotCaseNum] = useState('')
@@ -87,17 +87,17 @@ const CaseNumberChart = (props) => {
   return (
     <View>
       {!!dotCaseNum.length ? (
-        <FadeInView key={dotCaseNum} duration={300}>
-          <View style={styles.dotStatsContainer}>
-            <View style={styles.dotCaseNumTextContainer}>
-              <Text style={styles.dotCaseNumText}>
-                {dotCaseNum.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
-              </Text>
-            </View>
-            <Text style={styles.dotDateText}>{dotDate}</Text>
+        // <FadeInView key={dotCaseNum} duration={300}>
+        <View style={styles.dotStatsContainer}>
+          <View style={styles.dotCaseNumTextContainer}>
+            <Text style={styles.dotCaseNumText}>
+              {dotCaseNum.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
+            </Text>
           </View>
-        </FadeInView>
+          <Text style={styles.dotDateText}>{dotDate}</Text>
+        </View>
       ) : (
+        // </FadeInView>
         <Text style={{ fontFamily: 'open-sans', marginTop: 12 }}>
           View the number of cases for a specific day by touching a dot on the
           chart.

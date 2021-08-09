@@ -139,7 +139,8 @@ const Profile = (props) => {
   useFocusEffect(
     useCallback(() => {
       setIsLoading(true)
-      fetchInfectedDatesHandler()
+      fetchUserCountryHandler()
+        .then(() => fetchInfectedDatesHandler())
         .then(() => fetchUserCountryHandler())
         .then(() => setIsLoading(false))
     }, [date])
