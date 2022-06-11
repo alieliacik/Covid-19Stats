@@ -38,7 +38,7 @@
     "react-native-modal-datetime-picker": "^9.1.0",
     "react-native-paper": "^4.7.1",
     "react-native-progress-circle": "^2.1.0",
-    "react-native-screens": "~3.4.0",
+    "react-native-screens": "~3.13.1",
     "react-native-skeleton-content": "^1.0.20",
     "react-native-skeleton-placeholder": "^3.0.2",
     "react-native-svg": "12.1.1",
