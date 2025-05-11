@@ -29,7 +29,7 @@
     "moment": "^2.29.1",
     "react": "16.13.1",
     "react-dom": "16.13.1",
-    "react-native": "https://github.com/expo/react-native/archive/sdk-42.0.0.tar.gz",
+    "react-native": "0.69.12",
     "react-native-chart-kit": "^6.10.0",
     "react-native-country-picker-modal": "^2.0.0",
     "react-native-countup": "^0.0.2",
@@ -46,13 +46,13 @@
     "react-native-timeago": "^0.5.0",
     "react-native-web": "~0.13.12",
     "react-native-webview": "11.6.2",
-    "react-redux": "^7.2.2",
+    "react-redux": "^9.0.0",
     "react-table": "^7.6.3",
     "redux": "^4.0.5",
     "redux-thunk": "^2.3.0",
     "rn-timeago": "^1.5.0",
     "styled-components": "^5.2.1",
-    "yup": "^0.32.8"
+    "yup": "^1.0.0"
   },
   "devDependencies": {
     "@babel/core": "~7.9.0"
